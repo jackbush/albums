@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getListedTrips, plateCount } from '../lib/posts';
 import { SITE, url } from '../lib/site';
 
-const trips = await getListedTrips();
+const trips = getListedTrips();
 
 // Right-hand column width inside the 1100px container, minus the metadata rail.
 const SIZES = '(min-width: 68.75rem) 844px, calc(100vw - 3rem)';
@@ -23,13 +23,13 @@ const WIDTHS = [550, 844, 1100, 1688];
     <ul class="register">
       {
         trips.map((trip) => {
-          const plates = plateCount(trip.data.items);
+          const plates = plateCount(trip.items);
           return (
             <li class="entry">
               <div class="container">
-                <a class="entry__link" href={url(`${trip.id}/`)}>
+                <a class="entry__link" href={url(`${trip.slug}/`)}>
                   <div class="entry__rail">
-                    <span class="meta entry__date">{trip.data.date}</span>
+                    <span class="meta entry__date">{trip.date}</span>
                     <hr class="rule entry__railrule" />
                     <span class="meta">
                       {plates} {plates === 1 ? 'plate' : 'plates'}
@@ -38,7 +38,7 @@ const WIDTHS = [550, 844, 1100, 1688];
                   <div class="entry__body">
                     <Picture
                       class="entry__cover"
-                      src={trip.data.cover}
+                      src={trip.cover}
                       alt=""
                       widths={WIDTHS}
                       sizes={SIZES}
@@ -46,8 +46,8 @@ const WIDTHS = [550, 844, 1100, 1688];
                       loading="lazy"
                       decoding="async"
                     />
-                    <h2 class="display entry__title">{trip.data.title}</h2>
-                    <p class="entry__description">{trip.data.description}</p>
+                    <h2 class="display entry__title">{trip.title}</h2>
+                    <p class="entry__description">{trip.description}</p>
                   </div>
                 </a>
               </div>

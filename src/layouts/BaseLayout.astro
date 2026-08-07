@@ -5,12 +5,12 @@ import '@fontsource/ibm-plex-serif/600.css';
 import '../styles/global.css';
 import { resolveTheme, googleFontsHref, varsToStyle } from '../lib/theme';
 import { SITE, url } from '../lib/site';
-import type { ThemeInput } from '../content.config';
+import type { Theme } from '../lib/schema';
 
 interface Props {
   title: string;
   description: string;
-  theme?: ThemeInput;
+  theme?: Theme;
 }
 
 const { title, description, theme } = Astro.props;

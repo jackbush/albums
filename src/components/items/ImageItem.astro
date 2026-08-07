@@ -55,7 +55,6 @@ const fullSrc = gif
   <figcaption class="plate__caption">
     <span class="meta plate__no">{label}</span>
     {alt && <span class="meta plate__alt">{alt}</span>}
-    <span class="meta plate__hint" aria-hidden="true">Expand</span>
   </figcaption>
 </figure>
 
@@ -77,9 +76,7 @@ const fullSrc = gif
     display: flex;
     align-items: baseline;
     gap: 0.9rem;
-    padding-top: 0.7rem;
     margin-top: 0.7rem;
-    border-top: 1px solid var(--rule);
   }
 
   /* The plate number is the one coloured mark in the page chrome. */
@@ -96,22 +93,4 @@ const fullSrc = gif
     font-weight: 400;
   }
 
-  .plate__hint {
-    margin-left: auto;
-    flex: none;
-    color: var(--text-secondary);
-    opacity: 0;
-    transition: opacity 140ms ease;
-  }
-
-  .plate:hover .plate__hint,
-  .plate__open:focus-visible ~ .plate__caption .plate__hint {
-    opacity: 0.7;
-  }
-
-  @media (hover: none) {
-    .plate__hint {
-      display: none;
-    }
-  }
 </style>

@@ -1,0 +1,39 @@
+---
+import { SITE, url } from '../lib/site';
+
+interface Props {
+  /**
+   * Which landmark to render as. The same bar opens and closes a post, so the
+   * one at the top is the page header and the one at the bottom is its footer —
+   * two landmarks rather than two identical navs.
+   */
+  as?: 'header' | 'footer';
+}
+
+const { as: Tag = 'header' }: Props = Astro.props;
+---
+
+<Tag class="navbar">
+  <div class="container">
+    <a class="meta navbar__link" href={url()}>
+      <span aria-hidden="true">&larr;</span> {SITE.title}
+    </a>
+  </div>
+</Tag>
+
+<style>
+  .navbar {
+    padding-block: 1.25rem;
+  }
+
+  .navbar__link {
+    display: inline-block;
+    color: var(--text-link);
+    text-decoration: none;
+  }
+
+  .navbar__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+</style>

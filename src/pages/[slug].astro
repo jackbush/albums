@@ -2,12 +2,12 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Lightbox from '../components/Lightbox.astro';
+import NavBar from '../components/NavBar.astro';
 import ImageItem from '../components/items/ImageItem.astro';
 import VideoItem from '../components/items/VideoItem.astro';
 import QuoteItem from '../components/items/QuoteItem.astro';
 import TextItem from '../components/items/TextItem.astro';
 import { getTrips, plateCount, withPlateNumbers, type Trip } from '../lib/posts';
-import { SITE, url } from '../lib/site';
 
 interface Props {
   trip: Trip;
@@ -15,40 +15,28 @@ interface Props {
 
 // Built from the folders, not from index.json, so an unlisted trip is still
 // reachable by direct URL — that's how you preview one before publishing it.
-export const getStaticPaths: GetStaticPaths = async () => {
-  const trips = await getTrips();
-  return [...trips.values()].map((trip) => ({
-    params: { slug: trip.id },
+export const getStaticPaths: GetStaticPaths = () =>
+  [...getTrips().values()].map((trip) => ({
+    params: { slug: trip.slug },
     props: { trip },
   }));
-};
 
 const { trip } = Astro.props;
-const { title, description, date, items, theme } = trip.data;
+const { title, description, date, items, theme } = trip;
 
 const plates = plateCount(items);
 const blocks = withPlateNumbers(items);
 ---
 
 <BaseLayout title={title} description={description} theme={theme}>
-  <header class="masthead">
-    <div class="container">
-      <a class="meta back" href={url()}>
-        <span aria-hidden="true">&larr;</span> {SITE.title}
-      </a>
-    </div>
-  </header>
+  <NavBar />
 
   <main id="main" class="container post">
     <div class="post__head">
       <h1 class="display post__title">{title}</h1>
-      <p class="meta post__meta">
-        <span>{date}</span>
-        {plates > 0 && <span class="post__dot" aria-hidden="true">&middot;</span>}
-        {plates > 0 && <span>{plates} {plates === 1 ? 'plate' : 'plates'}</span>}
-      </p>
-      <hr class="rule post__rule" />
       <p class="post__description">{description}</p>
+      <p class="meta post__meta">{date}</p>
+      <hr class="rule post__rule" />
     </div>
 
     <div class="post__body">
@@ -60,7 +48,6 @@ const blocks = withPlateNumbers(items);
             case 'video':
               return (
                 <VideoItem
-                  slug={trip.id}
                   src={item.src}
                   poster={item.poster}
                   alt={item.alt}
@@ -85,59 +72,37 @@ const blocks = withPlateNumbers(items);
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <a class="meta back" href={url()}>
-        <span aria-hidden="true">&larr;</span> All trips
-      </a>
-    </div>
-  </footer>
+  <NavBar as="footer" />
 
   {plates > 0 && <Lightbox />}
 </BaseLayout>
 
 <style>
-  .masthead {
-    border-bottom: 1px solid var(--rule);
-    padding-block: 1.25rem;
-  }
-
-  .back {
-    color: var(--text-link);
-    text-decoration: none;
-  }
-
-  .back:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.25em;
-  }
 
   .post__head {
-    padding-block: 3.5rem 3rem;
+    padding-block: 7rem 3rem;
   }
 
   .post__title {
-    font-size: clamp(2.25rem, 1.4rem + 3.4vw, 4rem);
-  }
-
-  .post__meta {
-    display: flex;
-    gap: 0.6rem;
-    margin-top: 1rem;
-  }
-
-  .post__dot {
-    color: var(--rule-strong);
-  }
-
-  .post__rule {
-    margin-block: 1.5rem;
+    font-size: clamp(3.375rem, 2.1rem + 5.1vw, 6rem);
   }
 
   .post__description {
-    max-width: 52ch;
-    font-size: 1.1875rem;
+    margin-top: 0.5rem;
+    max-width: 34ch;
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem);
+    line-height: 1.25;
     color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+
+  .post__meta {
+    margin-top: 1rem;
+  }
+
+  .post__rule {
+    margin-top: 2.5rem;
+    border-top-width: 2px;
   }
 
   /* One rhythm for every block type, so the column reads as a single sequence. */
@@ -146,11 +111,6 @@ const blocks = withPlateNumbers(items);
     flex-direction: column;
     gap: 4rem;
     padding-bottom: 5rem;
-  }
-
-  .footer {
-    border-top: 1px solid var(--rule);
-    padding-block: 1.5rem;
   }
 
   @media (max-width: 48rem) {

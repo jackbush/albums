@@ -1,7 +1,7 @@
 # Gallery
 
 A static site for trip photographs. No CMS — every post is a folder of media plus a
-`manifest.json`, and the site is rebuilt from those files.
+`manifest.js`, and the site is rebuilt from those files.
 
 ```bash
 npm install
@@ -14,11 +14,11 @@ npm run preview  # serves dist/ at the real base path
 
 ## Adding a trip
 
-1. Make a folder under `src/content/trips/`. **The folder name is the URL** —
+1. Make a folder under `src/trips/`. **The folder name is the URL** —
    `2019-purbeck/` publishes at `/gallery/2019-purbeck/`.
 2. Put your media inside it. A `media/` subfolder keeps things tidy but isn't required.
-3. Write a `manifest.json` in the folder (see below).
-4. Add the folder name to `posts` in [`src/content/index.json`](src/content/index.json).
+3. Write a `manifest.js` in the folder (see below).
+4. Add the folder name to `posts` in [`src/trips/index.js`](src/trips/index.js).
 
 ### Folder names
 
@@ -28,15 +28,19 @@ URL, so treat it as permanent once you've shared a link.
 
 ---
 
-## `src/content/index.json`
+## `src/trips/index.js`
 
 Controls **which** trips appear on the home page and **in what order**. First in the list is
 first on the page.
 
-```json
-{
-  "posts": ["2019-purbeck", "japan-2023"]
-}
+```js
+/** @type {import('../lib/schema').HomeManifest} */
+export default {
+  posts: [
+    '2019-purbeck',
+    // 'japan-2023',
+  ],
+};
 ```
 
 - A slug here with no matching folder is a **build error** — it's a typo, and silently dropping
@@ -48,44 +52,55 @@ first on the page.
 
 ---
 
-## `manifest.json`
+## `manifest.js`
 
-```json
-{
-  "title": "Purbeck Bimble",
-  "description": "A birthday treat on gravel.",
-  "date": "April 2019",
-  "cover": "./media/DSCF0802.jpg",
-  "items": [
-    { "type": "text", "text": "Gorse everywhere, out for weeks and still going." },
-    { "type": "image", "src": "./media/DSCF0678.jpg", "alt": "Grinning into the wind" },
+```js
+/** @type {import('../../lib/schema').TripManifest} */
+export default {
+  title: 'Purbeck Bimble',
+  description: 'A birthday treat on gravel.',
+  date: 'April 2019',
+  cover: './media/DSCF0802.jpg',
+
+  items: [
+    { type: 'text', text: 'Gorse everywhere, out for weeks and still going.' },
+    { type: 'image', src: './media/DSCF0678.jpg', alt: 'Grinning into the wind' },
+    // { type: 'image', src: './media/DSCF0689.jpg', alt: 'Maybe later' },
     {
-      "type": "quote",
-      "text": "Like man, slighted and enduring.",
-      "attribution": "Thomas Hardy",
-      "attributionLink": "https://www.gutenberg.org/files/122/122-h/122-h.htm"
-    }
-  ]
-}
+      type: 'quote',
+      text: 'Like man, slighted and enduring.',
+      attribution: 'Thomas Hardy',
+      attributionLink: 'https://www.gutenberg.org/files/122/122-h/122-h.htm',
+    },
+  ],
+};
 ```
+
+**Keep that first `@type` line.** It's what makes your editor autocomplete block types and
+underline a bad field as you type, before you ever run a build. Copy it into every new manifest,
+adjusting `../../` if your file sits at a different depth.
+
+Manifests are JavaScript rather than JSON so you can **comment blocks in and out** while you're
+putting a post together. Plates renumber themselves, so commenting out an image doesn't leave a
+gap in the sequence.
 
 | Field | Required | Notes |
 | --- | --- | --- |
 | `title` | yes | Shown on the index and as the page heading. |
 | `description` | yes | One or two lines. Used on the index and as the page's meta description. |
-| `date` | yes | **Free-form display string.** `"April 2019"`, `"Summer 2024"`, `"2023-2024"` are all fine — it's never parsed or sorted on. |
+| `date` | yes | **Free-form display string.** `'April 2019'`, `'Summer 2024'`, `'2023-2024'` are all fine — it's never parsed or sorted on. |
 | `cover` | yes | Image shown on the home page. |
 | `items` | yes | The post itself, rendered in order. At least one. |
 | `theme` | no | Per-post colour and font overrides. See below. |
 
-There's no `slug` (the folder name is the slug) and no sort field (`index.json` sets the order).
+There's no `slug` (the folder name is the slug) and no sort field (`index.js` sets the order).
 
 ### Media paths
 
 **Every media path is relative to the manifest** and must start with `./`:
 
-```json
-"src": "./media/DSCF0678.jpg"
+```js
+src: './media/DSCF0678.jpg'
 ```
 
 This isn't a style preference. It's what lets the build find each file, read its real
@@ -94,8 +109,9 @@ that, so the schema rejects it.
 
 Supported: **jpg**, **png**, **gif** for images; **mp4**, **webm**, **mov** for video.
 
-Unknown fields are rejected, so a typo like `"atribution"` fails the build rather than being
-silently ignored.
+Unknown fields are rejected, so a typo like `atribution` fails the build rather than being
+silently ignored. Errors name the file and the exact field, e.g. `items.7: Unrecognized key(s)
+in object: 'atribution'`.
 
 ---
 
@@ -103,8 +119,8 @@ silently ignored.
 
 ### `image`
 
-```json
-{ "type": "image", "src": "./media/cliffs.jpg", "alt": "The chalk cliff at Old Harry" }
+```js
+{ type: 'image', src: './media/cliffs.jpg', alt: 'The chalk cliff at Old Harry' }
 ```
 
 | Field | Required | Notes |
@@ -121,8 +137,8 @@ flatten it to one frame. So export GIFs at the size you want them, around 1000px
 
 ### `video`
 
-```json
-{ "type": "video", "src": "./media/descent.mp4", "poster": "./media/descent-still.jpg", "alt": "Dropping off the ridge" }
+```js
+{ type: 'video', src: './media/descent.mp4', poster: './media/descent-still.jpg', alt: 'Dropping off the ridge' }
 ```
 
 | Field | Required | Default | Notes |
@@ -139,8 +155,8 @@ numbered as plates and don't open full screen — they play in place.
 
 ### `quote`
 
-```json
-{ "type": "quote", "text": "…", "attribution": "Thomas Hardy", "attributionLink": "https://…" }
+```js
+{ type: 'quote', text: '…', attribution: 'Thomas Hardy', attributionLink: 'https://…' }
 ```
 
 | Field | Required | Notes |
@@ -151,8 +167,8 @@ numbered as plates and don't open full screen — they play in place.
 
 ### `text`
 
-```json
-{ "type": "text", "text": "First paragraph.\n\nSecond paragraph." }
+```js
+{ type: 'text', text: 'First paragraph.\n\nSecond paragraph.' }
 ```
 
 Plain prose. Blank lines (`\n\n`) become paragraphs. **Not markdown** — `**bold**` renders as
@@ -164,17 +180,17 @@ literal asterisks.
 
 Optional. Every key is optional; anything you leave out keeps the default.
 
-```json
-"theme": {
-  "background": "#0e0e10",
-  "accent": "#ff5c00",
-  "textPrimary": "#f5f5f5",
-  "textSecondary": "#a0a0a0",
-  "textTitle": "#ffffff",
-  "textLink": "#ff5c00",
-  "fontBody": "Inter",
-  "fontHeading": "Fraunces"
-}
+```js
+  theme: {
+    background: '#0e0e10',
+    accent: '#ff5c00',
+    textPrimary: '#f5f5f5',
+    textSecondary: '#a0a0a0',
+    textTitle: '#ffffff',
+    textLink: '#ff5c00',
+    fontBody: 'Inter',
+    fontHeading: 'Fraunces',
+  },
 ```
 
 | Key | Default |
@@ -190,8 +206,8 @@ Optional. Every key is optional; anything you leave out keeps the default.
 
 Any CSS colour works — hex, `rgb()`, named colours.
 
-Fonts are **Google Fonts family names**, spelled as Google spells them: `"Fraunces"`,
-`"Space Grotesk"`, `"EB Garamond"`. The two IBM Plex defaults ship with the site, so the
+Fonts are **Google Fonts family names**, spelled as Google spells them: `'Fraunces'`,
+`'Space Grotesk'`, `'EB Garamond'`. The two IBM Plex defaults ship with the site, so the
 common case makes no external request; naming any other family adds a Google Fonts link to
 that page only.
 
@@ -224,6 +240,9 @@ problem, look at Git LFS before it does.
 
 ## Notes
 
+- Manifests are plain ES modules, loaded by the build. They can hold comments, trailing
+  commas and multi-line strings, but keep them to a plain exported object — no imports, no
+  computed values.
 - Builds are slow in proportion to how many new full-size images you've added — resizing 24MP
   files takes a while. Results are cached in `.astro/`, so rebuilds are fast.
 - The Purbeck post's `text` blocks are placeholder copy written from the photographs. Replace

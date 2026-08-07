@@ -1,4 +1,4 @@
-import type { ThemeInput } from '../content.config';
+import type { Theme } from './schema';
 
 export const DEFAULT_BODY_FONT = 'IBM Plex Sans';
 export const DEFAULT_HEADING_FONT = 'IBM Plex Serif';
@@ -30,7 +30,7 @@ export interface ResolvedTheme {
  *   textTitle -> textPrimary
  *   textLink  -> accent
  */
-export function resolveTheme(theme?: ThemeInput): ResolvedTheme {
+export function resolveTheme(theme?: Theme): ResolvedTheme {
   const background = theme?.background ?? DEFAULTS.background;
   const accent = theme?.accent ?? DEFAULTS.accent;
   const textPrimary = theme?.textPrimary ?? DEFAULTS.textPrimary;

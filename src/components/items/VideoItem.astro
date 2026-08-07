@@ -1,9 +1,8 @@
 ---
 import { getImage } from 'astro:assets';
-import { videoUrl } from '../../lib/media';
 
 interface Props {
-  slug: string;
+  /** Already resolved to an asset URL by lib/posts.ts. */
   src: string;
   poster?: ImageMetadata;
   alt?: string;
@@ -12,9 +11,8 @@ interface Props {
   autoplay: boolean;
 }
 
-const { slug, src, poster, alt, loop, muted, autoplay } = Astro.props;
+const { src: source, poster, alt, loop, muted, autoplay } = Astro.props;
 
-const source = videoUrl(slug, src);
 const posterImage = poster ? await getImage({ src: poster, width: 1530, format: 'webp' }) : null;
 
 // Browsers refuse to autoplay with sound, so autoplay implies muted rather than
@@ -53,9 +51,7 @@ const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
     display: flex;
     align-items: baseline;
     gap: 0.9rem;
-    padding-top: 0.7rem;
     margin-top: 0.7rem;
-    border-top: 1px solid var(--rule);
   }
 
   /* Sits where a plate number sits, but films aren't plates — they aren't numbered. */
