@@ -8,6 +8,5 @@
 export default {
   posts: [
     '2019-purbeck',
-    // 'japan-2023',
   ],
 };
