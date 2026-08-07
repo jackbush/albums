@@ -65,8 +65,12 @@ const WIDTHS = [400, 490, 800, 980, 1600];
     text-decoration: none;
   }
 
+  /* Covers are cropped to a common ratio so the grid stays even whatever the
+     source orientation — portrait covers would otherwise tower over landscape ones. */
   .entry__cover {
     width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
   }
 
   .entry__title {
