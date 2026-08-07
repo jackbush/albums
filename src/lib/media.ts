@@ -5,27 +5,27 @@
  * These globs hand every file in the content tree to Vite, which gives images their
  * `ImageMetadata` (dimensions included, so the build can resize them) and videos a
  * content-hashed URL with the site `base` already applied. That's what lets media
- * stay in the trip's own folder rather than in `public/`.
+ * stay in the album's own folder rather than in `public/`.
  */
 
 const IMAGES = import.meta.glob<ImageMetadata>(
-  '/src/trips/**/*.{jpg,jpeg,png,gif,webp,avif}',
+  '/src/albums/**/*.{jpg,jpeg,png,gif,webp,avif}',
   { eager: true, import: 'default' },
 );
 
-const VIDEOS = import.meta.glob<string>('/src/trips/**/*.{mp4,webm,mov}', {
+const VIDEOS = import.meta.glob<string>('/src/albums/**/*.{mp4,webm,mov}', {
   query: '?url',
   import: 'default',
   eager: true,
 });
 
 function keyFor(slug: string, src: string): string {
-  return `/src/trips/${slug}/${src.replace(/^\.\//, '')}`;
+  return `/src/albums/${slug}/${src.replace(/^\.\//, '')}`;
 }
 
 function missing(kind: string, slug: string, src: string, key: string, allowed: string): never {
   throw new Error(
-    `${kind} not found: "${src}" in src/trips/${slug}/manifest.js.\n` +
+    `${kind} not found: "${src}" in src/albums/${slug}/manifest.js.\n` +
       `  Looked for ${key}\n` +
       `  Paths are relative to the manifest and must be ${allowed}.`,
   );

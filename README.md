@@ -1,24 +1,24 @@
-# Gallery
+# Albums
 
-A static site for trip photographs. No CMS — every post is a folder of media plus a
+A static site for photo albums. No CMS — every post is a folder of media plus a
 `manifest.js`, and the site is rebuilt from those files.
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321/gallery/
+npm run dev      # http://localhost:4321/albums/
 npm run build    # writes dist/
 npm run preview  # serves dist/ at the real base path
 ```
 
 ---
 
-## Adding a trip
+## Adding an album
 
-1. Make a folder under `src/trips/`. **The folder name is the URL** —
-   `2019-purbeck/` publishes at `/gallery/2019-purbeck/`.
+1. Make a folder under `src/albums/`. **The folder name is the URL** —
+   `2019-purbeck/` publishes at `/albums/2019-purbeck/`.
 2. Put your media inside it. A `media/` subfolder keeps things tidy but isn't required.
 3. Write a `manifest.js` in the folder (see below).
-4. Add the folder name to `posts` in [`src/trips/index.js`](src/trips/index.js).
+4. Add the folder name to `posts` in [`src/albums/index.js`](src/albums/index.js).
 
 ### Folder names
 
@@ -28,9 +28,9 @@ URL, so treat it as permanent once you've shared a link.
 
 ---
 
-## `src/trips/index.js`
+## `src/albums/index.js`
 
-Controls **which** trips appear on the home page and **in what order**. First in the list is
+Controls **which** albums appear on the home page and **in what order**. First in the list is
 first on the page.
 
 ```js
@@ -46,7 +46,7 @@ export default {
 - A slug here with no matching folder is a **build error** — it's a typo, and silently dropping
   it would hide a post without telling you.
 - A folder that isn't listed just doesn't appear on the home page. You get a build warning, and
-  **its page still builds at its own URL**. That's how drafts work: leave a trip out of the list
+  **its page still builds at its own URL**. That's how drafts work: leave an album out of the list
   while you're putting it together, preview it directly, then add it when it's ready.
   (Unlinked isn't private — the files still ship.)
 
@@ -55,7 +55,7 @@ export default {
 ## `manifest.js`
 
 ```js
-/** @type {import('../../lib/schema').TripManifest} */
+/** @type {import('../../lib/schema').AlbumManifest} */
 export default {
   title: 'Purbeck Bimble',
   description: 'A birthday treat on gravel.',
@@ -221,14 +221,16 @@ photographs supply the rest of the colour.
 
 ## Site name
 
-The site title and tagline live in [`src/lib/site.ts`](src/lib/site.ts).
+"Albums" — the home page heading and the back link — and the meta description live in [`src/lib/site.ts`](src/lib/site.ts).
 
 ---
 
 ## Deploying to GitHub Pages
 
-1. In `astro.config.mjs`, set `site` to your Pages URL and `base` to `/<repo-name>/`.
-   They're currently `https://example.github.io` and `/gallery/`.
+Published at **https://jackbush.github.io/albums/**.
+
+1. The GitHub repo must be named `albums` — `base` in `astro.config.mjs` is `/albums/` and the
+   two have to match exactly, or every asset 404s.
 2. In the repo's **Settings → Pages**, set **Source** to **GitHub Actions**.
 3. Push to `main`. [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds and
    publishes.

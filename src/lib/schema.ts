@@ -23,7 +23,7 @@ export const themeSchema = z
 
 export type Theme = z.infer<typeof themeSchema>;
 
-export const tripManifestSchema = z
+export const albumManifestSchema = z
   .object({
     title: z.string().trim().min(1),
     description: z.string().trim().min(1),
@@ -76,13 +76,13 @@ export const tripManifestSchema = z
 export const homeManifestSchema = z.object({ posts: z.array(z.string()) }).strict();
 
 /**
- * The shape you write in a trip manifest. The JSDoc type annotation at the top of
+ * The shape you write in an album manifest. The JSDoc type annotation at the top of
  * each manifest.js points here, which is what gives you autocomplete on block
  * types and a red squiggle on a bad field without any build step.
  */
-export type TripManifest = z.input<typeof tripManifestSchema>;
+export type AlbumManifest = z.input<typeof albumManifestSchema>;
 
-/** The shape of src/trips/index.js. */
+/** The shape of src/albums/index.js. */
 export type HomeManifest = z.input<typeof homeManifestSchema>;
 
 /** A block after its media paths have been resolved to real assets. */
@@ -100,7 +100,7 @@ export type Item =
   | { type: 'quote'; text: string; attribution?: string; attributionLink?: string }
   | { type: 'text'; text: string };
 
-export interface Trip {
+export interface Album {
   /** Folder name, which is also the URL. */
   slug: string;
   title: string;

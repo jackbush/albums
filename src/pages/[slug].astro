@@ -7,22 +7,22 @@ import ImageItem from '../components/items/ImageItem.astro';
 import VideoItem from '../components/items/VideoItem.astro';
 import QuoteItem from '../components/items/QuoteItem.astro';
 import TextItem from '../components/items/TextItem.astro';
-import { getTrips, plateCount, withPlateNumbers, type Trip } from '../lib/posts';
+import { getAlbums, plateCount, withPlateNumbers, type Album } from '../lib/posts';
 
 interface Props {
-  trip: Trip;
+  album: Album;
 }
 
-// Built from the folders, not from index.json, so an unlisted trip is still
+// Built from the folders, not from index.js, so an unlisted album is still
 // reachable by direct URL — that's how you preview one before publishing it.
 export const getStaticPaths: GetStaticPaths = () =>
-  [...getTrips().values()].map((trip) => ({
-    params: { slug: trip.slug },
-    props: { trip },
+  [...getAlbums().values()].map((album) => ({
+    params: { slug: album.slug },
+    props: { album },
   }));
 
-const { trip } = Astro.props;
-const { title, description, date, items, theme } = trip;
+const { album } = Astro.props;
+const { title, description, date, items, theme } = album;
 
 const plates = plateCount(items);
 const blocks = withPlateNumbers(items);

@@ -1,4 +1,4 @@
-/** @type {import('../../lib/schema').TripManifest} */
+/** @type {import('../../lib/schema').AlbumManifest} */
 export default {
   title: 'Purbeck Bimble',
   description: 'A birthday treat on gravel.',
