@@ -1,0 +1,194 @@
+---
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getListedTrips, plateCount } from '../lib/posts';
+import { SITE, url } from '../lib/site';
+
+const trips = await getListedTrips();
+
+// Right-hand column width inside the 1100px container, minus the metadata rail.
+const SIZES = '(min-width: 68.75rem) 844px, calc(100vw - 3rem)';
+const WIDTHS = [550, 844, 1100, 1688];
+---
+
+<BaseLayout title={SITE.title} description={SITE.tagline}>
+  <header class="masthead">
+    <div class="container masthead__inner">
+      <p class="masthead__mark">{SITE.title}</p>
+      <p class="meta">{SITE.tagline}</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <ul class="register">
+      {
+        trips.map((trip) => {
+          const plates = plateCount(trip.data.items);
+          return (
+            <li class="entry">
+              <div class="container">
+                <a class="entry__link" href={url(`${trip.id}/`)}>
+                  <div class="entry__rail">
+                    <span class="meta entry__date">{trip.data.date}</span>
+                    <hr class="rule entry__railrule" />
+                    <span class="meta">
+                      {plates} {plates === 1 ? 'plate' : 'plates'}
+                    </span>
+                  </div>
+                  <div class="entry__body">
+                    <Picture
+                      class="entry__cover"
+                      src={trip.data.cover}
+                      alt=""
+                      widths={WIDTHS}
+                      sizes={SIZES}
+                      formats={['avif', 'webp']}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <h2 class="display entry__title">{trip.data.title}</h2>
+                    <p class="entry__description">{trip.data.description}</p>
+                  </div>
+                </a>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="meta">
+        {trips.length} {trips.length === 1 ? 'trip' : 'trips'}
+      </p>
+    </div>
+  </footer>
+</BaseLayout>
+
+<style>
+  /*
+    Rules run the full width of the viewport while the content stays in the 1100px
+    column, so the register reads as a ledger the page is cut out of.
+  */
+  .masthead {
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .masthead__inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.5rem;
+  }
+
+  .masthead__mark {
+    font-family: var(--font-heading);
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-title);
+  }
+
+  .entry + .entry {
+    border-top: 1px solid var(--rule);
+  }
+
+  .entry__link {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 2.5rem;
+    padding-block: 3rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .entry__rail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+
+  .entry__railrule {
+    width: 1.75rem;
+    margin: 0;
+    border-color: var(--rule-strong);
+    transition: width 200ms ease;
+  }
+
+  .entry__date {
+    transition: color 140ms ease;
+  }
+
+  .entry__cover {
+    width: 100%;
+  }
+
+  .entry__title {
+    margin-top: 1.25rem;
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.14em;
+    transition: text-decoration-color 140ms ease;
+  }
+
+  .entry__description {
+    margin-top: 0.4rem;
+    max-width: 52ch;
+    color: var(--text-secondary);
+  }
+
+  /* One hover gesture, spread across the row: the rail extends, the entry warms. */
+  .entry__link:hover .entry__railrule,
+  .entry__link:focus-visible .entry__railrule {
+    width: 3.5rem;
+  }
+
+  .entry__link:hover .entry__date,
+  .entry__link:focus-visible .entry__date {
+    color: var(--accent);
+  }
+
+  .entry__link:hover .entry__title,
+  .entry__link:focus-visible .entry__title {
+    text-decoration-color: currentColor;
+  }
+
+  .footer {
+    border-top: 1px solid var(--rule-strong);
+    padding-block: 1.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .entry__railrule,
+    .entry__date,
+    .entry__title {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .entry__link {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      padding-block: 2.25rem;
+    }
+
+    /* The rail becomes a single metadata line above the cover. */
+    .entry__rail {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .entry__railrule {
+      flex: none;
+      width: 1.25rem;
+    }
+  }
+</style>

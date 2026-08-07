@@ -1,0 +1,28 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+
+// Blank lines separate paragraphs. Plain text — no markdown parsing.
+const paragraphs = text
+  .split(/\n\s*\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter(Boolean);
+---
+
+<div class="prose">
+  {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+</div>
+
+<style>
+  .prose {
+    max-width: 62ch;
+    color: var(--text-secondary);
+  }
+
+  .prose p + p {
+    margin-top: 1em;
+  }
+</style>

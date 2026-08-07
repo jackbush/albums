@@ -1,0 +1,302 @@
+---
+/*
+  Full-screen plate viewer. One instance per post page.
+
+  Built on native <dialog>, which gives us the focus trap, Esc-to-close, inert
+  background and focus restoration for free — everything below is just navigation.
+  Images register themselves via `data-lightbox` on the figure, so this component
+  never needs to know what a post contains.
+*/
+---
+
+<dialog class="lb" aria-label="Plate viewer">
+  <div class="lb__bar">
+    <p class="meta lb__counter" aria-live="polite">
+      Plate <span data-lb-current>1</span> / <span data-lb-total>1</span>
+    </p>
+    <button type="button" class="lb__close" data-lb-close aria-label="Close viewer">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 5 19 19M19 5 5 19" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="lb__stage">
+    <img data-lb-image alt="" decoding="async" />
+  </div>
+
+  <button type="button" class="lb__nav lb__nav--prev" data-lb-prev aria-label="Previous plate">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 4 7 12l8 8" /></svg>
+  </button>
+  <button type="button" class="lb__nav lb__nav--next" data-lb-next aria-label="Next plate">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4l8 8-8 8" /></svg>
+  </button>
+</dialog>
+
+<style>
+  .lb {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(10 10 10 / 0.96);
+    color: #fafafa;
+    overflow: hidden;
+  }
+
+  .lb::backdrop {
+    background: rgb(10 10 10 / 0.96);
+  }
+
+  .lb[open] {
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
+  .lb__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgb(250 250 250 / 0.14);
+  }
+
+  .lb__counter {
+    color: #fafafa;
+    opacity: 0.75;
+  }
+
+  .lb__stage {
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    padding: 1.25rem;
+  }
+
+  .lb__stage img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .lb__close,
+  .lb__nav {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgb(250 250 250 / 0.18);
+    border-radius: 50%;
+    background: rgb(250 250 250 / 0.04);
+    color: #fafafa;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease;
+  }
+
+  .lb__close:hover,
+  .lb__nav:hover {
+    background: rgb(250 250 250 / 0.14);
+    border-color: rgb(250 250 250 / 0.4);
+  }
+
+  .lb__close {
+    width: 2.25rem;
+    height: 2.25rem;
+    flex: none;
+  }
+
+  .lb__nav {
+    position: fixed;
+    top: 50%;
+    translate: 0 -50%;
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .lb__nav--prev {
+    left: 1rem;
+  }
+
+  .lb__nav--next {
+    right: 1rem;
+  }
+
+  .lb__nav[hidden] {
+    display: none;
+  }
+
+  .lb svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .lb :focus-visible {
+    outline: 2px solid #fafafa;
+    outline-offset: 3px;
+  }
+
+  /* On touch-sized screens the edge buttons overlap the plate; drop them into the bar. */
+  @media (max-width: 40rem) {
+    .lb__nav {
+      position: static;
+      translate: none;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+
+    .lb[open] {
+      grid-template-areas: 'bar' 'stage' 'nav';
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .lb__bar {
+      grid-area: bar;
+    }
+
+    .lb__stage {
+      grid-area: stage;
+    }
+
+    .lb__nav--prev,
+    .lb__nav--next {
+      grid-area: nav;
+      margin: 0 auto 1.25rem;
+    }
+
+    .lb__nav--prev {
+      justify-self: end;
+      margin-right: 0.4rem;
+    }
+
+    .lb__nav--next {
+      justify-self: start;
+      margin-left: 0.4rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lb[open] {
+      animation: lb-in 140ms ease-out;
+    }
+
+    .lb[open] .lb__stage img {
+      animation: lb-plate-in 180ms ease-out;
+    }
+  }
+
+  @keyframes lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes lb-plate-in {
+    from {
+      opacity: 0;
+      scale: 0.985;
+    }
+  }
+</style>
+
+<script>
+  interface Plate {
+    src: string;
+    width: string;
+    height: string;
+    alt: string;
+    plate: string;
+    trigger: HTMLElement;
+  }
+
+  function init(dialog: HTMLDialogElement) {
+    const image = dialog.querySelector<HTMLImageElement>('[data-lb-image]')!;
+    const current = dialog.querySelector<HTMLElement>('[data-lb-current]')!;
+    const total = dialog.querySelector<HTMLElement>('[data-lb-total]')!;
+    const prevButton = dialog.querySelector<HTMLButtonElement>('[data-lb-prev]')!;
+    const nextButton = dialog.querySelector<HTMLButtonElement>('[data-lb-next]')!;
+
+    const plates: Plate[] = [...document.querySelectorAll<HTMLElement>('[data-lightbox]')].map(
+      (figure) => ({
+        src: figure.dataset.full!,
+        width: figure.dataset.fullWidth ?? '',
+        height: figure.dataset.fullHeight ?? '',
+        alt: figure.dataset.alt ?? '',
+        plate: figure.dataset.plate ?? '',
+        trigger: figure.querySelector<HTMLElement>('button') ?? figure,
+      }),
+    );
+
+    let index = 0;
+    total.textContent = String(plates.length);
+    // A single plate has nowhere to navigate to.
+    prevButton.hidden = nextButton.hidden = plates.length < 2;
+
+    function show(next: number) {
+      index = (next + plates.length) % plates.length;
+      const plate = plates[index];
+      image.src = plate.src;
+      image.alt = plate.alt;
+      image.width = Number(plate.width) || 0;
+      image.height = Number(plate.height) || 0;
+      current.textContent = plate.plate;
+      preload(index + 1);
+      preload(index - 1);
+    }
+
+    // Warm the neighbours so arrow-key navigation doesn't flash empty.
+    function preload(at: number) {
+      if (plates.length < 2) return;
+      const plate = plates[(at + plates.length) % plates.length];
+      new Image().src = plate.src;
+    }
+
+    function open(at: number) {
+      show(at);
+      dialog.showModal();
+      document.body.style.overflow = 'hidden';
+    }
+
+    plates.forEach((plate, at) => {
+      plate.trigger.addEventListener('click', () => open(at));
+    });
+
+    prevButton.addEventListener('click', () => show(index - 1));
+    nextButton.addEventListener('click', () => show(index + 1));
+    dialog.querySelector('[data-lb-close]')!.addEventListener('click', () => dialog.close());
+
+    // Clicking the shroud closes; clicking the plate or the controls does not.
+    dialog.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target === dialog || target.classList.contains('lb__stage')) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+      if (plates.length < 2) return;
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        show(index + 1);
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        show(index - 1);
+      }
+    });
+
+    // Covers Esc, the close button and shroud clicks alike.
+    dialog.addEventListener('close', () => {
+      document.body.style.overflow = '';
+      plates[index]?.trigger.focus();
+    });
+  }
+
+  const dialog = document.querySelector<HTMLDialogElement>('.lb');
+  if (dialog) init(dialog);
+</script>

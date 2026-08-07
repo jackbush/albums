@@ -1,0 +1,4 @@
+{
+  "$comment": "Which trips appear on the home page, and in what order. First in the list is first on the page.",
+  "posts": ["2019-purbeck"]
+}
