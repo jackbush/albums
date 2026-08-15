@@ -1,10 +1,8 @@
-/** Site-wide text. Edit these two lines to rename the site. */
-export const SITE = {
-  /** Shown as the home page heading and as the back link on every album page. */
-  title: 'Albums',
-  /** Not shown on the page — this is the meta description search results use. */
-  tagline: 'Photo albums from trips and elsewhere.',
-} as const;
+/**
+ * Site-wide text — title, heading, description and share image — lives in
+ * `src/albums/index.js`, next to the album list. Read it with `getSite()` from
+ * `./posts`. This file is just the URL helper.
+ */
 
 /** Prefixes a path with the configured `base` so links work under /albums/. */
 export function url(path = ''): string {

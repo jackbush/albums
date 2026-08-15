@@ -1,9 +1,10 @@
 ---
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getListedAlbums } from '../lib/posts';
-import { SITE, url } from '../lib/site';
+import { getListedAlbums, getSite } from '../lib/posts';
+import { url } from '../lib/site';
 
+const site = getSite();
 const albums = getListedAlbums();
 
 // Cards are half the 1020px column on desktop, full width below the 768px break.
@@ -12,9 +13,9 @@ const SIZES =
 const WIDTHS = [400, 490, 800, 980, 1600];
 ---
 
-<BaseLayout title={SITE.title} description={SITE.tagline}>
+<BaseLayout title={site.title} description={site.description} image={site.cover}>
   <header class="container masthead">
-    <h1 class="display masthead__mark">{SITE.title}</h1>
+    <h1 class="display masthead__mark">{site.heading}</h1>
   </header>
 
   <main id="main" class="container">

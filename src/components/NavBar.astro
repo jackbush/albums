@@ -1,5 +1,6 @@
 ---
-import { SITE, url } from '../lib/site';
+import { getSite } from '../lib/posts';
+import { url } from '../lib/site';
 
 interface Props {
   /**
@@ -11,12 +12,13 @@ interface Props {
 }
 
 const { as: Tag = 'header' }: Props = Astro.props;
+const site = getSite();
 ---
 
 <Tag class="navbar">
   <div class="container">
     <a class="meta navbar__link" href={url()}>
-      <span aria-hidden="true">&larr;</span> {SITE.title}
+      <span aria-hidden="true">&larr;</span> {site.heading}
     </a>
   </div>
 </Tag>

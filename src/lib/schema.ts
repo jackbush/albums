@@ -73,7 +73,18 @@ export const albumManifestSchema = z
   })
   .strict();
 
-export const homeManifestSchema = z.object({ posts: z.array(z.string()) }).strict();
+export const homeManifestSchema = z
+  .object({
+    /** Browser tab and share title for the home page. */
+    title: z.string().trim().min(1),
+    /** Short name: the masthead, and the back link on every album page. */
+    heading: z.string().trim().min(1),
+    description: z.string().trim().min(1),
+    /** Share image, relative to src/albums/index.js. */
+    cover: mediaPath,
+    posts: z.array(z.string()),
+  })
+  .strict();
 
 /**
  * The shape you write in an album manifest. The JSDoc type annotation at the top of
@@ -84,6 +95,14 @@ export type AlbumManifest = z.input<typeof albumManifestSchema>;
 
 /** The shape of src/albums/index.js. */
 export type HomeManifest = z.input<typeof homeManifestSchema>;
+
+/** Home page settings after the cover path has been resolved to a real asset. */
+export interface Site {
+  title: string;
+  heading: string;
+  description: string;
+  cover: ImageMetadata;
+}
 
 /** A block after its media paths have been resolved to real assets. */
 export type Item =

@@ -30,12 +30,18 @@ URL, so treat it as permanent once you've shared a link.
 
 ## `src/albums/index.js`
 
-Controls **which** albums appear on the home page and **in what order**. First in the list is
-first on the page.
+Holds the home page's own settings (see [Home page and site
+metadata](#home-page-and-site-metadata)) and controls **which** albums appear on it and **in
+what order**. First in the list is first on the page.
 
 ```js
 /** @type {import('../lib/schema').HomeManifest} */
 export default {
+  title: 'Jack Bush | Albums',
+  heading: 'Albums',
+  description: 'Just nice, old-fashioned photo albums. …',
+  cover: './home-cover.jpg',
+
   posts: [
     '2019-purbeck',
     // 'japan-2023',
@@ -219,9 +225,49 @@ photographs supply the rest of the colour.
 
 ---
 
-## Site name
+## Home page and site metadata
 
-"Albums" — the home page heading and the back link — and the meta description live in [`src/lib/site.ts`](src/lib/site.ts).
+Everything the home page needs — its title, heading, description and share image — sits at the
+top of [`src/albums/index.js`](src/albums/index.js), above the album list:
+
+```js
+export default {
+  title: 'Jack Bush | Albums',
+  heading: 'Albums',
+  description: "Just nice, old-fashioned photo albums. …",
+  cover: './home-cover.jpg',
+  posts: [ /* … */ ],
+};
+```
+
+| Field | Used for |
+| --- | --- |
+| `title` | The home page's browser tab and share title. |
+| `heading` | The masthead, the back link on every album page, and the `— Albums` suffix on album titles. Keep it short. |
+| `description` | The home page meta description, and the blurb in a link preview. |
+| `cover` | The home page share image. Path relative to `src/albums/index.js`, same `./` rule as album media. |
+
+> **`home-cover.jpg` is a placeholder.** It's a straight copy of
+> `src/albums/2011-tibet/media/jb20111204lhasa3.jpg`. Drop a proper image in at
+> `src/albums/home-cover.jpg` (or point `cover` somewhere else) when you have one.
+
+**Album pages take all of this from their own `manifest.js`** — `title`, `description` and
+`cover`. Edit the manifest and the album page, its card on the home page and its link preview
+all change together; there's nothing to update in a second place.
+
+Every page gets `<title>`, a meta description, a canonical URL, Open Graph and Twitter card
+tags. Share images are cropped to 1200×630 at build time, whatever the source shape.
+
+## Favicon
+
+[`public/favicon.svg`](public/favicon.svg) — a minimal camera outline on a white circle —
+is linked from every page, along with `public/apple-touch-icon.png` for iOS home screens.
+
+The PNG is generated from the SVG, so if you edit the SVG, regenerate it:
+
+```bash
+node -e "const sharp=require('sharp'),fs=require('fs');sharp(fs.readFileSync('public/favicon.svg'),{density:600}).resize(180,180).flatten({background:'#ffffff'}).png().toFile('public/apple-touch-icon.png')"
+```
 
 ---
 

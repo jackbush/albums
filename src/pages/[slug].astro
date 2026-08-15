@@ -7,7 +7,7 @@ import ImageItem from '../components/items/ImageItem.astro';
 import VideoItem from '../components/items/VideoItem.astro';
 import QuoteItem from '../components/items/QuoteItem.astro';
 import TextItem from '../components/items/TextItem.astro';
-import { getAlbums, plateCount, withPlateNumbers, type Album } from '../lib/posts';
+import { getAlbums, getSite, plateCount, withPlateNumbers, type Album } from '../lib/posts';
 
 interface Props {
   album: Album;
@@ -22,13 +22,18 @@ export const getStaticPaths: GetStaticPaths = () =>
   }));
 
 const { album } = Astro.props;
-const { title, description, date, items, theme } = album;
+const { title, description, date, cover, items, theme } = album;
 
+const site = getSite();
 const plates = plateCount(items);
 const blocks = withPlateNumbers(items);
+
+// Title, description and share image all come from the manifest, so editing it
+// updates the page, the home page card and the link preview together.
+const pageTitle = `${title} — ${site.heading}`;
 ---
 
-<BaseLayout title={title} description={description} theme={theme}>
+<BaseLayout title={pageTitle} description={description} image={cover} theme={theme}>
   <NavBar />
 
   <main id="main" class="container post">

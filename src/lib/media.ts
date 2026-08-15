@@ -37,6 +37,24 @@ export function resolveImage(slug: string, src: string): ImageMetadata {
   return IMAGES[key] ?? missing('Image', slug, src, key, '.jpg, .png or .gif');
 }
 
+/**
+ * Resolves an image path written in `src/albums/index.js`, e.g. "./home-cover.jpg".
+ *
+ * Same rules as an album's media, one level up: relative to the file it's written in.
+ */
+export function resolveSiteImage(src: string): ImageMetadata {
+  const key = `/src/albums/${src.replace(/^\.\//, '')}`;
+  const image = IMAGES[key];
+  if (!image) {
+    throw new Error(
+      `Image not found: "${src}" in src/albums/index.js.\n` +
+        `  Looked for ${key}\n` +
+        `  Paths are relative to src/albums/index.js and must be .jpg, .png or .gif.`,
+    );
+  }
+  return image;
+}
+
 /** Resolves a manifest-relative video path, e.g. "./media/descent.mp4". */
 export function resolveVideo(slug: string, src: string): string {
   const key = keyFor(slug, src);

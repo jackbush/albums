@@ -1,14 +1,15 @@
 import home from '../albums/index.js';
-import { resolveImage, resolveVideo } from './media';
+import { resolveImage, resolveSiteImage, resolveVideo } from './media';
 import {
   albumManifestSchema,
   homeManifestSchema,
   formatIssues,
   type Item,
   type Album,
+  type Site,
 } from './schema';
 
-export type { Album, Item };
+export type { Album, Item, Site };
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -76,6 +77,31 @@ export function getAlbums(): Map<string, Album> {
   return albums;
 }
 
+/** Validates `src/albums/index.js` once, naming the file and field on failure. */
+function loadHome() {
+  const parsed = homeManifestSchema.safeParse(home);
+  if (!parsed.success) {
+    throw new Error(formatIssues(parsed.error, 'src/albums/index.js'));
+  }
+  return parsed.data;
+}
+
+/**
+ * Home page settings — title, heading, description and share image.
+ *
+ * The one place the site's own metadata comes from, so the layout never has to
+ * know where it was written.
+ */
+export function getSite(): Site {
+  const data = loadHome();
+  return {
+    title: data.title,
+    heading: data.heading,
+    description: data.description,
+    cover: resolveSiteImage(data.cover),
+  };
+}
+
 /**
  * Resolves `src/albums/index.js` into the ordered list shown on the home page.
  *
@@ -86,11 +112,7 @@ export function getAlbums(): Map<string, Album> {
 export function getListedAlbums(): Album[] {
   const albums = getAlbums();
 
-  const parsed = homeManifestSchema.safeParse(home);
-  if (!parsed.success) {
-    throw new Error(formatIssues(parsed.error, 'src/albums/index.js'));
-  }
-  const listed = parsed.data.posts;
+  const listed = loadHome().posts;
 
   const missing = listed.filter((slug) => !albums.has(slug));
   if (missing.length > 0) {
