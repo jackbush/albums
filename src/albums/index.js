@@ -24,6 +24,7 @@ export default {
   posts: [
     '2019-purbeck',
     '2011-tibet',
+    '2011-nepal',
     '2011-bangkok',
   ],
 };
