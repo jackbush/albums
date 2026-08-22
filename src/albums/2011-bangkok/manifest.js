@@ -46,14 +46,17 @@ export default {
       alt: 'A visitor standing in front of a painted mural of a walled palace complex',
     },
     {
-      type: 'image',
-      src: './media/jb20111113bangkok25.jpg',
-      alt: 'Two giant guardian figures flanking the open doorway of a temple pavilion',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111113bangkok27.jpg',
-      alt: 'A tiled gateway with a gold kinnara standing either side of the steps',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111113bangkok25.jpg',
+          alt: 'Two giant guardian figures flanking the open doorway of a temple pavilion',
+        },
+        {
+          src: './media/jb20111113bangkok27.jpg',
+          alt: 'A tiled gateway with a gold kinnara standing either side of the steps',
+        },
+      ],
     },
     {
       type: 'image',

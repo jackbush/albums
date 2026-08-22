@@ -1,11 +1,16 @@
 ---
+import { blockMarker } from '../../lib/dev';
+
 interface Props {
   text: string;
   attribution?: string;
   attributionLink?: string;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
 }
 
-const { text, attribution, attributionLink } = Astro.props;
+const { text, attribution, attributionLink, block } = Astro.props;
+const marker = blockMarker(block);
 ---
 
 <blockquote class="quote">
@@ -17,6 +22,7 @@ const { text, attribution, attributionLink } = Astro.props;
       </cite>
     )
   }
+  {marker && <p class="meta block-marker quote__marker">{marker}</p>}
 </blockquote>
 
 <style>
@@ -46,5 +52,9 @@ const { text, attribution, attributionLink } = Astro.props;
 
   .quote__cite a {
     color: var(--text-link);
+  }
+
+  .quote__marker {
+    margin-top: 0.75rem;
   }
 </style>

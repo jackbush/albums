@@ -1,18 +1,22 @@
 ---
 import { Picture } from 'astro:assets';
 import { fullPlate, isGif } from '../../lib/media';
+import { blockMarker } from '../../lib/dev';
 
 interface Props {
   src: ImageMetadata;
   alt?: string;
   plate: number;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
 }
 
-const { src, alt = '', plate } = Astro.props;
+const { src, alt = '', plate, block } = Astro.props;
 const label = String(plate).padStart(2, '0');
+const marker = blockMarker(block);
 
-// The container is 1100px wide with 24px of padding, so 1052px is the display width.
-const SIZES = '(min-width: 68.75rem) 1052px, calc(100vw - 3rem)';
+// The container is 1084px wide with 16px of padding, so 1052px is the display width.
+const SIZES = '(min-width: 67.75rem) 1052px, calc(100vw - 2rem)';
 
 // Rungs are spaced ~1.4x so no viewport overshoots by much. 825 is the DPR-2 phone,
 // 1160 the DPR-3 phone (a 390px screen asks for 1026, which a 1052 rung would cover
@@ -54,10 +58,14 @@ const full = await fullPlate(src);
       )
     }
   </button>
-  <figcaption class="plate__caption">
-    <span class="meta plate__no">{label}</span>
-    {alt && <span class="meta plate__alt">{alt}</span>}
-  </figcaption>
+  {
+    (alt || marker) && (
+      <figcaption class="plate__caption">
+        {alt && <span class="meta plate__alt">{alt}</span>}
+        {marker && <span class="meta block-marker">{marker}</span>}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
@@ -74,21 +82,12 @@ const full = await fullPlate(src);
     width: 100%;
   }
 
+  /* Plain inline flow, so a dev block marker trails the last word of the caption. */
   .plate__caption {
-    display: flex;
-    align-items: baseline;
-    gap: 0.9rem;
     margin-top: 0.7rem;
   }
 
-  /* The plate number is the one coloured mark in the page chrome. */
-  .plate__no {
-    color: var(--accent);
-    flex: none;
-  }
-
   .plate__alt {
-    flex: 1;
     text-transform: none;
     letter-spacing: 0.01em;
     font-size: 0.8125rem;

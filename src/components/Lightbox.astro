@@ -197,14 +197,16 @@
       margin: 0 auto 1.25rem;
     }
 
+    /* Both share the one nav cell, so the auto margin left over from the rule above
+       is what pins each to its own edge — back the way the arrows point. */
     .lb__nav--prev {
-      justify-self: end;
-      margin-right: 0.4rem;
+      justify-self: start;
+      margin-left: 0.4rem;
     }
 
     .lb__nav--next {
-      justify-self: start;
-      margin-left: 0.4rem;
+      justify-self: end;
+      margin-right: 0.4rem;
     }
   }
 

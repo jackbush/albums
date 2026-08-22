@@ -31,9 +31,18 @@ export default {
       alt: 'Two people laying out an offering on the ghat steps beside green river water',
     },
     {
-      type: 'image',
-      src: './media/jb20111116kathamandu37.jpg',
-      alt: 'A dark carved wooden doorway in a brick wall, two figures in red sitting in the lit courtyard beyond',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111116kathamandu37.jpg',
+          alt: 'A dark carved wooden doorway in a brick wall, someone in red laying an offering on the step in the lit courtyard beyond',
+        },
+        {
+          src: './media/jb20111116kathamandu62.jpg',
+          alt: 'Two sadhus sitting on the steps of a stone shrine in hard midday sun, one with a long white beard',
+        },
+      ],
+      caption: 'The temples are lived in: an offering at one door, the afternoon sat out on the steps of another.',
     },
     {
       type: 'image',
@@ -80,11 +89,6 @@ export default {
       type: 'image',
       src: './media/jb20111116kathamandu60.jpg',
       alt: 'Shrines crowded under a big bare tree, one man in a white shirt walking the path between them',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111116kathamandu62.jpg',
-      alt: 'Two sadhus sitting on the steps of a stone shrine in hard midday sun, one with a long white beard',
     },
     {
       type: 'image',

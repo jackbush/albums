@@ -1,5 +1,6 @@
 ---
 import { getImage } from 'astro:assets';
+import { blockMarker } from '../../lib/dev';
 
 interface Props {
   /** Already resolved to an asset URL by lib/posts.ts. */
@@ -9,9 +10,12 @@ interface Props {
   loop: boolean;
   muted: boolean;
   autoplay: boolean;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
 }
 
-const { src: source, poster, alt, loop, muted, autoplay } = Astro.props;
+const { src: source, poster, alt, loop, muted, autoplay, block } = Astro.props;
+const marker = blockMarker(block);
 
 const posterImage = poster ? await getImage({ src: poster, width: 1530, format: 'webp' }) : null;
 
@@ -38,6 +42,7 @@ const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
   <figcaption class="film__caption">
     <span class="meta film__label">Film</span>
     {alt && <span class="meta film__alt">{alt}</span>}
+    {marker && <span class="meta block-marker">{marker}</span>}
   </figcaption>
 </figure>
 
@@ -48,16 +53,13 @@ const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
   }
 
   .film__caption {
-    display: flex;
-    align-items: baseline;
-    gap: 0.9rem;
     margin-top: 0.7rem;
   }
 
-  /* Sits where a plate number sits, but films aren't plates — they aren't numbered. */
+  /* Films aren't plates — the label says so where a caption would otherwise start. */
   .film__label {
     color: var(--accent);
-    flex: none;
+    margin-right: 0.9rem;
   }
 
   .film__alt {

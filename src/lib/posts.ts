@@ -166,19 +166,23 @@ export function plateCount(items: Item[]): number {
 }
 
 /**
- * Assigns each block its *first* plate number, counting photographs only.
+ * Numbers each block two ways: by plate and by position in the manifest.
  *
- * A group holds several, taking a run of consecutive numbers — the block knows how many
- * it has, and numbering it here keeps the sequence continuous across block types.
- * The same numbering appears under each photograph and in the lightbox counter, so
- * a plate referenced in one place is findable in the other.
+ * The plate number counts photographs only, so a group takes a run of consecutive
+ * numbers and a text block takes none. It drives the lightbox counter, which is why
+ * the sequence has to stay continuous across block types.
+ *
+ * The block number counts every entry in `items`, text and all, so it addresses the
+ * manifest directly. Only the dev server shows it — see `lib/dev.ts`.
  */
-export function withPlateNumbers(items: Item[]): Array<{ item: Item; plate: number | null }> {
+export function withNumbers(
+  items: Item[],
+): Array<{ item: Item; plate: number | null; block: number }> {
   let plate = 0;
-  return items.map((item) => {
+  return items.map((item, i) => {
     const held = platesIn(item);
     const first = held > 0 ? plate + 1 : null;
     plate += held;
-    return { item, plate: first };
+    return { item, plate: first, block: i + 1 };
   });
 }

@@ -3,25 +3,28 @@ import { Picture } from 'astro:assets';
 import { fullPlate, isGif } from '../../lib/media';
 import { groupRows } from '../../lib/layout';
 import type { GroupImage } from '../../lib/schema';
+import { blockMarker } from '../../lib/dev';
 
 interface Props {
   images: GroupImage[];
   caption?: string;
   /** Plate number of the first frame; the rest follow in order. */
   plate: number;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
 }
 
-const { images, caption, plate } = Astro.props;
+const { images, caption, plate, block } = Astro.props;
 
 const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
-const range = labels.length > 1 ? `${labels[0]}–${labels[labels.length - 1]}` : labels[0];
+const marker = blockMarker(block);
 
 // The content column is 1052px wide; frames in a row split it, less the gutters.
 const CONTENT = 1052;
 // The site gutter, which is also the page padding either side of the column: the
-// space between two frames and the space to the page edge are the same 1.5rem.
-const GAP = 24;
-const PADDING = '3rem';
+// space between two frames and the space to the page edge are the same 1rem.
+const GAP = 16;
+const PADDING = '2rem';
 // Small rungs for a frame sharing a row on desktop, large ones for the same frame
 // running full width below 720px, where a DPR-3 phone asks for around 1030.
 const WIDTHS = [250, 375, 550, 825, 1160, 1530];
@@ -78,7 +81,7 @@ const laid = frames.map((frame, i) => ({
   },
   sizes: [
     `(max-width: 719px) calc((100vw - (${PADDING} + ${narrow[i].gaps}px)) * ${narrow[i].share.toFixed(4)})`,
-    `(min-width: 68.75rem) ${Math.round((CONTENT - wide[i].gaps) * wide[i].share)}px`,
+    `(min-width: 67.75rem) ${Math.round((CONTENT - wide[i].gaps) * wide[i].share)}px`,
     `calc((100vw - (${PADDING} + ${wide[i].gaps}px)) * ${wide[i].share.toFixed(4)})`,
   ].join(', '),
   style: [
@@ -140,10 +143,14 @@ const laid = frames.map((frame, i) => ({
       ))
     }
   </div>
-  <figcaption class="group__caption">
-    <span class="meta group__no">{range}</span>
-    {caption && <span class="meta group__text">{caption}</span>}
-  </figcaption>
+  {
+    (caption || marker) && (
+      <figcaption class="group__caption">
+        {caption && <span class="meta group__text">{caption}</span>}
+        {marker && <span class="meta block-marker">{marker}</span>}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
@@ -153,10 +160,10 @@ const laid = frames.map((frame, i) => ({
    * full-width, zero-height break element ends a row, and each breakpoint shows only
    * its own breaks. Row spacing is two of the flex row-gaps — one either side of the
    * break — so the row-gap is half the gutter, leaving rows and columns the same
-   * 1.5rem apart.
+   * 1rem apart.
    */
   .group__frames {
-    --gutter: 1.5rem;
+    --gutter: 1rem;
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--gutter) / 2) var(--gutter);
@@ -194,19 +201,10 @@ const laid = frames.map((frame, i) => ({
 
   /* One caption for the whole group, where a single plate's caption sits. */
   .group__caption {
-    display: flex;
-    align-items: baseline;
-    gap: 0.9rem;
     margin-top: 0.7rem;
   }
 
-  .group__no {
-    color: var(--accent);
-    flex: none;
-  }
-
   .group__text {
-    flex: 1;
     text-transform: none;
     letter-spacing: 0.01em;
     font-size: 0.8125rem;

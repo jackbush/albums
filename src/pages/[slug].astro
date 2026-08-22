@@ -8,7 +8,7 @@ import GroupItem from '../components/items/GroupItem.astro';
 import VideoItem from '../components/items/VideoItem.astro';
 import QuoteItem from '../components/items/QuoteItem.astro';
 import TextItem from '../components/items/TextItem.astro';
-import { getAlbums, getSite, plateCount, withPlateNumbers, type Album } from '../lib/posts';
+import { getAlbums, getSite, plateCount, withNumbers, type Album } from '../lib/posts';
 
 interface Props {
   album: Album;
@@ -27,7 +27,7 @@ const { title, description, date, cover, items, theme } = album;
 
 const site = getSite();
 const plates = plateCount(items);
-const blocks = withPlateNumbers(items);
+const blocks = withNumbers(items);
 
 // Title, description and share image all come from the manifest, so editing it
 // updates the page, the home page card and the link preview together.
@@ -47,12 +47,19 @@ const pageTitle = `${title} — ${site.heading}`;
 
     <div class="post__body">
       {
-        blocks.map(({ item, plate }) => {
+        blocks.map(({ item, plate, block }) => {
           switch (item.type) {
             case 'image':
-              return <ImageItem src={item.src} alt={item.alt} plate={plate!} />;
+              return <ImageItem src={item.src} alt={item.alt} plate={plate!} block={block} />;
             case 'group':
-              return <GroupItem images={item.images} caption={item.caption} plate={plate!} />;
+              return (
+                <GroupItem
+                  images={item.images}
+                  caption={item.caption}
+                  plate={plate!}
+                  block={block}
+                />
+              );
             case 'video':
               return (
                 <VideoItem
@@ -62,6 +69,7 @@ const pageTitle = `${title} — ${site.heading}`;
                   loop={item.loop}
                   muted={item.muted}
                   autoplay={item.autoplay}
+                  block={block}
                 />
               );
             case 'quote':
@@ -70,10 +78,11 @@ const pageTitle = `${title} — ${site.heading}`;
                   text={item.text}
                   attribution={item.attribution}
                   attributionLink={item.attributionLink}
+                  block={block}
                 />
               );
             case 'text':
-              return <TextItem text={item.text} />;
+              return <TextItem text={item.text} block={block} />;
           }
         })
       }

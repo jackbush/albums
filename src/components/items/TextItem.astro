@@ -1,9 +1,14 @@
 ---
+import { blockMarker } from '../../lib/dev';
+
 interface Props {
   text: string;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
 }
 
-const { text } = Astro.props;
+const { text, block } = Astro.props;
+const marker = blockMarker(block);
 
 // Blank lines separate paragraphs. Plain text — no markdown parsing.
 const paragraphs = text
@@ -13,7 +18,16 @@ const paragraphs = text
 ---
 
 <div class="prose">
-  {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  {
+    paragraphs.map((paragraph, i) => (
+      <p>
+        {paragraph}
+        {marker && i === paragraphs.length - 1 && (
+          <span class="block-marker prose__marker">{marker}</span>
+        )}
+      </p>
+    ))
+  }
 </div>
 
 <style>
@@ -35,6 +49,11 @@ const paragraphs = text
 
   .prose p + p {
     margin-top: 1em;
+  }
+
+  /* Small enough not to read as part of the sentence it trails. */
+  .prose__marker {
+    font-size: 0.5em;
   }
 
   /* 768px: less room either side, so the column takes more of it at two thirds the size. */
