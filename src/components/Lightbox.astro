@@ -238,6 +238,7 @@
     width: string;
     height: string;
     alt: string;
+    caption: string;
     plate: string;
     trigger: HTMLElement;
   }
@@ -256,6 +257,9 @@
         width: figure.dataset.fullWidth ?? '',
         height: figure.dataset.fullHeight ?? '',
         alt: figure.dataset.alt ?? '',
+        // Every frame of a group carries the group's caption, so those slides read the
+        // same line while each keeps its own alt text. Otherwise the alt is the caption.
+        caption: figure.dataset.caption || figure.dataset.alt || '',
         plate: figure.dataset.plate ?? '',
         trigger: figure.querySelector<HTMLElement>('button') ?? figure,
       }),
@@ -273,9 +277,9 @@
       image.alt = plate.alt;
       image.width = Number(plate.width) || 0;
       image.height = Number(plate.height) || 0;
-      caption.textContent = plate.alt;
-      // A plate with no alt text shows no caption rather than an empty gap.
-      caption.hidden = plate.alt === '';
+      caption.textContent = plate.caption;
+      // A plate with nothing to say shows no caption rather than an empty gap.
+      caption.hidden = plate.caption === '';
       current.textContent = plate.plate;
       preload(index + 1);
       preload(index - 1);

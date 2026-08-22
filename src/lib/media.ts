@@ -8,6 +8,8 @@
  * stay in the album's own folder rather than in `public/`.
  */
 
+import { getImage } from 'astro:assets';
+
 const IMAGES = import.meta.glob<ImageMetadata>(
   '/src/albums/**/*.{jpg,jpeg,png,gif,webp,avif}',
   { eager: true, import: 'default' },
@@ -64,4 +66,26 @@ export function resolveVideo(slug: string, src: string): string {
 /** Animated GIFs are passed through unoptimised — sharp de-animates them on resize. */
 export function isGif(src: ImageMetadata): boolean {
   return src.format === 'gif' || src.src.toLowerCase().endsWith('.gif');
+}
+
+export interface Plate {
+  src: string;
+  width: number;
+  height: number;
+}
+
+/**
+ * The full-size version the lightbox loads, capped at 2400px.
+ *
+ * Animated GIFs bypass sharp entirely — resizing one drops every frame but the
+ * first — and still get a hashed URL from the import.
+ */
+export async function fullPlate(src: ImageMetadata): Promise<Plate> {
+  const width = isGif(src) ? src.width : Math.min(src.width, 2400);
+  const height = Math.round(src.height * (width / src.width));
+  return {
+    src: isGif(src) ? src.src : (await getImage({ src, width, format: 'webp', quality: 82 })).src,
+    width,
+    height,
+  };
 }

@@ -6,10 +6,11 @@ import {
   formatIssues,
   type Item,
   type Album,
+  type GroupImage,
   type Site,
 } from './schema';
 
-export type { Album, Item, Site };
+export type { Album, GroupImage, Item, Site };
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -36,6 +37,14 @@ function loadAlbum(slug: string, module: { default: unknown }): Album {
     switch (item.type) {
       case 'image':
         return { ...item, src: resolveImage(slug, item.src) };
+      case 'group':
+        return {
+          ...item,
+          images: item.images.map((image) => ({
+            ...image,
+            src: resolveImage(slug, image.src),
+          })),
+        };
       case 'video':
         return {
           ...item,
@@ -144,21 +153,32 @@ export function getListedAlbums(): Album[] {
   return listed.map((slug) => albums.get(slug)!);
 }
 
-/** Number of image blocks in a post — the "plates" count shown on the index. */
+/** How many plates a block holds: one per photograph, so a group holds several. */
+function platesIn(item: Item): number {
+  if (item.type === 'image') return 1;
+  if (item.type === 'group') return item.images.length;
+  return 0;
+}
+
+/** Number of photographs in a post — the "plates" count shown on the index. */
 export function plateCount(items: Item[]): number {
-  return items.filter((item) => item.type === 'image').length;
+  return items.reduce((total, item) => total + platesIn(item), 0);
 }
 
 /**
- * Assigns each image its plate number, counting images only.
+ * Assigns each block its *first* plate number, counting photographs only.
  *
- * The same numbering appears under each image and in the lightbox counter, so a
- * plate referenced in one place is findable in the other.
+ * A group holds several, taking a run of consecutive numbers — the block knows how many
+ * it has, and numbering it here keeps the sequence continuous across block types.
+ * The same numbering appears under each photograph and in the lightbox counter, so
+ * a plate referenced in one place is findable in the other.
  */
 export function withPlateNumbers(items: Item[]): Array<{ item: Item; plate: number | null }> {
   let plate = 0;
-  return items.map((item) => ({
-    item,
-    plate: item.type === 'image' ? ++plate : null,
-  }));
+  return items.map((item) => {
+    const held = platesIn(item);
+    const first = held > 0 ? plate + 1 : null;
+    plate += held;
+    return { item, plate: first };
+  });
 }

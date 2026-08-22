@@ -141,6 +141,44 @@ home page. Drop in the biggest file you have; the build makes the resized versio
 **GIFs are passed through untouched** to keep them animating — resizing an animated GIF would
 flatten it to one frame. So export GIFs at the size you want them, around 1000px wide.
 
+### `group`
+
+```js
+{
+  type: 'group',
+  images: [
+    { src: './media/doorway.jpg', alt: 'A monk stepping through a red doorway' },
+    { src: './media/lamps.jpg', alt: 'Rows of butter lamps burning in a dark hall' },
+    { src: './media/steps.jpg', alt: 'Worn steps climbing between two brick walls' },
+  ],
+  caption: 'Kopan, the hour before the morning session.',
+}
+```
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `images` | yes | Two to six. Each takes a `src` and its own `alt`. |
+| `caption` | no | One line under the whole group, in place of the per-image alt. |
+
+Several photographs laid out as rows. The count fixes the rows — nothing in the manifest
+chooses them:
+
+| Images | Rows |
+| --- | --- |
+| 2 | 2 |
+| 3 | 3 |
+| 4 | 2 + 2 |
+| 5 | 3 + 2 |
+| 6 | 3 + 3 |
+
+Within a row, widths are set in proportion to each frame's aspect ratio, so the frames land on
+a common height and fill the column exactly, uncropped — any mix of portrait and landscape
+works. **Below 720px the rows collapse and every frame runs full width.**
+
+Each frame is its own plate: they take consecutive numbers (`02–04` under a group of three),
+open as separate slides in the full-screen viewer, and each slide shows the group's caption
+alongside its own alt text.
+
 ### `video`
 
 ```js

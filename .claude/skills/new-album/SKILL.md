@@ -54,7 +54,23 @@ export default {
 };
 ```
 
-Item types: `image` (`src`, `alt`), `video`, `quote`, `text`. Optional `theme` block per album.
+Item types: `image` (`src`, `alt`), `group`, `video`, `quote`, `text`. Optional `theme` block per album.
+
+`group` lays two to six frames out as rows — each with its own `alt`, one shared `caption`:
+
+```js
+{
+  type: 'group',
+  images: [
+    { src: './media/a.jpg', alt: '...' },
+    { src: './media/b.jpg', alt: '...' },
+  ],
+  caption: '...',
+}
+```
+
+Rows follow the count: 2 → 2, 3 → 3, 4 → 2+2, 5 → 3+2, 6 → 3+3. Frames keep the album's file
+order. Field notes in `README.md` under "Block types".
 
 **Voice** — match the existing manifests, they set the house style:
 

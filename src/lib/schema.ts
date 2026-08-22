@@ -23,6 +23,14 @@ export const themeSchema = z
 
 export type Theme = z.infer<typeof themeSchema>;
 
+/** One frame of a `group`: its own src and alt, no caption of its own. */
+const groupImage = z
+  .object({
+    src: mediaPath,
+    alt: z.string().optional(),
+  })
+  .strict();
+
 export const albumManifestSchema = z
   .object({
     title: z.string().trim().min(1),
@@ -39,6 +47,15 @@ export const albumManifestSchema = z
               type: z.literal('image'),
               src: mediaPath,
               alt: z.string().optional(),
+            })
+            .strict(),
+          z
+            .object({
+              type: z.literal('group'),
+              /** Two to six frames; the count fixes the row layout. */
+              images: z.array(groupImage).min(2).max(6),
+              /** Shown once, under the whole group — each frame keeps its own `alt`. */
+              caption: z.string().trim().min(1).optional(),
             })
             .strict(),
           z
@@ -104,9 +121,20 @@ export interface Site {
   cover: ImageMetadata;
 }
 
+/** One frame of a `group` after its path has been resolved. */
+export interface GroupImage {
+  src: ImageMetadata;
+  alt?: string;
+}
+
 /** A block after its media paths have been resolved to real assets. */
 export type Item =
   | { type: 'image'; src: ImageMetadata; alt?: string }
+  | {
+      type: 'group';
+      images: GroupImage[];
+      caption?: string;
+    }
   | {
       type: 'video';
       src: string;

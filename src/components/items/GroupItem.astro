@@ -1,0 +1,170 @@
+---
+import { Picture } from 'astro:assets';
+import { fullPlate, isGif } from '../../lib/media';
+import { groupRows } from '../../lib/layout';
+import type { GroupImage } from '../../lib/schema';
+
+interface Props {
+  images: GroupImage[];
+  caption?: string;
+  /** Plate number of the first frame; the rest follow in order. */
+  plate: number;
+}
+
+const { images, caption, plate } = Astro.props;
+
+const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
+const range = labels.length > 1 ? `${labels[0]}–${labels[labels.length - 1]}` : labels[0];
+
+// The content column is 1020px wide; frames in a row split it, less the gutters.
+const CONTENT = 1020;
+const GAP = 24;
+const WIDTHS = [250, 375, 500, 750, 1000, 1500];
+
+const frames = await Promise.all(
+  images.map(async (image, i) => ({
+    ...image,
+    label: labels[i],
+    gif: isGif(image.src),
+    full: await fullPlate(image.src),
+    // Column widths in proportion to each frame's aspect ratio: the frames in a row
+    // then land on a common height and fill it exactly, without any being cropped.
+    ratio: image.src.width / image.src.height,
+  })),
+);
+
+const rows = groupRows(frames.length).map((count, row, all) => {
+  const start = all.slice(0, row).reduce((n, c) => n + c, 0);
+  const inRow = frames.slice(start, start + count);
+  const total = inRow.reduce((sum, frame) => sum + frame.ratio, 0);
+  const available = CONTENT - GAP * (count - 1);
+  const gutters = `3rem + ${GAP * (count - 1)}px`;
+
+  return {
+    columns: inRow.map((frame) => `${frame.ratio}fr`).join(' '),
+    frames: inRow.map((frame) => {
+      const share = frame.ratio / total;
+      return {
+        ...frame,
+        // Below 720px every frame is full width, so that case comes first.
+        sizes: [
+          '(max-width: 719px) calc(100vw - 3rem)',
+          `(min-width: 68.75rem) ${Math.round(available * share)}px`,
+          `calc((100vw - (${gutters})) * ${share.toFixed(4)})`,
+        ].join(', '),
+      };
+    }),
+  };
+});
+---
+
+<figure class="group">
+  {
+    rows.map((row) => (
+      <div class="group__row" style={`--columns: ${row.columns};`}>
+        {row.frames.map((frame) => (
+          <div
+            class="group__frame"
+            data-lightbox
+            data-full={frame.full.src}
+            data-full-width={frame.full.width}
+            data-full-height={frame.full.height}
+            data-alt={frame.alt}
+            data-caption={caption}
+            data-plate={frame.label}
+          >
+            <button
+              type="button"
+              class="group__open"
+              aria-label={frame.alt ? `View full screen: ${frame.alt}` : `View plate ${frame.label} full screen`}
+            >
+              {frame.gif ? (
+                <img
+                  src={frame.src.src}
+                  width={frame.src.width}
+                  height={frame.src.height}
+                  alt={frame.alt ?? ''}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <Picture
+                  src={frame.src}
+                  alt={frame.alt ?? ''}
+                  widths={WIDTHS}
+                  sizes={frame.sizes}
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+    ))
+  }
+  <figcaption class="group__caption">
+    <span class="meta group__no">{range}</span>
+    {caption && <span class="meta group__text">{caption}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .group__row {
+    display: grid;
+    grid-template-columns: var(--columns);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .group__row + .group__row {
+    margin-top: 1.5rem;
+  }
+
+  .group__open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .group__open :global(img) {
+    width: 100%;
+  }
+
+  /* One caption for the whole group, where a single plate's caption sits. */
+  .group__caption {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-top: 0.7rem;
+  }
+
+  .group__no {
+    color: var(--accent);
+    flex: none;
+  }
+
+  .group__text {
+    flex: 1;
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+
+  /* On a phone the frames are too small side by side, so they stack full width. */
+  @media (max-width: 719px) {
+    .group__row {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+    }
+
+    .group__row + .group__row {
+      margin-top: 1.75rem;
+    }
+  }
+</style>

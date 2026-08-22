@@ -1,6 +1,6 @@
 ---
-import { Picture, getImage } from 'astro:assets';
-import { isGif } from '../../lib/media';
+import { Picture } from 'astro:assets';
+import { fullPlate, isGif } from '../../lib/media';
 
 interface Props {
   src: ImageMetadata;
@@ -16,22 +16,15 @@ const SIZES = '(min-width: 68.75rem) 1020px, calc(100vw - 3rem)';
 const WIDTHS = [550, 825, 1020, 1530, 2040];
 
 const gif = isGif(src);
-
-// The plate shown in the lightbox. Animated GIFs bypass sharp entirely — resizing one
-// drops every frame but the first — and still get a hashed URL from the import.
-const fullWidth = gif ? src.width : Math.min(src.width, 2400);
-const fullHeight = Math.round(src.height * (fullWidth / src.width));
-const fullSrc = gif
-  ? src.src
-  : (await getImage({ src, width: fullWidth, format: 'webp', quality: 82 })).src;
+const full = await fullPlate(src);
 ---
 
 <figure
   class="plate"
   data-lightbox
-  data-full={fullSrc}
-  data-full-width={fullWidth}
-  data-full-height={fullHeight}
+  data-full={full.src}
+  data-full-width={full.width}
+  data-full-height={full.height}
   data-alt={alt}
   data-plate={label}
 >
