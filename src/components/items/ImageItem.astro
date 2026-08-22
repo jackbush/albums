@@ -13,7 +13,15 @@ const label = String(plate).padStart(2, '0');
 
 // The container is 1100px wide with 40px of padding, so 1020px is the display width.
 const SIZES = '(min-width: 68.75rem) 1020px, calc(100vw - 3rem)';
-const WIDTHS = [550, 825, 1020, 1530, 2040];
+
+// Rungs are spaced ~1.4x so no viewport overshoots by much. 825 is the DPR-2 phone,
+// 1160 the DPR-3 phone (a 390px screen asks for 1026, which a 1020 rung would miss by
+// six pixels, bumping it to the next one up), 1020/2040 the column at 1x and 2x.
+const WIDTHS = [550, 825, 1160, 1600, 2040];
+
+// Caps `Picture`'s fallback <img>, which otherwise renders at the source's full size —
+// a 5MB frame from a 6000px original, plus an unreferenced avif and webp beside it.
+const FALLBACK = Math.min(src.width, 2040);
 
 const gif = isGif(src);
 const full = await fullPlate(src);
@@ -36,6 +44,7 @@ const full = await fullPlate(src);
         <Picture
           src={src}
           alt={alt}
+          width={FALLBACK}
           widths={WIDTHS}
           sizes={SIZES}
           formats={['avif', 'webp']}

@@ -11,6 +11,9 @@ const albums = getListedAlbums();
 const SIZES =
   '(min-width: 68.75rem) 490px, (min-width: 48rem) calc(50vw - 3.5rem), calc(100vw - 3rem)';
 const WIDTHS = [400, 490, 800, 980, 1600];
+
+// Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
+const FALLBACK = 1600;
 ---
 
 <BaseLayout title={site.title} description={site.description} image={site.cover}>
@@ -28,6 +31,7 @@ const WIDTHS = [400, 490, 800, 980, 1600];
                 class="entry__cover"
                 src={album.cover}
                 alt=""
+                width={Math.min(album.cover.width, FALLBACK)}
                 widths={WIDTHS}
                 sizes={SIZES}
                 formats={['avif', 'webp']}

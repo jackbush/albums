@@ -19,7 +19,9 @@ const range = labels.length > 1 ? `${labels[0]}–${labels[labels.length - 1]}` 
 // The content column is 1020px wide; frames in a row split it, less the gutters.
 const CONTENT = 1020;
 const GAP = 24;
-const WIDTHS = [250, 375, 500, 750, 1000, 1500];
+// Small rungs for a frame sharing a row on desktop, large ones for the same frame
+// running full width below 720px, where a DPR-3 phone asks for around 1030.
+const WIDTHS = [250, 375, 550, 825, 1160, 1530];
 
 const frames = await Promise.all(
   images.map(async (image, i) => ({
@@ -27,6 +29,8 @@ const frames = await Promise.all(
     label: labels[i],
     gif: isGif(image.src),
     full: await fullPlate(image.src),
+    // Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
+    fallback: Math.min(image.src.width, 1530),
     // Column widths in proportion to each frame's aspect ratio: the frames in a row
     // then land on a common height and fill it exactly, without any being cropped.
     ratio: image.src.width / image.src.height,
@@ -91,6 +95,7 @@ const rows = groupRows(frames.length).map((count, row, all) => {
                 <Picture
                   src={frame.src}
                   alt={frame.alt ?? ''}
+                  width={frame.fallback}
                   widths={WIDTHS}
                   sizes={frame.sizes}
                   formats={['avif', 'webp']}
