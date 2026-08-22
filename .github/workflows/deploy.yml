@@ -28,12 +28,19 @@ jobs:
 
       # Resized images are expensive to regenerate; keep them between runs. The path is
       # `cacheDir` from astro.config.mjs — it must sit outside node_modules, which `npm ci`
-      # deletes. Adding photos changes the key; restore-keys still reuses the previous
-      # run's cache, so only the new photos are processed.
+      # deletes.
+      #
+      # The key covers the photos *and* the code that decides which variants exist: the
+      # width ladders, formats and quality settings under src/, the image service in
+      # astro.config.mjs, and sharp's pinned version. On an exact key hit actions/cache
+      # skips the upload, so anything generated during that run is thrown away and
+      # regenerated on every run after it — a width ladder edit with no photo change
+      # would never be cached at all. restore-keys still seeds the new cache from the
+      # previous run, so only the variants that actually changed are processed.
       - uses: actions/cache@v4
         with:
           path: .astro-cache
-          key: astro-assets-${{ hashFiles('src/albums/**') }}
+          key: astro-assets-${{ hashFiles('src/**', 'astro.config.mjs', 'integrations/**', 'package-lock.json') }}
           restore-keys: astro-assets-
 
       - run: npm ci
