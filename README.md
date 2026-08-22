@@ -297,5 +297,3 @@ node -e "const sharp=require('sharp'),fs=require('fs');sharp(fs.readFileSync('pu
 - Manifests are plain ES modules, loaded by the build. They can hold comments, trailing
   commas and multi-line strings, but keep them to a plain exported object — no imports, no
   computed values.
-- Builds are slow in proportion to how many new full-size images you've added — resizing 24MP
-  files takes a while. Results are cached in `.astro/`, so rebuilds are fast.
