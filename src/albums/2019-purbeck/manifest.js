@@ -85,10 +85,10 @@ export default {
       src: './media/DSCF0808.jpg',
       alt: 'Coming up a pale gravel track between heather and gorse',
     },
-    {
-      type: 'image',
-      src: './media/DSCF0819.jpg',
-      alt: 'A pony alone in bleached grass in front of a stand of pines',
-    },
+    // {
+    //   type: 'image',
+    //   src: './media/DSCF0819.jpg',
+    //   alt: 'A pony alone in bleached grass in front of a stand of pines',
+    // },
   ],
 };
