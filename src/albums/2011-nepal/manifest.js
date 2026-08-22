@@ -42,23 +42,39 @@ export default {
     },
     {
       type: 'image',
+      src: './media/jb20111123kopan22.jpg',
+      alt: 'A row of pale stone shrines on a terrace, tall pines rising behind them',
+    },
+    {
+      type: 'image',
       src: './media/jb20111116kathamandu53.jpg',
       alt: 'Two orange-painted stone figures either side of a post, Ganesh on the left and a kneeling Hanuman on the right',
     },
     {
-      type: 'image',
-      src: './media/jb20111116kathamandu54.jpg',
-      alt: 'A whitewashed votive shrine with a lattice door and a weathered dome, against a pale sky',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111116kathamandu54.jpg',
+          alt: 'A whitewashed votive shrine with a lattice door and a weathered dome, against a pale sky',
+        },
+        {
+          src: './media/jb20111116kathamandu58.jpg',
+          alt: 'A brick shrine with a carved stone doorframe and a soot-dark dome, the valley dropping away behind',
+        },
+        {
+          src: './media/jb20111123kopan34.jpg',
+          alt: 'A grey stone shrine under a spreading tree, a shaft of sun coming through the branches',
+        },
+        {
+          src: './media/jb20111123kopan36.jpg',
+          alt: 'A shrine painted terracotta red with a blackened doorway and a dark dome above',
+        },
+      ],
     },
     {
       type: 'image',
       src: './media/jb20111116kathamandu57.jpg',
       alt: 'A hillside of stone shrines stepping up between trees, a path and steps running through them',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111116kathamandu58.jpg',
-      alt: 'A brick shrine with a carved stone doorframe and a soot-dark dome, the valley dropping away behind',
     },
     {
       type: 'image',
@@ -121,19 +137,22 @@ export default {
       alt: 'A brick gateway with a blue gate and a small white stupa behind, coloured bunting overhead',
     },
     {
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111120machhegaun155.jpg',
+          alt: 'A string of marigolds hung across a mossy stone water tank',
+        },
+        {
+          src: './media/jb20111120machhegaun165.jpg',
+          alt: 'A carved stone lingam on its round base, scattered with marigold heads and white petals',
+        },
+      ],
+    },
+    {
       type: 'image',
       src: './media/jb20111120machhegaun137.jpg',
       alt: 'The city spread flat across the valley floor in the haze, ridges layered behind it',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111120machhegaun155.jpg',
-      alt: 'A string of marigolds hung across a mossy stone water tank',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111120machhegaun165.jpg',
-      alt: 'A carved stone lingam on its round base, scattered with marigold heads and white petals',
     },
     {
       type: 'image',
@@ -160,14 +179,18 @@ export default {
       alt: 'Steep temple steps flanked by pairs of stone guardians, people climbing past in red and grey',
     },
     {
-      type: 'image',
-      src: './media/jb20111121kathamandu156.jpg',
-      alt: 'Men in topi hats processing through the square, one carrying a drum, another swinging a mallet',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111121kathamandu158.jpg',
-      alt: 'A man in a patterned topi playing a brass shehnai, cheeks full, crowd blurred behind him',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111121kathamandu156.jpg',
+          alt: 'Men in topi hats processing through the square, one carrying a drum, another swinging a mallet',
+        },
+        {
+          src: './media/jb20111121kathamandu158.jpg',
+          alt: 'A man in a patterned topi playing a brass shehnai, cheeks full, crowd blurred behind him',
+        },
+      ],
+      caption: 'A wedding band coming through the square.',
     },
     {
       type: 'image',
@@ -210,14 +233,17 @@ export default {
       alt: 'A hand setting light to an offering on a red-washed stone platform, flames going up pale in daylight',
     },
     {
-      type: 'image',
-      src: './media/jb20111123kopan5.jpg',
-      alt: 'A shrine completely swallowed by the roots of a great tree growing over it',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111123kopan11.jpg',
-      alt: 'The same tree from further back, the whole canopy above the roots and the shrine below',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111123kopan11.jpg',
+          alt: 'The same tree from further back, the whole canopy above the roots and the shrine below',
+        },
+        {
+          src: './media/jb20111123kopan5.jpg',
+          alt: 'A shrine completely swallowed by the roots of a great tree growing over it',
+        },
+      ],
     },
     {
       type: 'image',
@@ -228,21 +254,6 @@ export default {
       type: 'image',
       src: './media/jb20111123kopan21.jpg',
       alt: 'A shrine under a cliff hung with faded prayer flags, a white stupa and offering bowls in front',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111123kopan22.jpg',
-      alt: 'A row of pale stone shrines on a terrace, tall pines rising behind them',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111123kopan34.jpg',
-      alt: 'A grey stone shrine under a spreading tree, a shaft of sun coming through the branches',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111123kopan36.jpg',
-      alt: 'A shrine painted terracotta red with a blackened doorway and a dark dome above',
     },
     {
       type: 'image',

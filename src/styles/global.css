@@ -62,13 +62,8 @@ a {
   width: 100%;
   max-width: 1100px;
   margin-inline: auto;
+  /* One gutter across the site: the page edge and the gaps inside a group match. */
   padding-inline: 1.5rem;
-}
-
-@media (min-width: 48rem) {
-  .container {
-    padding-inline: 2.5rem;
-  }
 }
 
 .skip-link {

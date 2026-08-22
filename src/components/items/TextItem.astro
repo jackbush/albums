@@ -17,12 +17,31 @@ const paragraphs = text
 </div>
 
 <style>
+  /*
+   * A text block is a break in the sequence rather than a caption, so it runs large
+   * and centred, in a column narrower than the photographs either side of it.
+   */
   .prose {
-    max-width: 62ch;
+    --size: 2.125rem;
+    width: 66.6667%;
+    margin-inline: auto;
     color: var(--text-secondary);
+    font-size: var(--size);
+    /* Tight for the size: at 34px the body's 1.6 opens the lines up too far. */
+    line-height: 1.3;
+    text-align: center;
+    text-wrap: pretty;
   }
 
   .prose p + p {
     margin-top: 1em;
+  }
+
+  /* 768px: less room either side, so the column takes more of it at two thirds the size. */
+  @media (max-width: 48rem) {
+    .prose {
+      width: 80%;
+      font-size: calc(var(--size) * 2 / 3);
+    }
   }
 </style>

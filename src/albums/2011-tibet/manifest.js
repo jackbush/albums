@@ -14,17 +14,26 @@ export default {
     {
       type: 'image',
       src: './media/jb20111205potala2.jpg',
-      alt: 'The Potala Palace on its hill above an empty square, sky cloudless and deep blue',
+      alt: 'The Potala Palace on its hill above an empty square — the Dalai Lama’s winter palace, and still the spiritual centre of Tibet through fifty years of his exile',
     },
     {
       type: 'image',
       src: './media/jb20111205potala3.jpg',
-      alt: 'People walking past the monument on the square below the palace, into the low winter sun',
+      alt: 'The Chinese monument raised on the square directly opposite, a competing spire staring back at anyone looking out from the palace, people walking past it into the low winter sun',
     },
     {
-      type: 'image',
-      src: './media/jb20111206drepung.jpg',
-      alt: 'Black and white: juniper smoke rising by a white stupa below the monastery buildings',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111206drepung.jpg',
+          alt: 'Black and white: juniper smoke rising by a white stupa below the monastery buildings',
+        },
+        {
+          src: './media/jb20111209samye7.jpg',
+          alt: 'Black and white: incense smoke from a white burner between tall prayer poles by a monastery wall',
+        },
+      ],
+      caption: 'Juniper heaped into the burners outside the temples until the smoke stands over the walls — an offering that purifies the ground and carries the prayers up with it.',
     },
     {
       type: 'image',
@@ -49,11 +58,6 @@ export default {
       type: 'image',
       src: './media/jb20111208samye1.jpg',
       alt: 'A bare tree on the shore of a still blue river, dry mountains along the far side',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111209samye7.jpg',
-      alt: 'Black and white: incense smoke from a white burner between tall prayer poles by a monastery wall',
     },
     {
       type: 'image',
@@ -86,19 +90,22 @@ export default {
       alt: 'A flag on a pole over a whitewashed village house with a painted wooden door, power lines overhead',
     },
     {
-      type: 'image',
-      src: './media/jb20111213lhasa11.jpg',
-      alt: 'Cattle tied up in a whitewashed yard, one brown and shaggy, looking at the camera',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111213lhasa12.jpg',
-      alt: 'A parabolic solar cooker propped against a wall with a kettle at its focus',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111213lhasa17.jpg',
-      alt: 'Polythene greenhouses on dry ground below a bare mountain ridge',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111213lhasa11.jpg',
+          alt: 'Cattle tied up in a whitewashed yard, one brown and shaggy, looking at the camera',
+        },
+        {
+          src: './media/jb20111213lhasa12.jpg',
+          alt: 'A parabolic solar cooker propped against a wall with a kettle at its focus',
+        },
+        {
+          src: './media/jb20111213lhasa17.jpg',
+          alt: 'Polythene greenhouses on dry ground below a bare mountain ridge',
+        },
+      ],
+      caption: 'Village work: the cattle in the yard, a parabolic mirror trained on a kettle to keep the water off freezing, polytunnels on the dry ground below the ridge.',
     },
   ],
 };

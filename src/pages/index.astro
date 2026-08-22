@@ -7,10 +7,10 @@ import { url } from '../lib/site';
 const site = getSite();
 const albums = getListedAlbums();
 
-// Cards are half the 1020px column on desktop, full width below the 768px break.
+// Cards are half the 1052px column on desktop, full width below the 768px break.
 const SIZES =
-  '(min-width: 68.75rem) 490px, (min-width: 48rem) calc(50vw - 3.5rem), calc(100vw - 3rem)';
-const WIDTHS = [400, 490, 800, 980, 1600];
+  '(min-width: 68.75rem) 506px, (min-width: 48rem) calc(50vw - 2.75rem), calc(100vw - 3rem)';
+const WIDTHS = [400, 506, 800, 1012, 1600];
 
 // Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
 const FALLBACK = 1600;

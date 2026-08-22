@@ -16,9 +16,12 @@ const { images, caption, plate } = Astro.props;
 const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
 const range = labels.length > 1 ? `${labels[0]}–${labels[labels.length - 1]}` : labels[0];
 
-// The content column is 1020px wide; frames in a row split it, less the gutters.
-const CONTENT = 1020;
+// The content column is 1052px wide; frames in a row split it, less the gutters.
+const CONTENT = 1052;
+// The site gutter, which is also the page padding either side of the column: the
+// space between two frames and the space to the page edge are the same 1.5rem.
 const GAP = 24;
+const PADDING = '3rem';
 // Small rungs for a frame sharing a row on desktop, large ones for the same frame
 // running full width below 720px, where a DPR-3 phone asks for around 1030.
 const WIDTHS = [250, 375, 550, 825, 1160, 1530];
@@ -31,44 +34,70 @@ const frames = await Promise.all(
     full: await fullPlate(image.src),
     // Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
     fallback: Math.min(image.src.width, 1530),
-    // Column widths in proportion to each frame's aspect ratio: the frames in a row
+    // Frame widths in proportion to each frame's aspect ratio: the frames in a row
     // then land on a common height and fill it exactly, without any being cropped.
     ratio: image.src.width / image.src.height,
   })),
 );
 
-const rows = groupRows(frames.length).map((count, row, all) => {
-  const start = all.slice(0, row).reduce((n, c) => n + c, 0);
-  const inRow = frames.slice(start, start + count);
-  const total = inRow.reduce((sum, frame) => sum + frame.ratio, 0);
-  const available = CONTENT - GAP * (count - 1);
-  const gutters = `3rem + ${GAP * (count - 1)}px`;
+/**
+ * A frame's share of its row, and the gutters that row spends, under one set of row
+ * shapes. Keyed by frame index, alongside whether the row ends after that frame.
+ */
+function share(variant: 'wide' | 'narrow') {
+  const shares: { share: number; gaps: number; ends: boolean }[] = [];
 
-  return {
-    columns: inRow.map((frame) => `${frame.ratio}fr`).join(' '),
-    frames: inRow.map((frame) => {
-      const share = frame.ratio / total;
-      return {
-        ...frame,
-        // Below 720px every frame is full width, so that case comes first.
-        sizes: [
-          '(max-width: 719px) calc(100vw - 3rem)',
-          `(min-width: 68.75rem) ${Math.round(available * share)}px`,
-          `calc((100vw - (${gutters})) * ${share.toFixed(4)})`,
-        ].join(', '),
-      };
-    }),
-  };
-});
+  let start = 0;
+  for (const count of groupRows(frames.length, variant)) {
+    const inRow = frames.slice(start, start + count);
+    const total = inRow.reduce((sum, frame) => sum + frame.ratio, 0);
+    inRow.forEach((frame, i) => {
+      shares.push({
+        share: frame.ratio / total,
+        gaps: GAP * (count - 1),
+        ends: i === count - 1,
+      });
+    });
+    start += count;
+  }
+
+  return shares;
+}
+
+const wide = share('wide');
+const narrow = share('narrow');
+
+const laid = frames.map((frame, i) => ({
+  ...frame,
+  wide: wide[i],
+  narrow: narrow[i],
+  // A break after the last frame would only add an empty row.
+  breaks: {
+    wide: wide[i].ends && i < frames.length - 1,
+    narrow: narrow[i].ends && i < frames.length - 1,
+  },
+  sizes: [
+    `(max-width: 719px) calc((100vw - (${PADDING} + ${narrow[i].gaps}px)) * ${narrow[i].share.toFixed(4)})`,
+    `(min-width: 68.75rem) ${Math.round((CONTENT - wide[i].gaps) * wide[i].share)}px`,
+    `calc((100vw - (${PADDING} + ${wide[i].gaps}px)) * ${wide[i].share.toFixed(4)})`,
+  ].join(', '),
+  style: [
+    `--share-wide: ${wide[i].share.toFixed(4)}`,
+    `--gaps-wide: ${wide[i].gaps}px`,
+    `--share-narrow: ${narrow[i].share.toFixed(4)}`,
+    `--gaps-narrow: ${narrow[i].gaps}px`,
+  ].join('; '),
+}));
 ---
 
 <figure class="group">
-  {
-    rows.map((row) => (
-      <div class="group__row" style={`--columns: ${row.columns};`}>
-        {row.frames.map((frame) => (
+  <div class="group__frames">
+    {
+      laid.map((frame) => (
+        <>
           <div
             class="group__frame"
+            style={frame.style}
             data-lightbox
             data-full={frame.full.src}
             data-full-width={frame.full.width}
@@ -105,10 +134,12 @@ const rows = groupRows(frames.length).map((count, row, all) => {
               )}
             </button>
           </div>
-        ))}
-      </div>
-    ))
-  }
+          {frame.breaks.wide && <span class="group__break group__break--wide" aria-hidden="true" />}
+          {frame.breaks.narrow && <span class="group__break group__break--narrow" aria-hidden="true" />}
+        </>
+      ))
+    }
+  </div>
   <figcaption class="group__caption">
     <span class="meta group__no">{range}</span>
     {caption && <span class="meta group__text">{caption}</span>}
@@ -116,15 +147,36 @@ const rows = groupRows(frames.length).map((count, row, all) => {
 </figure>
 
 <style>
-  .group__row {
-    display: grid;
-    grid-template-columns: var(--columns);
-    gap: 1.5rem;
-    align-items: start;
+  /*
+   * One flow of frames rather than a div per row: the rows a phone wants aren't the
+   * rows a desktop wants, and the same frames can't sit in two sets of parents. A
+   * full-width, zero-height break element ends a row, and each breakpoint shows only
+   * its own breaks. Row spacing is two of the flex row-gaps — one either side of the
+   * break — so the row-gap is half the gutter, leaving rows and columns the same
+   * 1.5rem apart.
+   */
+  .group__frames {
+    --gutter: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--gutter) / 2) var(--gutter);
+    align-items: flex-start;
   }
 
-  .group__row + .group__row {
-    margin-top: 1.5rem;
+  .group__frame {
+    --share: var(--share-wide);
+    --gaps: var(--gaps-wide);
+    /* The half-pixel keeps rounding from pushing a row's last frame onto its own line. */
+    width: calc((100% - var(--gaps) - 0.5px) * var(--share));
+  }
+
+  .group__break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .group__break--narrow {
+    display: none;
   }
 
   .group__open {
@@ -161,15 +213,19 @@ const rows = groupRows(frames.length).map((count, row, all) => {
     font-weight: 400;
   }
 
-  /* On a phone the frames are too small side by side, so they stack full width. */
+  /* On a phone the rows run no more than two across. */
   @media (max-width: 719px) {
-    .group__row {
-      grid-template-columns: 1fr;
-      gap: 1.75rem;
+    .group__frame {
+      --share: var(--share-narrow);
+      --gaps: var(--gaps-narrow);
     }
 
-    .group__row + .group__row {
-      margin-top: 1.75rem;
+    .group__break--wide {
+      display: none;
+    }
+
+    .group__break--narrow {
+      display: block;
     }
   }
 </style>
