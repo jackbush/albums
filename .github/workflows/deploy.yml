@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -19,9 +20,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -37,7 +38,7 @@ jobs:
       # regenerated on every run after it — a width ladder edit with no photo change
       # would never be cached at all. restore-keys still seeds the new cache from the
       # previous run, so only the variants that actually changed are processed.
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .astro-cache
           key: astro-assets-${{ hashFiles('src/**', 'astro.config.mjs', 'integrations/**', 'package-lock.json') }}
@@ -46,10 +47,12 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      # v4 onward excludes dotfiles from the tarball; dist/.nojekyll is one of them.
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
+          include-hidden-files: true
 
   deploy:
     needs: build
@@ -59,4 +62,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
