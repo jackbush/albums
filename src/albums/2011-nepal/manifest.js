@@ -121,14 +121,17 @@ export default {
       alt: 'Long lines of prayer flags strung down a wooded hillside to a monastery below',
     },
     {
-      type: 'image',
-      src: './media/jb20111118kathamandu112.jpg',
-      alt: 'Looking up at the great white stupa, prayer flags radiating from the gilded spire across a blank sky',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111118kathamandu119.jpg',
-      alt: 'A monk in maroon walking the base of the stupa past a marigold-covered shrine',
+      type: 'group',
+      images: [
+        {
+          src: './media/jb20111118kathamandu112.jpg',
+          alt: 'Looking up at the great white stupa, prayer flags radiating from the gilded spire across a blank sky',
+        },
+        {
+          src: './media/jb20111118kathamandu119.jpg',
+          alt: 'A monk in maroon walking the base of the stupa past a marigold-covered shrine',
+        },
+      ],
     },
     {
       type: 'image',

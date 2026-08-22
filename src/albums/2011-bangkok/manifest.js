@@ -8,8 +8,13 @@ export default {
   items: [
     {
       type: 'image',
-      src: './media/jb20111112bangkok4.jpg',
-      alt: 'A temple hall lit from a doorway behind the standing gold Buddha, murals over every wall',
+      src: './media/jb20111114bangkok63.jpg',
+      alt: 'The city and its waterways seen from a plane window just after take-off, wing across the frame',
+    },
+    {
+      type: 'image',
+      src: './media/jb20111112bangkok12.jpg',
+      alt: 'A small white and gold shrine set back in dense palms, seated Buddha inside',
     },
     {
       type: 'image',
@@ -18,8 +23,8 @@ export default {
     },
     {
       type: 'image',
-      src: './media/jb20111112bangkok12.jpg',
-      alt: 'A small white and gold shrine set back in dense palms, seated Buddha inside',
+      src: './media/jb20111112bangkok4.jpg',
+      alt: 'A temple hall lit from a doorway behind the standing gold Buddha, murals over every wall',
     },
     {
       type: 'text',
@@ -97,15 +102,6 @@ export default {
       type: 'image',
       src: './media/jb20111113bangkok54.jpg',
       alt: 'A Chinese stone guardian with a long beard and a halberd, standing under a tree',
-    },
-    {
-      type: 'text',
-      text: 'Out again on the third morning, up over the delta with the whole flat green sprawl of it below.',
-    },
-    {
-      type: 'image',
-      src: './media/jb20111114bangkok63.jpg',
-      alt: 'The city and its waterways seen from a plane window just after take-off, wing across the frame',
     },
     {
       type: 'image',
