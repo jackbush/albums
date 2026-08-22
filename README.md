@@ -231,8 +231,6 @@ Optional. Every key is optional; anything you leave out keeps the default.
 | `fontBody` | IBM Plex Sans |
 | `fontHeading` | IBM Plex Serif |
 
-Any CSS colour works — hex, `rgb()`, named colours.
-
 Fonts are **Google Fonts family names**, spelled as Google spells them: `'Fraunces'`,
 `'Space Grotesk'`, `'EB Garamond'`. The two IBM Plex defaults ship with the site, so the
 common case makes no external request; naming any other family adds a Google Fonts link to
