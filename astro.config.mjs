@@ -7,6 +7,10 @@ export default defineConfig({
   site: 'https://jackbush.github.io',
   base: '/albums/',
   trailingSlash: 'always',
+  // Outside node_modules so `npm ci` — and the CI cache step — can keep it. Holds every
+  // generated image variant; regenerating them all takes minutes, restoring takes seconds.
+  cacheDir: './.astro-cache',
+
   build: {
     // Emit `about/index.html` rather than `about.html` so paths work under `base`.
     format: 'directory',

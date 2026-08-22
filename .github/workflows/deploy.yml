@@ -26,10 +26,13 @@ jobs:
           node-version: 20
           cache: npm
 
-      # Resized images are expensive to regenerate; keep them between runs.
+      # Resized images are expensive to regenerate; keep them between runs. The path is
+      # `cacheDir` from astro.config.mjs — it must sit outside node_modules, which `npm ci`
+      # deletes. Adding photos changes the key; restore-keys still reuses the previous
+      # run's cache, so only the new photos are processed.
       - uses: actions/cache@v4
         with:
-          path: .astro
+          path: .astro-cache
           key: astro-assets-${{ hashFiles('src/albums/**') }}
           restore-keys: astro-assets-
 
