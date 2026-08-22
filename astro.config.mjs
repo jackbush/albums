@@ -27,6 +27,11 @@ export default defineConfig({
   },
   vite: {
     build: {
+      // Vite 8 minifies CSS with Lightning CSS, which rewrites to whatever the target
+      // allows — untargeted it emits media range syntax (`(width<=48rem)`), which
+      // Safari only understands from 16.4. Naming a floor keeps the media queries in
+      // the `max-width` form every browser that can render the rest of the site reads.
+      cssTarget: ['chrome100', 'safari15', 'firefox100'],
       // Never inline video as a data: URI — it defeats range requests, so the
       // browser can't seek and has to download the whole clip before playing.
       assetsInlineLimit: (file) => (/\.(mp4|webm|mov)$/i.test(file) ? false : undefined),

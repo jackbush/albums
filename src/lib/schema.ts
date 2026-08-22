@@ -74,7 +74,7 @@ export const albumManifestSchema = z
               type: z.literal('quote'),
               text: z.string().trim().min(1),
               attribution: z.string().trim().min(1).optional(),
-              attributionLink: z.string().url().optional(),
+              attributionLink: z.url().optional(),
             })
             .strict(),
           z
