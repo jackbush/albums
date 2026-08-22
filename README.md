@@ -49,12 +49,9 @@ export default {
 };
 ```
 
-- A slug here with no matching folder is a **build error** — it's a typo, and silently dropping
-  it would hide a post without telling you.
+- A slug here with no matching folder is a **build error**.
 - A folder that isn't listed just doesn't appear on the home page. You get a build warning, and
-  **its page still builds at its own URL**. That's how drafts work: leave an album out of the list
-  while you're putting it together, preview it directly, then add it when it's ready.
-  (Unlinked isn't private — the files still ship.)
+  **its page still builds at its own URL**. Useful for private/draft albums.
 
 ---
 
@@ -86,10 +83,6 @@ export default {
 underline a bad field as you type, before you ever run a build. Copy it into every new manifest,
 adjusting `../../` if your file sits at a different depth.
 
-Manifests are JavaScript rather than JSON so you can **comment blocks in and out** while you're
-putting a post together. Plates renumber themselves, so commenting out an image doesn't leave a
-gap in the sequence.
-
 | Field | Required | Notes |
 | --- | --- | --- |
 | `title` | yes | Shown on the index and as the page heading. |
@@ -99,8 +92,6 @@ gap in the sequence.
 | `items` | yes | The post itself, rendered in order. At least one. |
 | `theme` | no | Per-post colour and font overrides. See below. |
 
-There's no `slug` (the folder name is the slug) and no sort field (`index.js` sets the order).
-
 ### Media paths
 
 **Every media path is relative to the manifest** and must start with `./`:
@@ -109,15 +100,7 @@ There's no `slug` (the folder name is the slug) and no sort field (`index.js` se
 src: './media/DSCF0678.jpg'
 ```
 
-This isn't a style preference. It's what lets the build find each file, read its real
-dimensions, and generate resized versions. An absolute path like `/DSCF0678.jpg` skips all of
-that, so the schema rejects it.
-
 Supported: **jpg**, **png**, **gif** for images; **mp4**, **webm**, **mov** for video.
-
-Unknown fields are rejected, so a typo like `atribution` fails the build rather than being
-silently ignored. Errors name the file and the exact field, e.g. `items.7: Unrecognized key(s)
-in object: 'atribution'`.
 
 ---
 
@@ -309,21 +292,6 @@ node -e "const sharp=require('sharp'),fs=require('fs');sharp(fs.readFileSync('pu
 
 ---
 
-## Deploying to GitHub Pages
-
-Published at **https://jackbush.github.io/albums/**.
-
-1. The GitHub repo must be named `albums` — `base` in `astro.config.mjs` is `/albums/` and the
-   two have to match exactly, or every asset 404s.
-2. In the repo's **Settings → Pages**, set **Source** to **GitHub Actions**.
-3. Push to `main`. [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds and
-   publishes.
-
-Full-size photographs are committed to the repo, so it will get large. If that becomes a
-problem, look at Git LFS before it does.
-
----
-
 ## Notes
 
 - Manifests are plain ES modules, loaded by the build. They can hold comments, trailing
@@ -331,5 +299,3 @@ problem, look at Git LFS before it does.
   computed values.
 - Builds are slow in proportion to how many new full-size images you've added — resizing 24MP
   files takes a while. Results are cached in `.astro/`, so rebuilds are fast.
-- The Purbeck post's `text` blocks are placeholder copy written from the photographs. Replace
-  them with the real thing.
