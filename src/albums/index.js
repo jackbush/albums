@@ -23,6 +23,7 @@ export default {
 
   posts: [
     '2019-purbeck',
+    '2015-india',
     '2013-iceland',
     '2011-tibet',
     '2011-nepal',
