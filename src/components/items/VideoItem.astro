@@ -17,7 +17,7 @@ interface Props {
 const { src: source, poster, alt, loop, muted, autoplay, block } = Astro.props;
 const marker = blockMarker(block);
 
-const posterImage = poster ? await getImage({ src: poster, width: 1530, format: 'webp' }) : null;
+const posterImage = poster ? await getImage({ src: poster, width: 1650, format: 'webp' }) : null;
 
 // Browsers refuse to autoplay with sound, so autoplay implies muted rather than
 // silently doing nothing. An autoplaying loop is ambient, so it loses its controls.

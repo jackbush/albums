@@ -21,19 +21,20 @@ const { images, caption, hero, plate, block } = Astro.props;
 const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
 const marker = blockMarker(block);
 
-// The content column is 1052px wide; frames in a row split it, less the gutters.
-const CONTENT = 1052;
+// The content column is 1168px wide; frames in a row split it, less the gutters.
+const CONTENT = 1168;
 // The site gutter, which is also the page padding either side of the column: the
 // space between two frames and the space to the page edge are the same 1rem.
 const GAP = 16;
 const PADDING = '2rem';
 // Small rungs for a frame sharing a row on desktop, large ones for the same frame
-// running full width below 720px, where a DPR-3 phone asks for around 1030.
-const WIDTHS = [250, 375, 550, 825, 1160, 1530];
+// running full width below 720px, where a DPR-3 phone asks for around 1074. 380 is a
+// frame in a row of three at 1x, 580 a row of two, 830 and 1180 the same two at 2x.
+const WIDTHS = [250, 380, 580, 830, 1180, 1650];
 
 // A hero frame holds the full column at every width, so it takes the rungs a lone
 // plate takes — up to the column at 2x. See ImageItem.
-const HERO_WIDTHS = [550, 825, 1160, 1600, 2104];
+const HERO_WIDTHS = [560, 830, 1180, 1650, 2336];
 
 const frames = await Promise.all(
   images.map(async (image, i) => ({
@@ -43,7 +44,7 @@ const frames = await Promise.all(
     full: await fullPlate(image.src),
     widths: hero && i === 0 ? HERO_WIDTHS : WIDTHS,
     // Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
-    fallback: Math.min(image.src.width, hero && i === 0 ? 2104 : 1530),
+    fallback: Math.min(image.src.width, hero && i === 0 ? 2336 : 1650),
     // Frame widths in proportion to each frame's aspect ratio: the frames in a row
     // then land on a common height and fill it exactly, without any being cropped.
     ratio: image.src.width / image.src.height,
@@ -88,7 +89,7 @@ const laid = frames.map((frame, i) => ({
   },
   sizes: [
     `(max-width: 719px) calc((100vw - (${PADDING} + ${narrow[i].gaps}px)) * ${narrow[i].share.toFixed(4)})`,
-    `(min-width: 67.75rem) ${Math.round((CONTENT - wide[i].gaps) * wide[i].share)}px`,
+    `(min-width: 75rem) ${Math.round((CONTENT - wide[i].gaps) * wide[i].share)}px`,
     `calc((100vw - (${PADDING} + ${wide[i].gaps}px)) * ${wide[i].share.toFixed(4)})`,
   ].join(', '),
   style: [

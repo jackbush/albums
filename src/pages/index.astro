@@ -7,13 +7,16 @@ import { url } from '../lib/site';
 const site = getSite();
 const albums = getListedAlbums();
 
-// Cards are half the 1052px column on desktop, full width below the 768px break.
+// Cards are half the 1168px column on desktop, full width below the 768px break.
+// The gap between them is the site gutter, so a card is (1168 - 16) / 2.
 const SIZES =
-  '(min-width: 67.75rem) 506px, (min-width: 48rem) calc(50vw - 2.25rem), calc(100vw - 2rem)';
-const WIDTHS = [400, 506, 800, 1012, 1600];
+  '(min-width: 75rem) 576px, (min-width: 48rem) calc(50vw - 1.5rem), calc(100vw - 2rem)';
+// 580 the card at 1x, 1180 at 2x — which also covers a DPR-3 phone on a full-width
+// card. Shares its rungs with the plate ladders, so a cover used in both is cut once.
+const WIDTHS = [400, 580, 830, 1180, 1650];
 
 // Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
-const FALLBACK = 1600;
+const FALLBACK = 1650;
 ---
 
 <BaseLayout title={site.title} description={site.description} image={site.cover}>
@@ -60,7 +63,10 @@ const FALLBACK = 1600;
   .register {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 4rem 2.5rem;
+    /* The column gap is the site gutter, the same 1rem that separates two frames
+       inside a group. The row gap stays wide — a card carries a title and a blurb
+       under it, so the rows need more air than the columns. */
+    gap: 4rem 1rem;
     padding-bottom: 6rem;
   }
 

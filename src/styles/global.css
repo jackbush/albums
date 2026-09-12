@@ -61,11 +61,11 @@ a {
 .container {
   width: 100%;
   /*
-   * 1084 = the 1052px content column plus a gutter either side. The column is what the
+   * 1200 = a 1168px content column plus a gutter either side. The column is what the
    * image width ladders are cut to, so the max-width moves with the gutter to hold it
    * steady: narrowing the gutter widens the page edge, not the photographs.
    */
-  max-width: 1084px;
+  max-width: 1200px;
   margin-inline: auto;
   /* One gutter across the site: the page edge and the gaps inside a group match. */
   padding-inline: 1rem;
