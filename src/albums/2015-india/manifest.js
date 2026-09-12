@@ -1,52 +1,35 @@
 /** @type {import('../../lib/schema').AlbumManifest} */
 export default {
-  title: 'Mumbai to Delhi, the Long Way',
+  title: 'Mumbai to Delhi',
   description:
-    'Three weeks of trains, night buses and shared jeeps across Rajasthan, in the dry autumn light, arriving in Udaipur the week of Diwali.',
+    'Three weeks of trains, night buses and jeeps across Rajasthan in the dry autumn light.',
   date: 'November 2015',
-  cover: './media/_JB16705.jpg',
+  cover: './media/_JB16368.jpg',
 
   items: [
     {
-      type: 'text',
-      text: 'Landing in Mumbai and staying in Colaba, which is the wrong place to start if you want to be eased into anything. Everything is louder and closer than you expect, and then it is dark by six.',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16072.jpg',
-      alt: 'A market crowd moving under a blue tenement wall hung with bank signs and a hoarding for Pinge’s Tuition Classes, vegetables heaped on the pavement',
-    },
-    {
       type: 'group',
+      hero: true,
       images: [
         {
           src: './media/_JB16078.jpg',
           alt: 'From the back seat of a taxi, the driver in silhouette against a bright street of parked cars and handcarts',
         },
         {
-          src: './media/_JB16092.jpg',
-          alt: 'A dry fruit stall at night strung with bulbs and pink tinsel, two people sitting on the kerb below it',
+          src: './media/_JB16131.jpg',
+          alt: 'The Taj hotel across an empty plaza with pigeons turning in the air above it, a family of four standing in the foreground',
         },
-        {
-          src: './media/_JB16101.jpg',
-          alt: 'Two lit glass cabinets of sweets and pastries glowing out of an otherwise black shopfront',
-        },
-      ],
-      caption: 'Colaba after dark — the light comes almost entirely from what people are selling.',
-    },
-    {
-      type: 'group',
-      images: [
         {
           src: './media/_JB16130.jpg',
           alt: 'The Gateway of India under flat grey cloud, a scatter of people small along its base',
         },
-        {
-          src: './media/_JB16131.jpg',
-          alt: 'The Taj hotel across an empty plaza with pigeons turning in the air above it, a family of four standing in the foreground',
-        },
       ],
-      caption: 'The waterfront early, before the heat and the hawkers arrive.',
+      caption: 'Arriving in Colaba, where the air is full of corrander and the architecture is full of colonial legacy.',
+    },
+    {
+      type: 'image',
+      src: './media/_JB16101.jpg',
+      alt: 'Shantaram pilgrimage to Cafe Leopold.',
     },
     {
       type: 'group',
@@ -56,23 +39,33 @@ export default {
           alt: 'A concrete clock tower on a curved balcony above worn steps, deep in green shade, one person sitting alone underneath',
         },
         {
+          src: './media/_JB16072.jpg',
+          alt: 'Busy early morning markets with fresh vegetables and herbs.',
+        },
+        {
           src: './media/_JB16164.jpg',
           alt: 'A drummer in a white jacket on a roadside beside his decorated bull, both looking straight into the camera',
         },
+        {
+          src: './media/_JB16092.jpg',
+          alt: 'Closed fruit stand by night, with people sleeping outside.',
+        },
       ],
+      // caption: 'Walking around Mumbai',
     },
+
     {
       type: 'text',
-      text: 'A night train north-east to Udaipur, which turns out to be a city built entirely around the reflection of itself. We got there four days before Diwali, without really planning it.',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16228.jpg',
-      alt: 'A swimmer alone in the lake seen past a ghat railing, white havelis lining the far bank',
+      text: 'Across to Udaipur, a city built around its own reflection, for Diwali.',
     },
     {
       type: 'group',
+      hero: true,
       images: [
+        {
+          src: './media/_JB16228.jpg',
+          alt: 'A swimmer bathing in the lake',
+        },
         {
           src: './media/_JB16229.jpg',
           alt: 'The base of an old tree growing through the paving, trunk smeared with red pigment, a small white shrine tucked into its roots',
@@ -82,100 +75,85 @@ export default {
           alt: 'Looking up the same trunk to a carved sandstone temple spire against a blue-painted wall',
         },
       ],
-      caption: 'Trees left standing where they stood and the street built around them, then given a shrine.',
+      caption: 'A shrine by the lake, where people also come to meet and bathe.',
     },
     {
-      type: 'image',
-      src: './media/_JB16231.jpg',
-      alt: 'A tiered white gateway with balconies and arched openings, people passing through the arches below into the bazaar',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16234.jpg',
-      alt: 'A woman cooking on the pavement outside a bright blue house, scooter parked beside a red gate, marigold garlands over the doors',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16258.jpg',
-      alt: 'The Lake Palace sitting low and white on flat water, pale hills behind it in the haze',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16274.jpg',
-      alt: 'Sunset from a rooftop over the town, water tanks and cupolas in silhouette against a pink and violet sky',
+      type: 'group',
+      images: [
+        {
+          src: './media/_JB16234.jpg',
+          alt: 'A woman cooking on the pavement outside a bright blue house, scooter parked beside a red gate, marigold garlands over the doors',
+        },
+        {
+          src: './media/_JB16231.jpg',
+          alt: 'A tiered white gateway with balconies and arched openings, people passing through the arches below into the bazaar',
+        },
+        {
+          src: './media/_JB16571.jpg',
+          alt: 'Looking out from a shaded temple porch to the water, orange flags on the ghat and scooters parked across the flagstones',
+        },
+      ],
+      caption: 'test',
     },
     {
       type: 'text',
-      text: 'Then Diwali, and the whole city switches on at once — strings of bulbs across every lane, firecrackers going off underfoot for three days straight.',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16303.jpg',
-      alt: 'The Lake Palace lit gold at night, its reflection running the full depth of the black water',
+      text: 'The festival of light begins as the sun sets. Fairy lights across every lane, firecrackers going off every few seconds.',
     },
     {
       type: 'group',
-      images: [
-        {
-          src: './media/_JB16314.jpg',
-          alt: 'A crowd gathered outside a lit travel agency at night, a motorbike headlight coming through them',
-        },
-        {
-          src: './media/_JB16320.jpg',
-          alt: 'A narrow lane roofed over with fairy lights and red drapes, figures moving away into the dark',
-        },
-        {
-          src: './media/_JB16327.jpg',
-          alt: 'A busy street strung end to end with orange bulbs, women in saris walking towards the camera',
-        },
-      ],
-      caption: 'Every lane in the old town wired overhead for the week.',
-    },
-    {
-      type: 'image',
-      src: './media/_JB16330.jpg',
-      alt: 'Two women sitting on a step in front of a green door, one in cream and one in red, a rack of souvenirs beside them',
-    },
-    {
-      type: 'group',
-      images: [
-        {
-          src: './media/_JB16331.jpg',
-          alt: 'Looking down from a balcony on a street lit blue and white, chandeliers hung outside a jeweller’s',
-        },
-        {
-          src: './media/_JB16336.jpg',
-          alt: 'A temple entrance packed with people under heavy marigold garlands and cut-glass lamps, a policeman at the edge of the crowd',
-        },
-      ],
-    },
-    {
-      type: 'group',
+      hero: true,
       images: [
         {
           src: './media/_JB16344.jpg',
           alt: 'A wide street under converging lines of lights, a pandal tent glowing green at the far end',
         },
         {
-          src: './media/_JB16351.jpg',
-          alt: 'A man stepping back from fireworks burning on the ground, the whole frame lit red',
+          src: './media/_JB16327.jpg',
+          alt: 'A busy street strung end to end with orange bulbs, women in saris walking towards the camera',
+        },
+        {
+          src: './media/_JB16331.jpg',
+          alt: 'Looking down from a balcony on a street lit blue and white, chandeliers hung outside a jeweller’s',
         },
       ],
     },
     {
       type: 'image',
-      src: './media/_JB16358.jpg',
-      alt: 'Two boys holding sparklers at arm’s length in a doorway, faces lit hard from below',
+      src: './media/_JB16336.jpg',
+      alt: 'A temple entrance packed with people under heavy marigold garlands and cut-glass lamps, a policeman at the edge of the crowd',
     },
     {
-      type: 'image',
-      src: './media/_JB16366.jpg',
-      alt: 'A small fire burning in the mouth of a dark roadside shrine, everything else in shadow',
+      type: 'group',
+      // hero: true,
+      images:
+        [
+          {
+            src: './media/_JB16358.jpg',
+            alt: 'Two boys holding sparklers at arm’s length in a doorway, faces lit hard from below',
+          },
+          {
+            src: './media/_JB16330.jpg',
+            alt: 'Two women sitting on a step in front of a green door, one in cream and one in red, a rack of souvenirs beside them',
+          },
+          {
+            src: './media/_JB16351.jpg',
+            alt: 'A man stepping back from fireworks burning on the ground, the whole frame lit red',
+          },
+          {
+            src: './media/_JB16314.jpg',
+            alt: 'A crowd gathered outside a lit travel agency at night, a motorbike headlight coming through them',
+          },
+        ],
     },
     {
       type: 'image',
       src: './media/_JB16368.jpg',
-      alt: 'The Lake Palace at first light, everything blue — water, hills and sky the same shade, a boat entering from the right',
+      alt: 'The Lake Palace at first light',
+    },
+    {
+      type: 'image',
+      src: './media/_JB16498.jpg',
+      alt: 'A low colonnaded building standing straight out of the lake, a tree leaning over its roof',
     },
     {
       type: 'group',
@@ -192,21 +170,8 @@ export default {
       caption: 'Jagdish Temple, still busy from the festival.',
     },
     {
-      type: 'group',
-      images: [
-        {
-          src: './media/_JB16498.jpg',
-          alt: 'A low colonnaded building standing straight out of the lake, a tree leaning over its roof',
-        },
-        {
-          src: './media/_JB16571.jpg',
-          alt: 'Looking out from a shaded temple porch to the water, orange flags on the ghat and scooters parked across the flagstones',
-        },
-      ],
-    },
-    {
       type: 'text',
-      text: 'West into the desert, to Jaisalmer, where the whole town is cut from the same yellow stone and the fort is still lived in.',
+      text: 'West into the desert, to Jaisalmer.',
     },
     {
       type: 'group',
