@@ -14,7 +14,7 @@ const ROWS: Record<number, number[]> = {
   3: [3],
   4: [2, 2],
   5: [3, 2],
-  6: [3, 3],
+  6: [2, 2, 2],
 };
 
 const NARROW_ROWS: Record<number, number[]> = {

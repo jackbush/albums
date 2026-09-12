@@ -153,7 +153,7 @@ chooses them:
 | 3 | 3 |
 | 4 | 2 + 2 |
 | 5 | 3 + 2 |
-| 6 | 3 + 3 |
+| 6 | 2 + 2 + 2 |
 
 With `hero: true` the first image takes the full column width on its own — the same width a
 standalone `image` block gets — and the images after it fall into the rows for one fewer frame:
