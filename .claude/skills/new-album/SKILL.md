@@ -70,7 +70,8 @@ Item types: `image` (`src`, `alt`), `group`, `video`, `quote`, `text`. Optional 
 ```
 
 Rows follow the count: 2 → 2, 3 → 3, 4 → 2+2, 5 → 3+2, 6 → 3+3. Frames keep the album's file
-order. Field notes in `README.md` under "Block types".
+order. Optional `hero: true` gives the first frame a full-width row of its own and re-rows the
+rest: 3 → 1+2, 4 → 1+3, 5 → 1+2+2, 6 → 1+3+2. Field notes in `README.md` under "Block types".
 
 **Voice** — match the existing manifests, they set the house style:
 

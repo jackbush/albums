@@ -25,8 +25,20 @@ const NARROW_ROWS: Record<number, number[]> = {
   6: [2, 2, 2],
 };
 
-/** Frames per row, in order, for a group of `count` frames. */
-export function groupRows(count: number, variant: 'wide' | 'narrow' = 'wide'): number[] {
+/**
+ * Frames per row, in order, for a group of `count` frames.
+ *
+ * With `hero` set, the first frame takes a row of its own at every width and the
+ * rest fall into the shapes for one fewer frame — a hero group of four reads as one
+ * full-width plate above a band of three.
+ */
+export function groupRows(
+  count: number,
+  variant: 'wide' | 'narrow' = 'wide',
+  hero = false,
+): number[] {
+  if (hero) return [1, ...(count > 1 ? groupRows(count - 1, variant) : [])];
+
   const shapes = variant === 'narrow' ? NARROW_ROWS : ROWS;
   return shapes[count] ?? [count];
 }

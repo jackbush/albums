@@ -8,13 +8,15 @@ import { blockMarker } from '../../lib/dev';
 interface Props {
   images: GroupImage[];
   caption?: string;
+  /** Gives the first frame a full-width row of its own, at every width. */
+  hero: boolean;
   /** Plate number of the first frame; the rest follow in order. */
   plate: number;
   /** Position in the manifest, shown only by the dev server. */
   block: number;
 }
 
-const { images, caption, plate, block } = Astro.props;
+const { images, caption, hero, plate, block } = Astro.props;
 
 const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
 const marker = blockMarker(block);
@@ -29,14 +31,19 @@ const PADDING = '2rem';
 // running full width below 720px, where a DPR-3 phone asks for around 1030.
 const WIDTHS = [250, 375, 550, 825, 1160, 1530];
 
+// A hero frame holds the full column at every width, so it takes the rungs a lone
+// plate takes — up to the column at 2x. See ImageItem.
+const HERO_WIDTHS = [550, 825, 1160, 1600, 2104];
+
 const frames = await Promise.all(
   images.map(async (image, i) => ({
     ...image,
     label: labels[i],
     gif: isGif(image.src),
     full: await fullPlate(image.src),
+    widths: hero && i === 0 ? HERO_WIDTHS : WIDTHS,
     // Caps `Picture`'s fallback <img> at the widest rung — see ImageItem.
-    fallback: Math.min(image.src.width, 1530),
+    fallback: Math.min(image.src.width, hero && i === 0 ? 2104 : 1530),
     // Frame widths in proportion to each frame's aspect ratio: the frames in a row
     // then land on a common height and fill it exactly, without any being cropped.
     ratio: image.src.width / image.src.height,
@@ -51,7 +58,7 @@ function share(variant: 'wide' | 'narrow') {
   const shares: { share: number; gaps: number; ends: boolean }[] = [];
 
   let start = 0;
-  for (const count of groupRows(frames.length, variant)) {
+  for (const count of groupRows(frames.length, variant, hero)) {
     const inRow = frames.slice(start, start + count);
     const total = inRow.reduce((sum, frame) => sum + frame.ratio, 0);
     inRow.forEach((frame, i) => {
@@ -128,7 +135,7 @@ const laid = frames.map((frame, i) => ({
                   src={frame.src}
                   alt={frame.alt ?? ''}
                   width={frame.fallback}
-                  widths={WIDTHS}
+                  widths={frame.widths}
                   sizes={frame.sizes}
                   formats={['avif', 'webp']}
                   loading="lazy"

@@ -142,6 +142,7 @@ flatten it to one frame. So export GIFs at the size you want them, around 1000px
 | --- | --- | --- |
 | `images` | yes | Two to six. Each takes a `src` and its own `alt`. |
 | `caption` | no | One line under the whole group, in place of the per-image alt. |
+| `hero` | no | `false`. Gives the first image a full-width row of its own. |
 
 Several photographs laid out as rows. The count fixes the rows — nothing in the manifest
 chooses them:
@@ -153,6 +154,17 @@ chooses them:
 | 4 | 2 + 2 |
 | 5 | 3 + 2 |
 | 6 | 3 + 3 |
+
+With `hero: true` the first image takes the full column width on its own — the same width a
+standalone `image` block gets — and the images after it fall into the rows for one fewer frame:
+
+| Images | Rows with `hero` |
+| --- | --- |
+| 2 | 1 + 1 |
+| 3 | 1 + 2 |
+| 4 | 1 + 3 |
+| 5 | 1 + 2 + 2 |
+| 6 | 1 + 3 + 2 |
 
 Within a row, widths are set in proportion to each frame's aspect ratio, so the frames land on
 a common height and fill the column exactly, uncropped — any mix of portrait and landscape

@@ -56,6 +56,8 @@ export const albumManifestSchema = z
               images: z.array(groupImage).min(2).max(6),
               /** Shown once, under the whole group — each frame keeps its own `alt`. */
               caption: z.string().trim().min(1).optional(),
+              /** Gives the first frame a full-width row of its own, at every width. */
+              hero: z.boolean().default(false),
             })
             .strict(),
           z
@@ -134,6 +136,7 @@ export type Item =
       type: 'group';
       images: GroupImage[];
       caption?: string;
+      hero: boolean;
     }
   | {
       type: 'video';
