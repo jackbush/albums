@@ -291,8 +291,9 @@ tags. Share images are cropped to 1200×630 at build time, whatever the source s
 
 ## Favicon
 
-[`public/favicon.svg`](public/favicon.svg) — a minimal camera outline on a white circle —
-is linked from every page, along with `public/apple-touch-icon.png` for iOS home screens.
+[`public/favicon.svg`](public/favicon.svg) — the Phosphor `camera` icon, fill variant, black on
+a white rounded square — is linked from every page, along with `public/apple-touch-icon.png`
+for iOS home screens.
 
 The PNG is generated from the SVG, so if you edit the SVG, regenerate it:
 
