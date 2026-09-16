@@ -19,6 +19,11 @@ const MANIFESTS = import.meta.glob<{ default: unknown }>('/src/albums/*/manifest
   eager: true,
 });
 
+/** `caption: false` is a slot waiting to be filled, so it renders as no caption at all. */
+function written(caption: string | false | undefined): string | undefined {
+  return caption || undefined;
+}
+
 /**
  * Validates one manifest and resolves its media paths to real assets.
  *
@@ -36,7 +41,7 @@ function loadAlbum(slug: string, module: { default: unknown }): Album {
   const items: Item[] = data.items.map((item) => {
     switch (item.type) {
       case 'image':
-        return { ...item, src: resolveImage(slug, item.src) };
+        return { ...item, src: resolveImage(slug, item.src), caption: written(item.caption) };
       case 'group':
         return {
           ...item,
@@ -44,6 +49,7 @@ function loadAlbum(slug: string, module: { default: unknown }): Album {
             ...image,
             src: resolveImage(slug, image.src),
           })),
+          caption: written(item.caption),
         };
       case 'video':
         return {

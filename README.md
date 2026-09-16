@@ -109,13 +109,23 @@ Supported: **jpg**, **png**, **gif** for images; **mp4**, **webm**, **mov** for 
 ### `image`
 
 ```js
-{ type: 'image', src: './media/cliffs.jpg', alt: 'The chalk cliff at Old Harry' }
+{
+  type: 'image',
+  src: './media/cliffs.jpg',
+  alt: 'The chalk cliff at Old Harry, white against a grey sea',
+  caption: 'Old Harry, an hour before the rain.',
+}
 ```
 
 | Field | Required | Notes |
 | --- | --- | --- |
 | `src` | yes | Path relative to the manifest. |
-| `alt` | no | Description for screen readers, also shown beside the plate number. Worth writing. |
+| `alt` | no | Description for screen readers and the full-screen viewer. Never printed on the page. |
+| `caption` | no | The line under the plate. `false` means "not written yet" — same as leaving it out, but keeps the slot. |
+
+`alt` and `caption` do different jobs: `alt` describes what is in the frame for someone who
+can't see it, `caption` says the thing worth saying to someone who can. Write both, or write
+neither — they aren't substitutes and neither falls back to the other.
 
 Fills the column width. Click to open full screen. Images are numbered as **plates** — the
 number under each image is the same number the full-screen viewer shows, and the count on the
@@ -141,7 +151,7 @@ flatten it to one frame. So export GIFs at the size you want them, around 1000px
 | Field | Required | Notes |
 | --- | --- | --- |
 | `images` | yes | Two to six. Each takes a `src` and its own `alt`. |
-| `caption` | no | One line under the whole group, in place of the per-image alt. |
+| `caption` | no | One line under the whole group. `false` means "not written yet". |
 | `hero` | no | `false`. Gives the first image a full-width row of its own. |
 
 Several photographs laid out as rows. The count fixes the rows — nothing in the manifest
@@ -171,8 +181,8 @@ a common height and fill the column exactly, uncropped — any mix of portrait a
 works. **Below 720px the rows collapse and every frame runs full width.**
 
 Each frame is its own plate: they take consecutive numbers (`02–04` under a group of three),
-open as separate slides in the full-screen viewer, and each slide shows the group's caption
-alongside its own alt text.
+open as separate slides in the full-screen viewer, where each slide repeats the group's caption
+with its position appended — `Kopan, the hour before the morning session. (2/3)`.
 
 ### `video`
 

@@ -40,6 +40,9 @@ const frames = await Promise.all(
   images.map(async (image, i) => ({
     ...image,
     label: labels[i],
+    // Each slide of the group repeats the group's caption; the count says which
+    // frame of the set you are looking at — "Temples on the river (2/4)".
+    caption: caption && `${caption} (${i + 1}/${images.length})`,
     gif: isGif(image.src),
     full: await fullPlate(image.src),
     widths: hero && i === 0 ? HERO_WIDTHS : WIDTHS,
@@ -114,7 +117,7 @@ const laid = frames.map((frame, i) => ({
             data-full-width={frame.full.width}
             data-full-height={frame.full.height}
             data-alt={frame.alt}
-            data-caption={caption}
+            data-caption={frame.caption}
             data-plate={frame.label}
           >
             <button

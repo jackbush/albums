@@ -5,13 +5,16 @@ import { blockMarker } from '../../lib/dev';
 
 interface Props {
   src: ImageMetadata;
+  /** Screen readers and the full-screen viewer only; never printed on the page. */
   alt?: string;
+  /** The line under the plate. */
+  caption?: string;
   plate: number;
   /** Position in the manifest, shown only by the dev server. */
   block: number;
 }
 
-const { src, alt = '', plate, block } = Astro.props;
+const { src, alt = '', caption, plate, block } = Astro.props;
 const label = String(plate).padStart(2, '0');
 const marker = blockMarker(block);
 
@@ -38,6 +41,7 @@ const full = await fullPlate(src);
   data-full-width={full.width}
   data-full-height={full.height}
   data-alt={alt}
+  data-caption={caption}
   data-plate={label}
 >
   <button type="button" class="plate__open" aria-label={alt ? `View full screen: ${alt}` : `View plate ${label} full screen`}>
@@ -59,9 +63,9 @@ const full = await fullPlate(src);
     }
   </button>
   {
-    (alt || marker) && (
+    (caption || marker) && (
       <figcaption class="plate__caption">
-        {alt && <span class="meta plate__alt">{alt}</span>}
+        {caption && <span class="meta plate__text">{caption}</span>}
         {marker && <span class="meta block-marker">{marker}</span>}
       </figcaption>
     )
@@ -87,7 +91,7 @@ const full = await fullPlate(src);
     margin-top: 0.7rem;
   }
 
-  .plate__alt {
+  .plate__text {
     text-transform: none;
     letter-spacing: 0.01em;
     font-size: 0.8125rem;

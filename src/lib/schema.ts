@@ -23,6 +23,13 @@ export const themeSchema = z
 
 export type Theme = z.infer<typeof themeSchema>;
 
+/**
+ * A caption is the line printed under a block. `false` means "not written yet" — it
+ * reads the same as leaving the key out, but keeps the key in the manifest as a slot
+ * to come back and fill in.
+ */
+const caption = z.union([z.string().trim().min(1), z.literal(false)]).optional();
+
 /** One frame of a `group`: its own src and alt, no caption of its own. */
 const groupImage = z
   .object({
@@ -46,7 +53,10 @@ export const albumManifestSchema = z
             .object({
               type: z.literal('image'),
               src: mediaPath,
+              /** Screen readers and the full-screen viewer only; never printed. */
               alt: z.string().optional(),
+              /** The line under the plate. */
+              caption,
             })
             .strict(),
           z
@@ -55,7 +65,7 @@ export const albumManifestSchema = z
               /** Two to six frames; the count fixes the row layout. */
               images: z.array(groupImage).min(2).max(6),
               /** Shown once, under the whole group — each frame keeps its own `alt`. */
-              caption: z.string().trim().min(1).optional(),
+              caption,
               /** Gives the first frame a full-width row of its own, at every width. */
               hero: z.boolean().default(false),
             })
@@ -131,7 +141,7 @@ export interface GroupImage {
 
 /** A block after its media paths have been resolved to real assets. */
 export type Item =
-  | { type: 'image'; src: ImageMetadata; alt?: string }
+  | { type: 'image'; src: ImageMetadata; alt?: string; caption?: string }
   | {
       type: 'group';
       images: GroupImage[];

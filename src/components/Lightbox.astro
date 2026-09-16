@@ -259,9 +259,10 @@
         width: figure.dataset.fullWidth ?? '',
         height: figure.dataset.fullHeight ?? '',
         alt: figure.dataset.alt ?? '',
-        // Every frame of a group carries the group's caption, so those slides read the
-        // same line while each keeps its own alt text. Otherwise the alt is the caption.
-        caption: figure.dataset.caption || figure.dataset.alt || '',
+        // Every frame of a group carries the group's caption, counted "(2/4)" so the
+        // repeat reads as a position in the set. Alt is for screen readers, not print,
+        // so a plate with no caption simply shows none.
+        caption: figure.dataset.caption ?? '',
         plate: figure.dataset.plate ?? '',
         trigger: figure.querySelector<HTMLElement>('button') ?? figure,
       }),

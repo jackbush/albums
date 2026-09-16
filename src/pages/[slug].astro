@@ -50,7 +50,15 @@ const pageTitle = `${title} — ${site.heading}`;
         blocks.map(({ item, plate, block }) => {
           switch (item.type) {
             case 'image':
-              return <ImageItem src={item.src} alt={item.alt} plate={plate!} block={block} />;
+              return (
+                <ImageItem
+                  src={item.src}
+                  alt={item.alt}
+                  caption={item.caption}
+                  plate={plate!}
+                  block={block}
+                />
+              );
             case 'group':
               return (
                 <GroupItem
