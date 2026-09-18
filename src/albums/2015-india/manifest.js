@@ -8,7 +8,7 @@ export default {
 
   items: [
     {
-      type: 'group',
+      type: 'photos',
       hero: true,
       images: [
         {
@@ -27,12 +27,16 @@ export default {
       caption: 'Arriving in Colaba, where the air is full of corrander and the architecture is full of colonial legacy.',
     },
     {
-      type: 'image',
-      src: './media/_JB16101.jpg',
-      alt: 'Shantaram pilgrimage to Cafe Leopold.',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16101.jpg',
+          alt: 'Shantaram pilgrimage to Cafe Leopold.',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16159.jpg',
@@ -59,7 +63,7 @@ export default {
       text: 'Across to Udaipur, a city built around its own reflection, for Diwali.',
     },
     {
-      type: 'group',
+      type: 'photos',
       hero: true,
       images: [
         {
@@ -78,7 +82,7 @@ export default {
       caption: 'A shrine by the lake, where people also come to meet and bathe.',
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16234.jpg',
@@ -100,7 +104,7 @@ export default {
       text: 'The festival of light begins as the sun sets. Fairy lights across every lane, firecrackers going off every few seconds.',
     },
     {
-      type: 'group',
+      type: 'photos',
       hero: true,
       images: [
         {
@@ -118,12 +122,16 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB16336.jpg',
-      alt: 'A temple entrance packed with people under heavy marigold garlands and cut-glass lamps, a policeman at the edge of the crowd',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16336.jpg',
+          alt: 'A temple entrance packed with people under heavy marigold garlands and cut-glass lamps, a policeman at the edge of the crowd',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       // hero: true,
       images:
         [
@@ -146,17 +154,25 @@ export default {
         ],
     },
     {
-      type: 'image',
-      src: './media/_JB16368.jpg',
-      alt: 'The Lake Palace at first light',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16368.jpg',
+          alt: 'The Lake Palace at first light',
+        },
+      ],
     },
     {
-      type: 'image',
-      src: './media/_JB16498.jpg',
-      alt: 'A low colonnaded building standing straight out of the lake, a tree leaning over its roof',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16498.jpg',
+          alt: 'A low colonnaded building standing straight out of the lake, a tree leaning over its roof',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16470.jpg',
@@ -174,7 +190,7 @@ export default {
       text: 'West into the desert, to Jaisalmer.',
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16579.jpg',
@@ -187,7 +203,7 @@ export default {
       ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16596.jpg',
@@ -200,22 +216,34 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB16705.jpg',
-      alt: 'Two domed cenotaphs standing out in still water at dawn, pigeons crowded on the nearer roof',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16705.jpg',
+          alt: 'Two domed cenotaphs standing out in still water at dawn, pigeons crowded on the nearer roof',
+        },
+      ],
     },
     {
-      type: 'image',
-      src: './media/_JB16710.jpg',
-      alt: 'A dirt track running out into scrub, the sun coming up flat and pale through desert haze',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16710.jpg',
+          alt: 'A dirt track running out into scrub, the sun coming up flat and pale through desert haze',
+        },
+      ],
     },
     {
-      type: 'image',
-      src: './media/_JB16717.jpg',
-      alt: 'A figure in a red shirt walking a narrow stone causeway across water towards a low sandstone gateway',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16717.jpg',
+          alt: 'A figure in a red shirt walking a narrow stone causeway across water towards a low sandstone gateway',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16719.jpg',
@@ -229,16 +257,20 @@ export default {
       caption: 'A morning puja we walked into the middle of, and were waved further in.',
     },
     {
-      type: 'image',
-      src: './media/_JB16724.jpg',
-      alt: 'A man driving a red tractor and green trailer loaded with sand, the fort walls on the ridge behind him',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16724.jpg',
+          alt: 'A man driving a red tractor and green trailer loaded with sand, the fort walls on the ridge behind him',
+        },
+      ],
     },
     {
       type: 'text',
       text: 'Two days out on camels from a village west of town. It is much colder at night than anyone tells you, and much slower than you imagine — which is the point of it.',
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16739.jpg',
@@ -251,12 +283,16 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB16765.jpg',
-      alt: 'Riding out through low scrub at dusk, seen from the camel behind — a rider ahead with a pack on their back, sand track winding between bushes',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16765.jpg',
+          alt: 'Riding out through low scrub at dusk, seen from the camel behind — a rider ahead with a pack on their back, sand track winding between bushes',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16769.jpg',
@@ -270,12 +306,16 @@ export default {
       caption: 'Dinner cooked on the fire, and everyone asleep on the sand by nine.',
     },
     {
-      type: 'image',
-      src: './media/_JB16796.jpg',
-      alt: 'A ginger dog curled asleep on a dune in the cold blue light before sunrise',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16796.jpg',
+          alt: 'A ginger dog curled asleep on a dune in the cold blue light before sunrise',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16818.jpg',
@@ -297,12 +337,16 @@ export default {
       text: 'Jodhpur next, and the blue starts at the edge of the old town and does not stop.',
     },
     {
-      type: 'image',
-      src: './media/_JB16835.jpg',
-      alt: 'A boy walking away down a wet lane between a brick house and blue-washed walls, carrying a bag',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16835.jpg',
+          alt: 'A boy walking away down a wet lane between a brick house and blue-washed walls, carrying a bag',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16851.jpg',
@@ -320,7 +364,7 @@ export default {
       caption: 'A stone wheel, a stick to start it, and about ninety seconds a pot.',
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16865.jpg',
@@ -333,7 +377,7 @@ export default {
       ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16872.jpg',
@@ -346,12 +390,16 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB16913.jpg',
-      alt: 'Two men behind the counter of a spice shop, the older one giving a peace sign, packets and film posters stacked behind them',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16913.jpg',
+          alt: 'Two men behind the counter of a spice shop, the older one giving a peace sign, packets and film posters stacked behind them',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16917.jpg',
@@ -364,7 +412,7 @@ export default {
       ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16920.jpg',
@@ -377,21 +425,29 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB16932.jpg',
-      alt: 'Amy on the train, half in shadow against the window, a platform sliding past behind her',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16932.jpg',
+          alt: 'Amy on the train, half in shadow against the window, a platform sliding past behind her',
+        },
+      ],
     },
     {
       type: 'text',
       text: 'Jaipur is pink and enormous and the traffic is a different order of thing. We mostly gave up and walked.',
     },
     {
-      type: 'image',
-      src: './media/_JB16934.jpg',
-      alt: 'The Hawa Mahal from below, its honeycomb of small windows curving up into a cloudless sky',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB16934.jpg',
+          alt: 'The Hawa Mahal from below, its honeycomb of small windows curving up into a cloudless sky',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB16982.jpg',
@@ -404,7 +460,7 @@ export default {
       ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB17061.jpg',
@@ -417,7 +473,7 @@ export default {
       ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB17068.jpg',
@@ -430,16 +486,20 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB17086.jpg',
-      alt: 'Stuck in traffic at sunset, a bus and motorbikes in silhouette against an orange sky under a flyover',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB17086.jpg',
+          alt: 'Stuck in traffic at sunset, a bus and motorbikes in silhouette against an orange sky under a flyover',
+        },
+      ],
     },
     {
       type: 'text',
       text: 'A stop at the bird reserve on the way east, which after two weeks of towns was startlingly quiet.',
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB17091.jpg',
@@ -456,7 +516,7 @@ export default {
       text: 'Agra, then Delhi, and the end of it. The Taj we saw from the wrong bank of the river, across the sand, which turned out to be the better way to see it.',
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB17119.jpg',
@@ -469,12 +529,16 @@ export default {
       ],
     },
     {
-      type: 'image',
-      src: './media/_JB17134.jpg',
-      alt: 'The Taj Mahal in heavy morning mist, almost weightless above the scrub and sand of the far riverbank',
+      type: 'photos',
+      images: [
+        {
+          src: './media/_JB17134.jpg',
+          alt: 'The Taj Mahal in heavy morning mist, almost weightless above the scrub and sand of the far riverbank',
+        },
+      ],
     },
     {
-      type: 'group',
+      type: 'photos',
       images: [
         {
           src: './media/_JB17157.jpg',

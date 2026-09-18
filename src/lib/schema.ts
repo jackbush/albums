@@ -30,10 +30,11 @@ export type Theme = z.infer<typeof themeSchema>;
  */
 const caption = z.union([z.string().trim().min(1), z.literal(false)]).optional();
 
-/** One frame of a `group`: its own src and alt, no caption of its own. */
-const groupImage = z
+/** One frame of a `photos` block: its own src and alt, no caption of its own. */
+const photo = z
   .object({
     src: mediaPath,
+    /** Screen readers and the full-screen viewer only; never printed on the page. */
     alt: z.string().optional(),
   })
   .strict();
@@ -51,20 +52,10 @@ export const albumManifestSchema = z
         z.discriminatedUnion('type', [
           z
             .object({
-              type: z.literal('image'),
-              src: mediaPath,
-              /** Screen readers and the full-screen viewer only; never printed. */
-              alt: z.string().optional(),
-              /** The line under the plate. */
-              caption,
-            })
-            .strict(),
-          z
-            .object({
-              type: z.literal('group'),
-              /** Two to six frames; the count fixes the row layout. */
-              images: z.array(groupImage).min(2).max(6),
-              /** Shown once, under the whole group — each frame keeps its own `alt`. */
+              type: z.literal('photos'),
+              /** One to six frames; the count fixes the row layout. */
+              images: z.array(photo).min(1).max(6),
+              /** Shown once, under the whole block — each frame keeps its own `alt`. */
               caption,
               /** Gives the first frame a full-width row of its own, at every width. */
               hero: z.boolean().default(false),
@@ -133,18 +124,17 @@ export interface Site {
   cover: ImageMetadata;
 }
 
-/** One frame of a `group` after its path has been resolved. */
-export interface GroupImage {
+/** One frame of a `photos` block after its path has been resolved. */
+export interface Photo {
   src: ImageMetadata;
   alt?: string;
 }
 
 /** A block after its media paths have been resolved to real assets. */
 export type Item =
-  | { type: 'image'; src: ImageMetadata; alt?: string; caption?: string }
   | {
-      type: 'group';
-      images: GroupImage[];
+      type: 'photos';
+      images: Photo[];
       caption?: string;
       hero: boolean;
     }

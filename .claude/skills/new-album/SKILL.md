@@ -86,24 +86,29 @@ No attribution. A day with no photos gets no block.
 
 #### One photo per block
 
-Default to a standalone `image` block for every frame:
+Photographs live in `photos` blocks, which hold one to six frames. **Default to one frame per
+block** — a block of one fills the column, which is the ordinary way a photo appears:
 
 ```js
 {
-  type: 'image',
-  src: './media/jb20151114jaisalmer3.jpg',
-  alt: 'Camels resting in the shade of a thorn tree, saddles stacked beside them',
+  type: 'photos',
+  images: [
+    {
+      src: './media/jb20151114jaisalmer3.jpg',
+      alt: 'Camels resting in the shade of a thorn tree, saddles stacked beside them',
+    },
+  ],
   caption: false,
 }
 ```
 
-Only reach for a `group` when the frames are **clearly one series** — shot within about five
-minutes of each other, on the same subject, of a piece. Capture times tell you this; don't
-group on vibe. When in doubt, separate blocks.
+Put several frames in one block only when they are **clearly one series** — shot within about
+five minutes of each other, on the same subject, of a piece. Capture times tell you this;
+don't group on vibe. When in doubt, separate blocks.
 
 ```js
 {
-  type: 'group',
+  type: 'photos',
   images: [
     { src: './media/a.jpg', alt: '...' },
     { src: './media/b.jpg', alt: '...' },
@@ -120,7 +125,7 @@ Optional `hero: true` gives the first frame a full-width row of its own and re-r
 
 `alt` is **screen readers and the full-screen viewer only**. It is never printed on the page,
 so it can't sound like generated caption prose and it costs Jack no editing. Write one for
-every frame, standalone `image` and every frame inside a `group`.
+every frame, in every `photos` block, however many frames it holds.
 
 - One clause, present tense. No "photo of", no "image showing".
 - Describe what is actually visible — composition, light, colour, what someone is doing.
@@ -131,7 +136,7 @@ every frame, standalone `image` and every frame inside a `group`.
 
 #### Captions — leave every one `false`
 
-Every `image` and every `group` gets `caption: false`. The schema accepts `false` as "not
+Every `photos` block gets `caption: false`. The schema accepts `false` as "not
 written yet": it renders as no caption, and the key sits there ready to be filled in.
 
 **Never write caption text.** Not a draft, not a placeholder phrase, not a "feel free to

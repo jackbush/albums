@@ -6,11 +6,11 @@ import {
   formatIssues,
   type Item,
   type Album,
-  type GroupImage,
+  type Photo,
   type Site,
 } from './schema';
 
-export type { Album, GroupImage, Item, Site };
+export type { Album, Photo, Item, Site };
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -40,9 +40,7 @@ function loadAlbum(slug: string, module: { default: unknown }): Album {
   const data = parsed.data;
   const items: Item[] = data.items.map((item) => {
     switch (item.type) {
-      case 'image':
-        return { ...item, src: resolveImage(slug, item.src), caption: written(item.caption) };
-      case 'group':
+      case 'photos':
         return {
           ...item,
           images: item.images.map((image) => ({
@@ -159,11 +157,9 @@ export function getListedAlbums(): Album[] {
   return listed.map((slug) => albums.get(slug)!);
 }
 
-/** How many plates a block holds: one per photograph, so a group holds several. */
+/** How many plates a block holds: one per photograph, so a `photos` block holds its frames. */
 function platesIn(item: Item): number {
-  if (item.type === 'image') return 1;
-  if (item.type === 'group') return item.images.length;
-  return 0;
+  return item.type === 'photos' ? item.images.length : 0;
 }
 
 /** Number of photographs in a post — the "plates" count shown on the index. */
@@ -174,8 +170,8 @@ export function plateCount(items: Item[]): number {
 /**
  * Numbers each block two ways: by plate and by position in the manifest.
  *
- * The plate number counts photographs only, so a group takes a run of consecutive
- * numbers and a text block takes none. It drives the lightbox counter, which is why
+ * The plate number counts photographs only, so a block of several takes a run of
+ * consecutive numbers and a text block takes none. It drives the lightbox counter, which is why
  * the sequence has to stay continuous across block types.
  *
  * The block number counts every entry in `items`, text and all, so it addresses the

@@ -3,8 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Lightbox from '../components/Lightbox.astro';
 import NavBar from '../components/NavBar.astro';
-import ImageItem from '../components/items/ImageItem.astro';
-import GroupItem from '../components/items/GroupItem.astro';
+import PhotosItem from '../components/items/PhotosItem.astro';
 import VideoItem from '../components/items/VideoItem.astro';
 import QuoteItem from '../components/items/QuoteItem.astro';
 import TextItem from '../components/items/TextItem.astro';
@@ -49,19 +48,9 @@ const pageTitle = `${title} — ${site.heading}`;
       {
         blocks.map(({ item, plate, block }) => {
           switch (item.type) {
-            case 'image':
+            case 'photos':
               return (
-                <ImageItem
-                  src={item.src}
-                  alt={item.alt}
-                  caption={item.caption}
-                  plate={plate!}
-                  block={block}
-                />
-              );
-            case 'group':
-              return (
-                <GroupItem
+                <PhotosItem
                   images={item.images}
                   caption={item.caption}
                   hero={item.hero}

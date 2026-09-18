@@ -67,8 +67,8 @@ export default {
 
   items: [
     { type: 'text', text: 'Gorse everywhere, out for weeks and still going.' },
-    { type: 'image', src: './media/DSCF0678.jpg', alt: 'Grinning into the wind' },
-    // { type: 'image', src: './media/DSCF0689.jpg', alt: 'Maybe later' },
+    { type: 'photos', images: [{ src: './media/DSCF0678.jpg', alt: 'Grinning into the wind' }] },
+    // { type: 'photos', images: [{ src: './media/DSCF0689.jpg', alt: 'Maybe later' }] },
     {
       type: 'quote',
       text: 'Like man, slighted and enduring.',
@@ -106,39 +106,23 @@ Supported: **jpg**, **png**, **gif** for images; **mp4**, **webm**, **mov** for 
 
 ## Block types
 
-### `image`
+### `photos`
+
+One to six photographs. One is the ordinary case — the frame fills the column:
 
 ```js
 {
-  type: 'image',
-  src: './media/cliffs.jpg',
-  alt: 'The chalk cliff at Old Harry, white against a grey sea',
+  type: 'photos',
+  images: [{ src: './media/cliffs.jpg', alt: 'The chalk cliff at Old Harry, white against a grey sea' }],
   caption: 'Old Harry, an hour before the rain.',
 }
 ```
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| `src` | yes | Path relative to the manifest. |
-| `alt` | no | Description for screen readers and the full-screen viewer. Never printed on the page. |
-| `caption` | no | The line under the plate. `false` means "not written yet" — same as leaving it out, but keeps the slot. |
-
-`alt` and `caption` do different jobs: `alt` describes what is in the frame for someone who
-can't see it, `caption` says the thing worth saying to someone who can. Write both, or write
-neither — they aren't substitutes and neither falls back to the other.
-
-Fills the column width. Click to open full screen. Images are numbered as **plates** — the
-number under each image is the same number the full-screen viewer shows, and the count on the
-home page. Drop in the biggest file you have; the build makes the resized versions.
-
-**GIFs are passed through untouched** to keep them animating — resizing an animated GIF would
-flatten it to one frame. So export GIFs at the size you want them, around 1000px wide.
-
-### `group`
+More than one lays out as rows, under a single caption:
 
 ```js
 {
-  type: 'group',
+  type: 'photos',
   images: [
     { src: './media/doorway.jpg', alt: 'A monk stepping through a red doorway' },
     { src: './media/lamps.jpg', alt: 'Rows of butter lamps burning in a dark hall' },
@@ -150,39 +134,44 @@ flatten it to one frame. So export GIFs at the size you want them, around 1000px
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `images` | yes | Two to six. Each takes a `src` and its own `alt`. |
-| `caption` | no | One line under the whole group. `false` means "not written yet". |
-| `hero` | no | `false`. Gives the first image a full-width row of its own. |
+| `images` | yes | One to six. Each takes a `src` relative to the manifest, and its own `alt`. |
+| `caption` | no | One line under the whole block. `false` means "not written yet" — same as leaving it out, but keeps the slot. |
+| `hero` | no | `false`. Gives the first image a full-width row of its own. No effect on a block of one. |
 
-Several photographs laid out as rows. The count fixes the rows — nothing in the manifest
-chooses them:
+`alt` and `caption` do different jobs: `alt` describes what is in the frame for someone who
+can't see it — screen readers and the full-screen viewer, never printed on the page — while
+`caption` says the thing worth saying to someone who can. Write both, or write neither; they
+aren't substitutes and neither falls back to the other.
 
-| Images | Rows |
-| --- | --- |
-| 2 | 2 |
-| 3 | 3 |
-| 4 | 2 + 2 |
-| 5 | 3 + 2 |
-| 6 | 2 + 2 + 2 |
+Every frame is a **plate**. Plates take consecutive numbers across the whole album (`02–04`
+under a block of three), which is the number the full-screen viewer shows and the count on the
+home page. Click any frame to open it full screen. Where a block holds more than one, each
+slide repeats the block's caption with its position appended — `Kopan, the hour before the
+morning session. (2/3)`.
 
-With `hero: true` the first image takes the full column width on its own — the same width a
-standalone `image` block gets — and the images after it fall into the rows for one fewer frame:
+Drop in the biggest file you have; the build makes the resized versions. **GIFs are passed
+through untouched** to keep them animating — resizing an animated GIF would flatten it to one
+frame, so export GIFs at the size you want them, around 1000px wide.
 
-| Images | Rows with `hero` |
-| --- | --- |
-| 2 | 1 + 1 |
-| 3 | 1 + 2 |
-| 4 | 1 + 3 |
-| 5 | 1 + 2 + 2 |
-| 6 | 1 + 3 + 2 |
+#### Rows
+
+The count fixes the rows — nothing in the manifest chooses them:
+
+| Images | Rows | Rows with `hero` |
+| --- | --- | --- |
+| 1 | 1 | 1 |
+| 2 | 2 | 1 + 1 |
+| 3 | 3 | 1 + 2 |
+| 4 | 2 + 2 | 1 + 3 |
+| 5 | 3 + 2 | 1 + 2 + 2 |
+| 6 | 2 + 2 + 2 | 1 + 3 + 2 |
+
+With `hero: true` the first image takes the full column width on its own — the width a block
+of one gets — and the images after it fall into the rows for one fewer frame.
 
 Within a row, widths are set in proportion to each frame's aspect ratio, so the frames land on
 a common height and fill the column exactly, uncropped — any mix of portrait and landscape
 works. **Below 720px the rows collapse and every frame runs full width.**
-
-Each frame is its own plate: they take consecutive numbers (`02–04` under a group of three),
-open as separate slides in the full-screen viewer, where each slide repeats the group's caption
-with its position appended — `Kopan, the hour before the morning session. (2/3)`.
 
 ### `video`
 
