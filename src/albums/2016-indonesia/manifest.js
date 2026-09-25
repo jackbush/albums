@@ -13,6 +13,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "Arriving on the last flight of the day, then shivering violently in a sarong as first light slowly catches the ash cloud.",
       images: [
         {
           src: "./media/_JB18099.jpg",
@@ -35,30 +36,30 @@ export default {
           alt: "Mt Bromo lit gold by the low sun, its plume drifting across the caldera floor",
         },
       ],
-      caption: "Arriving on the last flight of the day, then shivering violently in a sarong as first light slowly catches the ash cloud.",
     },
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB18205.jpg",
           alt: "Mist pouring over a green ridge into the valley below the viewpoint",
         },
       ],
-      caption: false,
     },
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB18203.jpg",
           alt: "The sea of sand filled with low cloud, Mt Bromo and Mt Batok rising from it",
         },
       ],
-      caption: false,
     },
     {
       type: "photos",
+      caption: "Across the sea of ash while battling extreme scarf envy, then up to the crater rim.",
       images: [
         {
           src: "./media/_JB18220.jpg",
@@ -77,7 +78,6 @@ export default {
           alt: "Steam and ash boiling out of the vent against the pale inner slope of the crater",
         },
       ],
-      caption: "Across the sea of ash while battling extreme scarf envy, then up to the crater rim.",
     },
     {
       type: "video",
@@ -90,6 +90,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "1: Casuarina trees. 2: Angel's trumpet tree.",
       images: [
         {
           src: "./media/_JB18308.jpg",
@@ -100,7 +101,6 @@ export default {
           alt: "An angel's trumpet tree hung with pale flowers over a tiled village roof",
         },
       ],
-      caption: "1: Casuarina trees. 2: Angel's trumpet tree.",
     },
 
     {
@@ -111,6 +111,7 @@ export default {
     {
       type: "photos",
       hero: true,
+      caption: "Enjoying the shifting colours as light breaks on the complex.",
       images: [
         {
           src: "./media/_JB17775.jpg",
@@ -129,26 +130,22 @@ export default {
           alt: "Looking up at the main dome of Borobudur past a latticed stupa",
         },
       ],
-      caption: "Enjoying the shifting colours as light breaks on the complex.",
     },
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB17980.jpg",
           alt: "Two stupas framing the Menoreh hills and the palm forest below Borobudur",
         },
       ],
-      caption: false,
     },
     {
       type: "photos",
-      hero: true,
+      closer: true,
+      caption: "Infinite, labyrinthine passageways.",
       images: [
-        {
-          src: "./media/_JB17943.jpg",
-          alt: "Borobudur seen whole from the lawn, a tree overhanging the left of the frame",
-        },
         {
           src: "./media/_JB17887.jpg",
           alt: "A narrow gallery at Borobudur, carved panels along one wall and stupas above",
@@ -161,12 +158,16 @@ export default {
           src: "./media/_JB17909.jpg",
           alt: "A wall of relief panels running the length of a Borobudur gallery",
         },
+        {
+          src: "./media/_JB17943.jpg",
+          alt: "Borobudur seen whole from the lawn, a tree overhanging the left of the frame",
+        },
       ],
-      caption: "Infinite, labyrinthine passageways.",
     },
     {
       type: "photos",
       hero: true,
+      caption: false,
       images: [
         {
           src: "./media/_JB18011.jpg",
@@ -181,21 +182,21 @@ export default {
           alt: "A lane running between flooded paddy fields towards hills under cloud",
         },
       ],
-      caption: false,
     },
     {
       type: "photos",
+      caption: "Not photographed: the tandem bike we were failing to ride around here.",
       images: [
         {
           src: "./media/_JB18066.jpg",
           alt: "The full group of Prambanan towers above the rubble field, two people walking the grass",
         },
       ],
-      caption: "Not photographed: the tandem bike we were failing to ride around here.",
     },
     {
       type: "photos",
       hero: true,
+      caption: false,
       images: [
         {
           src: "./media/_JB18069.jpg",
@@ -210,17 +211,16 @@ export default {
           alt: "Stacked blocks from the collapsed shrines at Candi Sewu, two dvarapala guardians flanking the path",
         },
       ],
-      caption: false,
     },
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB18046.jpg",
           alt: "The main temple of Candi Sewu seen head-on from the ruined outer court",
         },
       ],
-      caption: false,
     },
 
     {
@@ -230,27 +230,28 @@ export default {
     },
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB17761.jpg",
           alt: "Dawn light through the thatch and bamboo frame of a beach hut",
         },
       ],
-      caption: false,
     },
 
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB17747.jpg",
           alt: "A woman lit red by a nearby lamp in near-darkness, the shore just visible behind",
         },
       ],
-      caption: false,
     },
     {
       type: "broll",
+      caption: "Cameras don't go in the sea.",
       images: [
         {
           src: "./b-roll/DSC_0006.jpg",
@@ -301,7 +302,6 @@ export default {
           alt: "Turquoise shallows and moored outriggers under a thatched eave, Lombok's hills across the strait",
         },
       ],
-      caption: "Assorted phone pics from out and about.",
     },
   ],
 };

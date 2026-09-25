@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import PhotoFrame from './PhotoFrame.astro';
 import { fullPlate, isGif } from '../../lib/media';
 import { photoRows } from '../../lib/layout';
 import type { Photo } from '../../lib/schema';
@@ -9,13 +9,15 @@ interface Props {
   caption?: string;
   /** Gives the first frame a row of its own; a block of two shares one row, 2/3 + 1/3. */
   hero: boolean;
+  /** The same for the last frame: it closes the block on a row of its own. */
+  closer: boolean;
   /** Plate number of the first frame; the rest follow in order. */
   plate: number;
   /** Position in the manifest, shown only by the dev server. */
   block: number;
 }
 
-const { images, caption, hero, plate, block } = Astro.props;
+const { images, caption, hero, closer, plate, block } = Astro.props;
 
 const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
 
@@ -48,7 +50,27 @@ function share(variant: 'wide' | 'narrow') {
   const ratios = images.map((image) => image.src.width / image.src.height);
 
   let start = 0;
-  for (const count of photoRows(images.length, variant, hero)) {
+
+  /*
+   * The hero rectangle is solved, not shared, so it skips the proportional pass
+   * below and only takes the bookkeeping the flow needs: a row break after its
+   * third frame, and a count above one so all three read off the shared-row width
+   * ladder rather than the full-column one.
+   */
+  if (variant === 'wide' && stacked) {
+    for (let i = 0; i < 3; i++) shares.push({ share: 1, gaps: 0, count: 2, ends: i === 2 });
+    start = 3;
+  }
+
+  const rest = images.length - start;
+  const rows =
+    variant === 'wide' && stacked
+      ? rest > 0
+        ? photoRows(rest, 'wide', false, closer)
+        : []
+      : photoRows(images.length, variant, hero, closer);
+
+  for (const count of rows) {
     const inRow = ratios.slice(start, start + count);
     const total = inRow.reduce((sum, ratio) => sum + ratio, 0);
     // Frame widths in proportion to each frame's aspect ratio: the frames in a row
@@ -62,26 +84,95 @@ function share(variant: 'wide' | 'narrow') {
   return shares;
 }
 
-const wide = share('wide');
-const narrow = share('narrow');
-
 /**
  * A hero block of two doesn't divide its row in proportion to the frames: the hero
  * holds two thirds of the column and the second frame the last third, so the seam
  * between them falls on the right-hand gutter of an evenly spaced band of three.
  * Wide screens only — `photoRows` keeps the pair stacked on a phone.
  */
-const split = hero && images.length === 2;
+const split = hero && !closer && images.length === 2;
+
+const upright = (image: Photo) => image.src.height > image.src.width;
+const ratioOf = (image: Photo) => image.src.width / image.src.height;
 
 /**
- * An upright frame on its own doesn't fill the column either: at full width it
- * towers, so it takes the same two-thirds band as a hero and sits left, and the
- * last third of the row stays empty.
+ * A hero block whose first frame is upright, holding three frames or more.
  *
- * Wide screens only. On a phone it keeps the full bleed — there is no room to
- * give a third of the screen away.
+ * A full-width upright plate is a tower, and the two-thirds split a hero pair uses
+ * only softens it. So the first three frames instead build one rectangle: the hero
+ * down the left, two frames stacked on the right, both columns ending on the same
+ * line. Anything past the third falls into ordinary rows underneath.
+ *
+ * Wide screens only, and three frames at least — a hero pair keeps the split it
+ * already had.
  */
-const tall = images.length === 1 && images[0].src.height > images[0].src.width;
+const stacked = hero && images.length >= (closer ? 4 : 3) && upright(images[0]);
+
+/**
+ * The two column widths of that rectangle.
+ *
+ * Solved rather than chosen, because "rectangle" is the whole constraint: the hero
+ * and the stack have to finish at the same height, and each frame keeps its own
+ * aspect — nothing is cropped here, the way nothing is cropped in a row.
+ *
+ * With `a` the hero's width, `b` the stack's, `A` the column and `G` the gutter:
+ *
+ *   a + G + b = A                     they fill the column
+ *   a / r0    = b·K + G               equal heights, K = 1/r1 + 1/r2
+ *
+ * where the `+ G` on the right is the gutter between the two stacked frames, which
+ * is why this can't just be handed to the row solver — that one splits a width in
+ * proportion to aspect, and a gutter running across the grain doesn't fit it.
+ * Eliminating `a` gives `b = (A - G(1 + r0)) / (1 + r0·K)`, linear in A, so it lands
+ * in the same `calc((basis - Npx) * share)` shape every other width here uses.
+ */
+function stackSolve() {
+  const r0 = ratioOf(images[0]);
+  const k = 1 / ratioOf(images[1]) + 1 / ratioOf(images[2]);
+  return { share: 1 / (1 + r0 * k), offset: GAP.wide * (1 + r0) };
+}
+
+/** Stack column, then hero as the exact remainder so the pair can't drift apart. */
+function stackWidths(basis: string) {
+  const { share, offset } = stackSolve();
+  // Composed from the bare expression rather than by slicing `calc(` off the stack
+  // string: that way round there is no bracket to miscount, and an unbalanced calc
+  // fails silently — the declaration is dropped and the frame falls back to auto.
+  const inner = `(${basis} - ${offset.toFixed(3)}px) * ${share.toFixed(4)}`;
+  return {
+    stack: `calc(${inner})`,
+    hero: `calc(${basis} - ${GAP.wide}px - 0.5px - (${inner}))`,
+  };
+}
+
+/** The same two widths at the one size the column is fixed: 1168px, from 75rem up. */
+function stackPx(content: number) {
+  const { share, offset } = stackSolve();
+  const stack = (content - offset) * share;
+  return { stack: Math.round(stack), hero: Math.round(content - GAP.wide - stack) };
+}
+
+const wide = share('wide');
+const narrow = share('narrow');
+
+/**
+ * An upright frame alone on its row doesn't fill the column: at full width it
+ * towers. It takes the same two-thirds band a hero pair uses and sits left, with
+ * the last third of the row empty.
+ *
+ * Alone on its row, not alone in its block — so this covers a block of one, a
+ * `closer` that happens to be upright, and a `hero` that is upright in the cases
+ * where the rectangle doesn't apply. Wide screens only: on a phone the frame keeps
+ * the full bleed, there being no room to give a third of the screen away.
+ */
+const soloUpright = (i: number) => wide[i].count === 1 && upright(images[i]);
+
+/**
+ * The block-of-one case, which also narrows the caption — there the photograph is
+ * the whole block, so the line under it belongs to the plate rather than the page.
+ * A solo upright inside a longer block leaves the caption on the full measure.
+ */
+const tall = images.length === 1 && soloUpright(0);
 
 /**
  * Two of three even bands, plus the gutter they'd have had between them.
@@ -103,7 +194,11 @@ const TWO_THIRDS_PX = Math.round(((CONTENT - 2 * GAP.wide) / 3) * 2 + GAP.wide);
  */
 function width(i: number, basis: string, variant: 'wide' | 'narrow') {
   if (variant === 'wide') {
-    if (tall) return twoThirds(basis);
+    if (soloUpright(i)) return twoThirds(basis);
+    if (stacked && i < 3) {
+      const { hero: left, stack } = stackWidths(basis);
+      return i === 0 ? left : stack;
+    }
     if (split) return i === 0 ? twoThirds(basis) : `calc(${band(basis)})`;
   }
 
@@ -113,7 +208,12 @@ function width(i: number, basis: string, variant: 'wide' | 'narrow') {
 
 /** The same width at the one size the column is fixed: 1168px, from 75rem up. */
 function column(i: number) {
-  if (tall) return TWO_THIRDS_PX;
+  if (soloUpright(i)) return TWO_THIRDS_PX;
+
+  if (stacked && i < 3) {
+    const { hero: left, stack } = stackPx(CONTENT);
+    return i === 0 ? left : stack;
+  }
 
   if (split) {
     const third = (CONTENT - 2 * GAP.wide) / 3;
@@ -129,7 +229,7 @@ const frames = await Promise.all(
     // where a lone frame is at its widest. A lone upright is the exception — it
     // never passes the two-thirds band on desktop, and below 720px it runs no wider
     // than the screen, so the top rung of the full ladder would never be requested.
-    const full = wide[i].count === 1 && !tall;
+    const full = wide[i].count === 1 && !soloUpright(i);
 
     return {
       ...image,
@@ -155,7 +255,11 @@ const frames = await Promise.all(
         width(i, BASIS.wide, 'wide'),
       ].join(', '),
       style: [
-        `--width-wide: ${width(i, '100%', 'wide')}`,
+        // The two stacked frames are laid inside `.photos__stack`, which already
+        // holds the solved column width, so against their own parent they are
+        // simply full width. `sizes` above still carries the real measure, since
+        // that one is answered against the viewport rather than the parent.
+        `--width-wide: ${stacked && i > 0 && i < 3 ? '100%' : width(i, '100%', 'wide')}`,
         `--width-narrow: ${width(i, '100%', 'narrow')}`,
       ].join('; '),
     };
@@ -168,53 +272,45 @@ const frames = await Promise.all(
   style={tall ? `--tall-width: ${twoThirds('100%')}` : undefined}
   data-block={block}
 >
-  <div class:list={['photos__frames', 'bleed', split && 'photos__frames--split']}>
+  <div
+    class:list={[
+      'photos__frames',
+      'bleed',
+      split && 'photos__frames--split',
+      stacked && 'photos__frames--stacked',
+    ]}
+  >
     {
-      frames.map((frame) => (
+      stacked ? (
         <>
-          <div
-            class="photos__frame"
-            style={frame.style}
-            data-lightbox
-            data-full={frame.plate.src}
-            data-full-width={frame.plate.width}
-            data-full-height={frame.plate.height}
-            data-alt={frame.alt}
-            data-caption={frame.caption}
-            data-plate={frame.label}
-          >
-            <button
-              type="button"
-              class="photos__open"
-              aria-label={frame.alt ? `View full screen: ${frame.alt}` : `View plate ${frame.label} full screen`}
-            >
-              {frame.gif ? (
-                <img
-                  src={frame.src.src}
-                  width={frame.src.width}
-                  height={frame.src.height}
-                  alt={frame.alt ?? ''}
-                  loading="lazy"
-                  decoding="async"
-                />
-              ) : (
-                <Picture
-                  src={frame.src}
-                  alt={frame.alt ?? ''}
-                  width={frame.fallback}
-                  widths={frame.widths}
-                  sizes={frame.sizes}
-                  formats={['avif', 'webp']}
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
-            </button>
+          <PhotoFrame frame={frames[0]} />
+          {frames[0].breaks.narrow && <span class="photos__break photos__break--narrow" aria-hidden="true" />}
+          <div class="photos__stack" style={`--stack-width: ${stackWidths('100%').stack}`}>
+            {frames.slice(1, 3).map((frame) => (
+              <>
+                <PhotoFrame frame={frame} />
+                {frame.breaks.narrow && <span class="photos__break photos__break--narrow" aria-hidden="true" />}
+              </>
+            ))}
           </div>
-          {frame.breaks.wide && <span class="photos__break photos__break--wide" aria-hidden="true" />}
-          {frame.breaks.narrow && <span class="photos__break photos__break--narrow" aria-hidden="true" />}
+          {frames[2].breaks.wide && <span class="photos__break photos__break--wide" aria-hidden="true" />}
+          {frames.slice(3).map((frame) => (
+            <>
+              <PhotoFrame frame={frame} />
+              {frame.breaks.wide && <span class="photos__break photos__break--wide" aria-hidden="true" />}
+              {frame.breaks.narrow && <span class="photos__break photos__break--narrow" aria-hidden="true" />}
+            </>
+          ))}
         </>
-      ))
+      ) : (
+        frames.map((frame) => (
+          <>
+            <PhotoFrame frame={frame} />
+            {frame.breaks.wide && <span class="photos__break photos__break--wide" aria-hidden="true" />}
+            {frame.breaks.narrow && <span class="photos__break photos__break--narrow" aria-hidden="true" />}
+          </>
+        ))
+      )
     }
   </div>
   {
@@ -253,8 +349,20 @@ const frames = await Promise.all(
     align-items: flex-end;
   }
 
-  .photos__frame {
-    width: var(--width-wide);
+  /*
+   * The right-hand column of a hero rectangle. Its width is solved in the frontmatter
+   * so that its two frames, plus the gutter between them, come to exactly the height
+   * of the upright hero beside it.
+   *
+   * On a phone it dissolves: `display: contents` drops the element from layout and
+   * hands its frames straight to the wrapping flow outside, so the narrow row shapes
+   * and their breaks work on them as if this grouping had never existed.
+   */
+  .photos__stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gutter);
+    width: var(--stack-width);
   }
 
   .photos__break {
@@ -264,19 +372,6 @@ const frames = await Promise.all(
 
   .photos__break--narrow {
     display: none;
-  }
-
-  .photos__open {
-    display: block;
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: zoom-in;
-  }
-
-  .photos__open :global(img) {
-    width: 100%;
   }
 
   /*
@@ -320,8 +415,8 @@ const frames = await Promise.all(
       --gutter: 0.5rem;
     }
 
-    .photos__frame {
-      width: var(--width-narrow);
+    .photos__stack {
+      display: contents;
     }
 
     /* Nothing is held back to two thirds down here — the frame runs the full

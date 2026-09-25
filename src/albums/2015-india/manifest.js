@@ -9,6 +9,7 @@ export default {
     {
       type: "photos",
       hero: true,
+      caption: "Arriving in Colaba, where the air is thick with fresh coriander and the architecture has a deep colonial legacy.",
       images: [
         {
           src: "./media/_JB16078.jpg",
@@ -23,17 +24,16 @@ export default {
           alt: "The Gateway of India under flat grey cloud, a scatter of people small along its base",
         },
       ],
-      caption: "Arriving in Colaba, where the air is thick with fresh coriander and the architecture has a deep colonial legacy.",
     },
     {
       type: "photos",
+      caption: "Shantaram pilgrimage to Leopold Cafe.",
       images: [
         {
           src: "./media/_JB16101.jpg",
           alt: "A café cabinet lit at night, filled with cakes.",
         },
       ],
-      caption: "Shantaram pilgrimage to Leopold Cafe.",
     },
     {
       type: "photos",
@@ -60,12 +60,9 @@ export default {
     },
     {
       type: "photos",
-      hero: true,
+      closer: true,
+      caption: "A shrine by the lake, where people also come to meet and bathe.",
       images: [
-        {
-          src: "./media/_JB16228.jpg",
-          alt: "A swimmer bathing in the lake",
-        },
         {
           src: "./media/_JB16229.jpg",
           alt: "The base of an old tree growing through the paving, trunk smeared with red pigment, a small white shrine tucked into its roots",
@@ -74,19 +71,24 @@ export default {
           src: "./media/_JB16230.jpg",
           alt: "Looking up the same trunk to a carved sandstone temple spire against a blue-painted wall",
         },
+        {
+          src: "./media/_JB16228.jpg",
+          alt: "A swimmer bathing in the lake",
+        },
       ],
-      caption: "A shrine by the lake, where people also come to meet and bathe.",
     },
     {
       type: "photos",
+      hero: true,
+      caption: "The city is serene by daylight.",
       images: [
-        {
-          src: "./media/_JB16234.jpg",
-          alt: "A woman cooking on the pavement outside a bright blue house, scooter parked beside a red gate, marigold garlands over the doors",
-        },
         {
           src: "./media/_JB16231.jpg",
           alt: "A tiered white gateway with balconies and arched openings, people passing through the arches below into the bazaar",
+        },
+        {
+          src: "./media/_JB16234.jpg",
+          alt: "A woman cooking on the pavement outside a bright blue house, scooter parked beside a red gate, marigold garlands over the doors",
         },
         {
           src: "./media/_JB16571.jpg",
@@ -97,6 +99,7 @@ export default {
     {
       type: "photos",
       hero: true,
+      caption: "Diwali kicks off the moment the sun hits the horizon.",
       images: [
         {
           src: "./media/_JB16344.jpg",
@@ -111,20 +114,16 @@ export default {
           alt: "Looking down from a balcony on a street lit blue and white, chandeliers hung outside a jeweller’s",
         },
       ],
-      caption: "The evening arrives and Diwali begins.",
     },
     {
       type: "photos",
+      hero: true,
+      caption: "The joy is everywhere and shared by all.",
       images: [
         {
           src: "./media/_JB16336.jpg",
           alt: "A temple entrance packed with people under heavy marigold garlands and cut-glass lamps, a policeman at the edge of the crowd",
         },
-      ],
-    },
-    {
-      type: "photos",
-      images: [
         {
           src: "./media/_JB16358.jpg",
           alt: "Two boys holding sparklers at arm’s length in a doorway, faces lit hard from below",
@@ -142,17 +141,16 @@ export default {
           alt: "A crowd gathered outside a lit travel agency at night, a motorbike headlight coming through them",
         },
       ],
-      caption: "The joy is everywhere and shared by all.",
     },
     {
       type: "photos",
+      caption: "Kept awake all night by firecrackers, had a bleary walk down to the Lake Palace for sunrise.",
       images: [
         {
           src: "./media/_JB16368.jpg",
           alt: "The Lake Palace at first light",
         },
       ],
-      caption: "Kept awake all night by firecrackers, had a bleary walk down to the Lake Palace for sunrise.",
     },
     {
       type: "photos",
@@ -165,6 +163,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "Jagdish Temple, still busy from the festival.",
       images: [
         {
           src: "./media/_JB16470.jpg",
@@ -175,7 +174,6 @@ export default {
           alt: "Two carved stone elephants facing each other on a temple frieze, worn smooth and marked with red powder",
         },
       ],
-      caption: "Jagdish Temple, still busy from the festival.",
     },
     {
       type: "subheading",
@@ -184,6 +182,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "Arrived on a night bus, sleep deprived again after 14 hours of lumpy roads and limited lumbar support. Straight up to the hill fort, to be distracted by the incredible ornament.",
       images: [
         {
           src: "./media/_JB16579.jpg",
@@ -194,7 +193,6 @@ export default {
           alt: "A haveli façade of tiered projecting windows above an archway, people passing underneath into the light",
         },
       ],
-      caption: "Arrived on a night bus, sleep deprived again after 14 hours of lumpy roads and limited lumbar support. Straight up to the hill fort, to be distracted by the incredible ornament.",
     },
     {
       type: "photos",
@@ -208,6 +206,7 @@ export default {
     {
       type: "photos",
       hero: true,
+      caption: "Sunrise at Gadsisar Lake, with chhatris rebuilt in the 14th century. Met a train driver who invited me to run with him to his morning prayer.",
       images: [
         {
           src: "./media/_JB16705.jpg",
@@ -222,17 +221,16 @@ export default {
           alt: "A figure in a red shirt walking a narrow stone causeway across water towards a low sandstone gateway",
         },
       ],
-      caption: "Sunrise at Gadsisar Lake, with chhatris rebuilt in the 14th century. Met a train driver who invited me to run with him to his morning prayer.",
     },
     {
       type: "photos",
+      caption: "Getting to see this made my trip.",
       images: [
         {
           src: "./media/_JB16721.jpg",
           alt: "The same temple from the front, women in bright print saris filling steel buckets around the offering",
         },
       ],
-      caption: "Getting to see this made my trip.",
     },
     {
       type: "photos",
@@ -246,6 +244,7 @@ export default {
     {
       type: "photos",
       hero: true,
+      caption: "The desert is stunning, but the camels get a raw deal and this isn’t something any of us would do again.",
       images: [
         {
           src: "./media/_JB16739.jpg",
@@ -260,41 +259,41 @@ export default {
           alt: "Riding out through low scrub at dusk, seen from the camel behind — a rider ahead with a pack on their back, sand track winding between bushes",
         },
       ],
-      caption: "The desert is stunning, but the camels get a raw deal and this isn’t something any of us would do again.",
     },
     {
       type: "photos",
+      caption: false,
       images: [
         {
           src: "./media/_JB16769.jpg",
           alt: "Bare gradient sky after sunset, orange to deep violet, a single star out over a black line of trees",
         },
       ],
-      caption: false,
     },
     {
       type: "photos",
+      caption: "These two started drumming on the water container and asked if we wanted a song, so I got all excited about hearing some folk music. Justin Bieber’s ‘Baby’ wasn’t what I expected, but they put a lot of love into it.",
       images: [
         {
           src: "./media/_JB16770.jpg",
           alt: "Two guides talking across a low fire, faces lit orange, a water drum between them",
         },
       ],
-      caption: "These two started drumming on the water container and asked if we wanted a song, so I got all excited about hearing some folk music. Justin Bieber’s ‘Baby’ wasn’t what I expected, but they put a lot of love into it.",
     },
     {
       type: "photos",
+      caption: "We slept on mats in the sand. I was on one end and got woken up in the middle of the night by some dogs circling and growling, their teeth barely illuminated by the crescent moon. This is Poppy, named by Amy, who chased them away and kept us safe all night.",
       images: [
         {
           src: "./media/_JB16796.jpg",
           alt: "A ginger dog curled asleep on a dune in the cold blue light before sunrise",
         },
       ],
-      caption: "We slept on mats in the sand. I was on one end and got woken up in the middle of the night by some dogs circling and growling, their teeth barely illuminated by the crescent moon. This is Poppy, named by Amy, who chased them away and kept us safe all night.",
     },
     {
       type: "photos",
       hero: true,
+      caption: "Off the long way to the next destination.",
       images: [
         {
           src: "./media/_JB16872.jpg",
@@ -309,7 +308,6 @@ export default {
           alt: "Packed into the back of a shared jeep, heads and shoulders filling the frame, the road bright through the windscreen",
         },
       ],
-      caption: "Off the long way to the next destination.",
     },
     {
       type: "subheading",
@@ -336,6 +334,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "A stone wheel, a stick to start it, and about ninety seconds a pot.",
       images: [
         {
           src: "./media/_JB16851.jpg",
@@ -350,7 +349,6 @@ export default {
           alt: "The wheel spinning to a blur while he leans in and draws the clay up",
         },
       ],
-      caption: "A stone wheel, a stick to start it, and about ninety seconds a pot.",
     },
     {
       type: "photos",
@@ -363,13 +361,13 @@ export default {
     },
     {
       type: "photos",
+      caption: "These two ran an amazing tea and spices shop, and had the claim to fame of having loaned their motorbike to Wes Anderson for Darjeeling Limited. It’s the one the brothers ride at the end, and also the one they gave Amy a ride around town on.",
       images: [
         {
           src: "./media/_JB16913.jpg",
           alt: "Two men behind the counter of a spice shop, the older one giving a peace sign, packets and film posters stacked behind them",
         },
       ],
-      caption: "These two ran an amazing tea and spices shop, and had the claim to fame of having loaned their motorbike to Wes Anderson for Darjeeling Limited. It’s the one the brothers ride at the end, and also the one they gave Amy a ride around town on.",
     },
     {
       type: "photos",
@@ -440,6 +438,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "We were so glad for some peace and quiet, and also the birds. Not pictured: an absolutely beautiful little owl.",
       images: [
         {
           src: "./media/_JB17091.jpg",
@@ -450,7 +449,6 @@ export default {
           alt: "A stork flying low over still wetland, reeds in the foreground and nesting trees along the far bank",
         },
       ],
-      caption: "We were so glad for some peace and quiet, and also the birds. Not pictured: an absolutely beautiful little owl.",
     },
     {
       type: "subheading",
@@ -459,6 +457,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "Walking across town at sunrise to see the Taj Mahal.",
       images: [
         {
           src: "./media/_JB17119.jpg",
@@ -469,20 +468,20 @@ export default {
           alt: "A domed tomb in the trees with the low sun burning through its colonnade",
         },
       ],
-      caption: "Walking across town at sunrise to see the Taj Mahal.",
     },
     {
       type: "photos",
+      caption: "Did you folks know this place doesn’t open on Fridays? We didn’t! Managed to see a little from the gardens across the river.",
       images: [
         {
           src: "./media/_JB17134.jpg",
           alt: "The Taj Mahal in heavy morning mist, almost weightless above the scrub and sand of the far riverbank",
         },
       ],
-      caption: "Did you folks know this place doesn’t open on Fridays? We didn’t! Managed to see a little from the gardens across the river.",
     },
     {
       type: "photos",
+      caption: "Last morning, out of the sun.",
       images: [
         {
           src: "./media/_JB17157.jpg",
@@ -493,7 +492,6 @@ export default {
           alt: "Amy and a woman she got talking to, standing against a wall thrown all over with the lattice shadow of the screen",
         },
       ],
-      caption: "Last morning, out of the sun.",
     },
   ],
 };

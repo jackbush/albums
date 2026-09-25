@@ -53,6 +53,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "The temples are lived in: an offering at one door, the afternoon sat out on the steps of another.",
       images: [
         {
           src: "./media/jb20111116kathamandu37.jpg",
@@ -63,7 +64,6 @@ export default {
           alt: "Two sadhus sitting on the steps of a stone shrine in hard midday sun, one with a long white beard",
         },
       ],
-      caption: "The temples are lived in: an offering at one door, the afternoon sat out on the steps of another.",
     },
     {
       type: "photos",
@@ -280,6 +280,7 @@ export default {
     },
     {
       type: "photos",
+      caption: "A wedding band coming through the square.",
       images: [
         {
           src: "./media/jb20111121kathamandu156.jpg",
@@ -290,7 +291,6 @@ export default {
           alt: "A man in a patterned topi playing a brass shehnai, cheeks full, crowd blurred behind him",
         },
       ],
-      caption: "A wedding band coming through the square.",
     },
     {
       type: "photos",

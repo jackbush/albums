@@ -10,9 +10,23 @@ from `flora-id` and any quotes from `quote-find`. Output: the album on the home 
 writing checked, and a list of every change made.
 
 This skill edits words and the index. **It never reorders blocks, regroups frames, or changes a
-`src`** — if the shape of the album is wrong, that's `draft-album`'s work, not this.
+`src`** — if the shape of the album is wrong, that's `draft-album`'s work, not this. Putting a
+block's own properties back into house order is the one exception, and it's step 1.
 
-## 1. Register it on the home page
+## 1. Put the manifest in house order
+
+```bash
+npm run format -- <album-slug>
+```
+
+One property per line, and `photos` blocks keyed `type`, `hero`, `closer`, `caption`, `images`.
+It rewrites the file in place and leaves comments, and blocks held back behind `//`, exactly
+where they were.
+
+**Do this silently.** It changes no words and no data — only which line a property sits on —
+so it doesn't belong in the report at the end. Run it, say nothing, move on.
+
+## 2. Register it on the home page
 
 **Skip this entirely for a `standalone: true` album.** Standalone albums stay out of
 `src/albums/index.js` — see `draft-album`.
@@ -23,7 +37,7 @@ Otherwise, look for the slug in `posts` in `src/albums/index.js`:
 - **Absent**: add it in newest-first position, uncommented.
 - **Already there, uncommented**: nothing to do. Say so; don't add a second line.
 
-## 2. Check the writing
+## 3. Check the writing
 
 Read every piece of prose in the manifest: the album `title` and `location`, each `alt`, each
 `caption`, and each `subheading` `title` and `text`.
@@ -82,7 +96,7 @@ One list, in block order, before you finish:
 
 A block with no change doesn't appear. If nothing changed, say so in a line.
 
-## 3. Warn about the rhythm
+## 4. Warn about the rhythm
 
 The same audit prints both of these. They are **warnings, not fixes** — never regroup blocks to
 clear one. Report them and let the owner decide.
@@ -91,10 +105,11 @@ clear one. Report them and let the owner decide.
   names the count, the block range, and the subheading the run sits under. The fix is usually a
   subheading the album is missing, or a quote.
 - **The same photo-block shape twice or more in a row** — two adjacent blocks of three frames
-  with `hero: true`, say. A block of one plain frame is the album's baseline rhythm, so it
-  doesn't count as a shape; only blocks with several frames, or with a hero row, do.
+  with `hero: true`, say. A block of one frame is the album's baseline rhythm, so it doesn't
+  count as a shape — neither `hero` nor `closer` changes a single frame. Only blocks with
+  several frames do, and the flags count as part of the shape there.
 
-## 4. Orphaned media
+## 5. Orphaned media
 
 The audit's orphan section lists every file in `media/` that nothing in the manifest points at —
 frames, video sources, video posters and the cover all count as pointing at a file.
@@ -120,7 +135,7 @@ Two things to check before you ask:
 
 Delete with `git rm` for tracked files, so the removal is staged along with the manifest.
 
-## 5. Verify
+## 6. Verify
 
 ```bash
 npm run check
@@ -131,6 +146,6 @@ album should now appear in the position its line sits in.
 
 ## Hand it back
 
-The change list from step 2, the warnings from step 3, and anything you asked about and are
+The change list from step 3, the warnings from step 4, and anything you asked about and are
 still waiting on. Say plainly if the album went into the index, was already there, or was
-skipped as standalone.
+skipped as standalone. Nothing about step 1 — the formatting pass is silent by design.

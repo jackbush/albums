@@ -13,14 +13,14 @@ export default {
     },
     {
       type: "photos",
+      caption:
+        "Playing a game one evening, Egil’s father Skalla-Grímur was unhappy to be losing: he killed his playing partner outright and then seized Egil. Egil’s nurse, Þorgerður Brák, shamed Skalla-Grímur into letting the boy go, then ran for the point of Digranes. She went into the water here, and the sound has been called Brákarsund ever since.",
       images: [
         {
           src: "./media/jb20130609iceland592.jpg",
           alt: "A black rock shore running out into a flat grey fjord, cloud sitting halfway down the mountain opposite",
         },
       ],
-      caption:
-        "Playing a game one evening, Egil’s father Skalla-Grímur was unhappy to be losing: he killed his playing partner outright and then seized Egil. Egil’s nurse, Þorgerður Brák, shamed Skalla-Grímur into letting the boy go, then ran for the point of Digranes. She went into the water here, and the sound has been called Brákarsund ever since.",
     },
     {
       type: "quote",
@@ -30,13 +30,13 @@ export default {
     },
     {
       type: "photos",
+      caption: "Hitching out of town, we were invited to a farm party by these lovely folks. A girl called Þórunn (pronounced like Thor-ina) tried to fight three men at the same time and someone stole our tent pegs.",
       images: [
         {
           src: "./media/jb20130609iceland617.jpg",
           alt: "A man in a white shirt talking to four young people on a gravel track, a collie between them, the fjord flat behind",
         },
       ],
-      caption: "Hitching out of town, we were invited to a farm party by these lovely folks. A girl called Þórunn (pronounced like Thor-ina) tried to fight three men at the same time and someone stole our tent pegs.",
     },
     {
       type: "subheading",
@@ -45,14 +45,14 @@ export default {
     },
     {
       type: "photos",
+      caption:
+        "Grettir Ásmundarson had been outlawed fifteen or sixteen winters when he came out to Drangey. Being outlawed meant he wasn’t protected by the law and people could do as they wanted to him, but killing everyone who tried had evidently become tiresome.",
       images: [
         {
           src: "./media/jb20130610iceland688.jpg",
           alt: "Gulls scattered over open grey water, the far shore reduced to a pale line by the weather",
         },
       ],
-      caption:
-        "Grettir Ásmundarson had been outlawed fifteen or sixteen winters when he came out to Drangey. Being outlawed meant he wasn’t protected by the law and people could do as they wanted to him, but killing everyone who tried had evidently become tiresome.",
     },
     {
       type: "quote",
@@ -62,28 +62,29 @@ export default {
     },
     {
       type: "photos",
+      caption:
+        "Grettir feared the dark and would not stay on the island alone, so his brother Illugi came with him. When their fire went out, he swam the sea-mile ashore for more. This is the farm at Reykir, where he came ashore. He warmed up in a thermal spring, took fire and swam back holding it.",
       images: [
         {
           src: "./media/jb20130610iceland653.jpg",
           alt: "A crumbling earth cliff dropping to a stony beach, a flat-topped island just visible in the haze offshore",
         },
       ],
-      caption:
-        "Grettir feared the dark and would not stay on the island alone, so his brother Illugi came with him. When their fire went out, he swam the sea-mile ashore for more. This is the farm at Reykir, where he came ashore. He warmed up in a thermal spring, took fire and swam back holding it.",
     },
     {
       type: "photos",
+      caption: "Ally tries to find a lighter for his DIY torch. The locals are mercifully resistant to enabling our re-enactment.",
       images: [
         {
           src: "./media/jb20130610iceland636.jpg",
           alt: "Two figures picking their way over wet boulders below a row of turf-roofed cottages in the mist",
         },
       ],
-      caption: "Ally tries to find a lighter for his DIY torch. The locals are mercifully resistant to enabling our re-enactment.",
     },
     {
       type: "photos",
       hero: true,
+      caption: "The landscape is beautiful but incredibly bleak. This is two weeks before the summer solstice, most of our items are damp and we’re perpetually cold.",
       images: [
         {
           src: "./media/jb20130610iceland705.jpg",
@@ -98,7 +99,6 @@ export default {
           alt: "A green headland running down into the fjord, mist halfway up it and snow on the tops beyond",
         },
       ],
-      caption: "The landscape is beautiful but incredibly bleak. This is two weeks before the summer solstice, most of our items are damp and we’re perpetually cold.",
     },
     {
       type: "subheading",
@@ -107,14 +107,14 @@ export default {
     },
     {
       type: "photos",
+      caption:
+        "It’s rumoured that as Þorgeir rode home from the Alþingi he threw his carvings of the old gods into the falls, giving it the name ‘waterfall of the gods’.",
       images: [
         {
           src: "./media/jb20130611iceland854.jpg",
           alt: "A wide horseshoe waterfall split by a rock in the middle, spray blowing up out of the pool",
         },
       ],
-      caption:
-        "It’s rumoured that as Þorgeir rode home from the Alþingi he threw his carvings of the old gods into the falls, giving it the name ‘waterfall of the gods’.",
     },
     {
       type: "quote",
@@ -124,13 +124,13 @@ export default {
     },
     {
       type: "photos",
+      caption: "Ally, likely daydreaming about an alternate Iceland that stayed heathen, and maybe even a Scotland that did the same.",
       images: [
         {
           src: "./media/jb20130611iceland847.jpg",
           alt: "A man in a grey jacket sitting against a boulder above a basalt gorge, river running out across the plain below",
         },
       ],
-      caption: "Ally, likely daydreaming about an alternate Iceland that stayed heathen, and maybe even a Scotland that did the same.",
     },
     {
       type: "subheading",
@@ -139,35 +139,35 @@ export default {
     },
     {
       type: "photos",
+      caption:
+        "Traditional construction: turf laid in courses over a frame of driftwood and imported timber. The walls are a metre thick, with the scarce wood saved for the gable fronts.",
       images: [
         {
           src: "./media/jb20130611iceland731.jpg",
           alt: "Three white gabled turf houses in a row, grass growing over their roofs and down their sides, under a hard blue sky",
         },
       ],
-      caption:
-        "Traditional construction: turf laid in courses over a frame of driftwood and imported timber. The walls are a metre thick, with the scarce wood saved for the gable fronts.",
     },
     {
       type: "photos",
+      caption:
+        "Forests once covered a quarter of the island, but it was stripped of usable timber within three centuries of settlement and sheep grazed on saplings. Churches were built of imported wood as a display of wealth.",
       images: [
         {
           src: "./media/jb20130611iceland735.jpg",
           alt: "A white timber church with a red spire behind a picket gate, graves and bare trees either side",
         },
       ],
-      caption:
-        "Forests once covered a quarter of the island, but it was stripped of usable timber within three centuries of settlement and sheep grazed on saplings. Churches were built of imported wood as a display of wealth.",
     },
     {
       type: "photos",
+      caption: "Sara was on holiday from the Canary Islands, gave us a lift and ended up staying with us for a few days.",
       images: [
         {
           src: "./media/jb20130611iceland760.jpg",
           alt: "A woman laughing on the verge with a water bottle in her hand, sunglasses hooked on her collar, snow on the far shore",
         },
       ],
-      caption: "Sara was on holiday from the Canary Islands, gave us a lift and ended up staying with us for a few days.",
     },
     {
       type: "photos",
@@ -227,6 +227,7 @@ export default {
     {
       type: "photos",
       hero: true,
+      caption: "Crater rims, lava fields and steaming holes in the landscape.",
       images: [
         {
           src: "./media/jb20130611iceland881.jpg",
@@ -241,7 +242,6 @@ export default {
           alt: "Steam drifting low over rough grass at sunset, the sky yellow behind a black ridge",
         },
       ],
-      caption: "Crater rims, lava fields and steaming holes in the landscape.",
     },
   ],
 };

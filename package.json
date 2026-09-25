@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "clean": "rm -rf .astro-cache dist",
-    "compress": "node scripts/compress-media.mjs"
+    "compress": "node scripts/compress-media.mjs",
+    "format": "node scripts/format-manifests.mjs"
   },
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.3.0",

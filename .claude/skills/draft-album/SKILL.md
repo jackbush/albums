@@ -62,6 +62,19 @@ the JSDoc type line at the top is what gives editor autocomplete, keep it.
 `publish-album` flags any that aren't. A string holding a double quote of its own is the one
 exception — single-quote that one rather than escaping it.
 
+**One property per line, always** — never an inline object, however short. A subheading fits on
+one line and still gets four; so does an `images` entry. These files are edited by hand far more
+than they are read, and a property alone on its line is one a person can change, comment out or
+move without picking a line apart first.
+
+**A `photos` block keys in this order:** `type`, `hero`, `closer`, `caption`, `images`. The
+images array is long and the flags above it are what get edited, so they belong together at the
+top where they can be read at a glance rather than hunted for either side of forty lines of
+paths. Other block types keep the order their fields are documented in.
+
+`npm run format` puts a manifest into both of these, and `publish-album` runs it. Write them
+right the first time anyway — the formatter is a safety net, not the plan.
+
 ```js
 /** @type {import('../../lib/schema').AlbumManifest} */
 export default {
@@ -103,7 +116,10 @@ Group the photos by capture day. Before each day's photos — including the firs
 user's to write:
 
 ```js
-{ type: "subheading", title: "Sat 14 Nov 2015" }
+{
+  type: "subheading",
+  title: "Sat 14 Nov 2015",
+}
 ```
 
 Exactly that format: `%a %d %b %Y`, which is what the exiftool command above already prints.
@@ -117,13 +133,13 @@ block** — a block of one fills the column, which is the ordinary way a photo a
 ```js
 {
   type: "photos",
+  caption: false,
   images: [
     {
       src: "./media/jb20151114jaisalmer3.jpg",
       alt: "Camels resting in the shade of a thorn tree, saddles stacked beside them",
     },
   ],
-  caption: false,
 }
 ```
 
@@ -138,17 +154,33 @@ next day's `subheading`. More than six in a day takes two adjacent blocks.
 ```js
 {
   type: "photos",
-  images: [
-    { src: "./media/a.jpg", alt: "..." },
-    { src: "./media/b.jpg", alt: "..." },
-  ],
   caption: false,
+  images: [
+    {
+      src: "./media/a.jpg",
+      alt: "...",
+    },
+    {
+      src: "./media/b.jpg",
+      alt: "...",
+    },
+  ],
 }
 ```
 
 Rows follow the count: 2 → 2, 3 → 3, 4 → 2+2, 5 → 3+2, 6 → 2+2+2. Frames keep capture order.
 Optional `hero: true` gives the first frame a full-width row of its own and re-rows the rest:
-3 → 1+2, 4 → 1+3, 5 → 1+2+2, 6 → 1+3+2. Field notes in `README.md` under "Block types".
+3 → 1+2, 4 → 1+3, 5 → 1+2+2, 6 → 1+3+2. Optional `closer: true` does the same at the other
+end, the last frame taking the row: 3 → 2+1, 4 → 3+1, 5 → 2+2+1, 6 → 3+2+1. Both together
+bracket the block: 2 → 1+1, 4 → 1+2+1, 6 → 1+2+2+1.
+
+Two shapes fall out of the frames themselves rather than the count, so they aren't yours to
+choose — but they are worth knowing when you group. A `hero` block of four or more (three,
+without a `closer`) whose **first frame is upright** builds a rectangle instead: the hero down
+the left, two frames stacked on the right, the rest in ordinary rows underneath. And any
+**upright frame left alone on its row** sits at two thirds of the column rather than filling
+it — a block of one, an upright `closer`, an upright `hero` where the rectangle doesn't apply.
+Field notes in `README.md` under "Block types".
 
 #### Orientation
 

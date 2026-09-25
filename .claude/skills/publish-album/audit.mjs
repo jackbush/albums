@@ -7,12 +7,16 @@ const { default: m } = await import(
   pathToFileURL(resolve(`src/albums/${slug}/manifest.js`)).href
 );
 
-// A block of one plain frame is the album's baseline rhythm, not a repeat, so it has no
-// shape to match on. Anything with more frames or a hero row does.
+// A block of one frame is the album's baseline rhythm, not a repeat, so it has no shape to
+// match on — and neither `hero` nor `closer` changes a single frame, so it stays shapeless
+// whatever they're set to. Anything with more frames does, and the flags are part of the
+// shape there: four frames and four with a closer lay out differently, so they aren't a
+// repeat of each other.
 const shape = (it) => {
   if (it.type !== 'photos') return null;
-  if (it.images.length === 1 && !it.hero) return null;
-  return `${it.images.length} image${it.images.length > 1 ? 's' : ''}${it.hero ? ' + hero' : ''}`;
+  if (it.images.length === 1) return null;
+  const flags = [it.hero && 'hero', it.closer && 'closer'].filter(Boolean);
+  return `${it.images.length} images${flags.length ? ` + ${flags.join(' + ')}` : ''}`;
 };
 
 // Which subheading each block sits under, and the runs of photo blocks between breaks.

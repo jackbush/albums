@@ -27,3 +27,18 @@ and go measure, rather than explaining why it should have.
 
 **Typography corollary:** put `font-size` and `line-height` on the block that owns the line
 box. Setting them on an inline child changes the glyphs but not the spacing.
+
+## Leave the docs true at the end of every run (2026-09-25)
+
+I changed how `hero` blocks lay out, then reported that `README.md` and the `draft-album`
+skill still described the old shapes and *offered* to update them. The user had to ask. The
+same run had already left the README's "drop in the biggest file you have" advice standing
+after capping sources at 2400px, and its phone notes standing after media started bleeding to
+the screen edge.
+
+**Rule:** documentation is part of the change, not a follow-up. Before reporting a behaviour
+change as done, grep the docs for what it describes and fix every stale line in the same run.
+In this repo that means `README.md` (block types, row shapes, the npm script list) and
+`.claude/skills/*/SKILL.md` — the skills generate manifests from those descriptions, so a
+stale row table produces wrong groupings later. Never end a run with a docs offer; the
+question is a tell that the work isn't finished.

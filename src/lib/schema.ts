@@ -67,6 +67,8 @@ export const albumManifestSchema = z
               caption,
               /** Gives the first frame a row of its own; a block of two shares one row, 2/3 + 1/3. */
               hero: z.boolean().default(false),
+              /** The same for the last frame: it closes the block on a row of its own. */
+              closer: z.boolean().default(false),
             })
             .strict(),
           z
@@ -187,6 +189,7 @@ export type Item =
       images: Photo[];
       caption?: string;
       hero: boolean;
+      closer: boolean;
     }
   | {
       type: 'broll';

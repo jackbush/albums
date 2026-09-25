@@ -8,6 +8,8 @@ npm install
 npm run dev      # http://localhost:4321/albums/
 npm run build    # writes dist/
 npm run preview  # serves dist/ at the real base path
+npm run compress # fits album sources to the largest size the site serves
+npm run format   # puts manifests in house order (one property per line)
 ```
 
 ---
@@ -37,14 +39,14 @@ what order**. First in the list is first on the page.
 ```js
 /** @type {import('../lib/schema').HomeManifest} */
 export default {
-  title: 'Jack Bush | Albums',
-  heading: 'Albums',
-  description: 'Just nice, old-fashioned photo albums. …',
-  cover: './home-cover.jpg',
+  title: "Jack Bush | Albums",
+  heading: "Albums",
+  description: "Just nice, old-fashioned photo albums. …",
+  cover: "./home-cover.jpg",
 
   posts: [
-    '2019-purbeck',
-    // 'japan-2023',
+    "2019-purbeck",
+    // "japan-2023",
   ],
 };
 ```
@@ -62,19 +64,52 @@ export default {
 ```js
 /** @type {import('../../lib/schema').AlbumManifest} */
 export default {
-  title: 'Purbeck Bimble',
-  location: 'Dorset, UK',
-  year: '2019',
-  cover: './media/DSCF0802.jpg',
+  title: "Purbeck Bimble",
+  location: "Dorset, UK",
+  year: "2019",
+  cover: "./media/DSCF0802.jpg",
 
   items: [
-    { type: 'quote', text: 'Gorse everywhere, out for weeks and still going.', attribution: 'Ben' },
-    { type: 'photos', images: [{ src: './media/DSCF0678.jpg', alt: 'Grinning into the wind' }] },
-    // { type: 'photos', images: [{ src: './media/DSCF0689.jpg', alt: 'Maybe later' }] },
-    { type: 'subheading', title: 'Old Harry', text: 'Chalk, and a headwind that stopped us dead' },
+    {
+      type: "quote",
+      text: "Gorse everywhere, out for weeks and still going.",
+      attribution: "Ben",
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./media/DSCF0678.jpg",
+          alt: "Grinning into the wind",
+        },
+      ],
+    },
+    // {
+    //   type: "photos",
+    //   caption: false,
+    //   images: [
+    //     {
+    //       src: "./media/DSCF0689.jpg",
+    //       alt: "Maybe later",
+    //     },
+    //   ],
+    // },
+    {
+      type: "subheading",
+      title: "Old Harry",
+      text: "Chalk, and a headwind that stopped us dead",
+    },
   ],
 };
 ```
+
+**One property per line**, however short — never an inline object. Manifests are edited by hand
+far more than they are read, and a property alone on its line is one you can change, comment out
+or move without picking a line apart first. A `photos` block keys in a fixed order too:
+`type`, `hero`, `closer`, `caption`, `images` — the flags that get edited sit together above the
+long array of paths rather than either side of it. `npm run format` puts a manifest into both,
+and `publish-album` runs it over an album before publishing.
 
 **Keep that first `@type` line.** It's what makes your editor autocomplete block types and
 underline a bad field as you type, before you ever run a build. Copy it into every new manifest,
@@ -95,7 +130,7 @@ adjusting `../../` if your file sits at a different depth.
 **Every media path is relative to the manifest** and must start with `./`:
 
 ```js
-src: './media/DSCF0678.jpg'
+src: "./media/DSCF0678.jpg"
 ```
 
 Supported: **jpg**, **png**, **gif** for images; **mp4**, **webm**, **mov** for video.
@@ -127,9 +162,14 @@ One to six photographs. One is the ordinary case — the frame fills the column:
 
 ```js
 {
-  type: 'photos',
-  images: [{ src: './media/cliffs.jpg', alt: 'The chalk cliff at Old Harry, white against a grey sea' }],
-  caption: 'Old Harry, an hour before the rain.',
+  type: "photos",
+  caption: "Old Harry, an hour before the rain.",
+  images: [
+    {
+      src: "./media/cliffs.jpg",
+      alt: "The chalk cliff at Old Harry, white against a grey sea",
+    },
+  ],
 }
 ```
 
@@ -137,13 +177,22 @@ More than one lays out as rows, under a single caption:
 
 ```js
 {
-  type: 'photos',
+  type: "photos",
+  caption: "Kopan, the hour before the morning session.",
   images: [
-    { src: './media/doorway.jpg', alt: 'A monk stepping through a red doorway' },
-    { src: './media/lamps.jpg', alt: 'Rows of butter lamps burning in a dark hall' },
-    { src: './media/steps.jpg', alt: 'Worn steps climbing between two brick walls' },
+    {
+      src: "./media/doorway.jpg",
+      alt: "A monk stepping through a red doorway",
+    },
+    {
+      src: "./media/lamps.jpg",
+      alt: "Rows of butter lamps burning in a dark hall",
+    },
+    {
+      src: "./media/steps.jpg",
+      alt: "Worn steps climbing between two brick walls",
+    },
   ],
-  caption: 'Kopan, the hour before the morning session.',
 }
 ```
 
@@ -151,7 +200,8 @@ More than one lays out as rows, under a single caption:
 | --- | --- | --- |
 | `images` | yes | One to six. Each takes a `src` relative to the manifest, and its own `alt`. |
 | `caption` | no | One line under the whole block. `false` means "not written yet" — same as leaving it out, but keeps the slot. |
-| `hero` | no | `false`. Gives the first image a full-width row of its own. No effect on a block of one. |
+| `hero` | no | `false`. Gives the first image a row of its own. Two exceptions, both below: a block of two shares one row, and an upright first image builds a rectangle with two frames stacked beside it. No effect on a block of one. |
+| `closer` | no | `false`. The same for the last image: it closes the block on a row of its own. Combines with `hero` to bracket the block. No effect on a block of one. |
 
 `alt` and `caption` do different jobs: `alt` describes what is in the frame for someone who
 can't see it — screen readers and the full-screen viewer, never printed on the page — while
@@ -168,21 +218,41 @@ Drop in the biggest file you have; the build makes the resized versions. **GIFs 
 through untouched** to keep them animating — resizing an animated GIF would flatten it to one
 frame, so export GIFs at the size you want them, around 1000px wide.
 
+Nothing beyond **2400px on the long edge** ever reaches a visitor, though. That's `PLATE_CAP`
+in `src/lib/media.ts` — the size of the full-screen plate, and the largest image the site
+serves; every inline width is smaller. Pixels past it are resized away on every build and
+cost only repository size, so once an album is final, `npm run compress` fits its sources
+inside that box in place. It keeps EXIF, skips anything already within the cap, and is safe to
+re-run. It is also lossy and irreversible — keep the true originals somewhere outside the repo.
+
 #### Rows
 
 The count fixes the rows — nothing in the manifest chooses them:
 
-| Images | Rows | with `hero` | Phone | Phone with `hero` |
+| Images | Rows | with `hero` | with `closer` | with both |
 | --- | --- | --- | --- | --- |
 | 1 | 1 | 1 | 1 | 1 |
-| 2 | 2 | 2 (⅔ + ⅓) | 2 | 1 + 1 |
-| 3 | 3 | 1 + 2 | 2 + 1 | 1 + 2 |
-| 4 | 2 + 2 | 1 + 3 | 2 + 2 | 1 + 2 + 1 |
-| 5 | 3 + 2 | 1 + 2 + 2 | 2 + 1 + 2 | 1 + 2 + 2 |
-| 6 | 2 + 2 + 2 | 1 + 3 + 2 | 2 + 2 + 2 | 1 + 2 + 1 + 2 |
+| 2 | 2 | 2 (⅔ + ⅓) | 1 + 1 | 1 + 1 |
+| 3 | 3 | 1 + 2 | 2 + 1 | 1 + 1 + 1 |
+| 4 | 2 + 2 | 1 + 3 | 3 + 1 | 1 + 2 + 1 |
+| 5 | 3 + 2 | 1 + 2 + 2 | 2 + 2 + 1 | 1 + 3 + 1 |
+| 6 | 2 + 2 + 2 | 1 + 3 + 2 | 3 + 2 + 1 | 1 + 2 + 2 + 1 |
+
+And the same on a phone, where a row never runs more than two across:
+
+| Images | Phone | with `hero` | with `closer` | with both |
+| --- | --- | --- | --- | --- |
+| 1 | 1 | 1 | 1 | 1 |
+| 2 | 2 | 1 + 1 | 1 + 1 | 1 + 1 |
+| 3 | 2 + 1 | 1 + 2 | 2 + 1 | 1 + 1 + 1 |
+| 4 | 2 + 2 | 1 + 2 + 1 | 2 + 1 + 1 | 1 + 2 + 1 |
+| 5 | 2 + 1 + 2 | 1 + 2 + 2 | 2 + 2 + 1 | 1 + 2 + 1 + 1 |
+| 6 | 2 + 2 + 2 | 1 + 2 + 1 + 2 | 2 + 1 + 2 + 1 | 1 + 2 + 2 + 1 |
 
 With `hero: true` the first image takes the full column width on its own — the width a block
-of one gets — and the images after it fall into the rows for one fewer frame.
+of one gets — and the images after it fall into the rows for one fewer frame. `closer: true`
+does the same at the other end, giving the last image a row of its own. Set both and the block
+is bracketed: a plate, the shapes for whatever sits between, then a plate.
 
 A hero block of **two** is the exception: the pair shares a single row rather than stacking,
 the hero holding two thirds of the column and the second frame the last third. The seam
@@ -190,12 +260,53 @@ between them lands on the right-hand gutter of an evenly spaced band of three, s
 and a band of three set one above the other line up down the page. These two are cut to fixed
 widths rather than to a common height, so they hang from a shared bottom edge and the tops
 stagger. A phone still stacks them — a third of a phone column is the thumbnail the narrow
-shapes exist to avoid.
+shapes exist to avoid. Adding `closer` overrides the split — asking for the last frame on a
+row of its own is asking for the two to stack, which is the one way to get two full-width
+plates one above the other.
+
+A hero block of **three or more whose first image is upright** is the other exception, and it
+ignores the `hero` column above. A full-width upright plate is a tower, so instead the first
+three frames build one rectangle — the hero down the left, two frames stacked on the right,
+both columns ending on the same line. Anything past the third falls into ordinary rows
+underneath:
+
+| Images | Rows, upright hero |
+| --- | --- |
+| 3 | rectangle |
+| 4 | rectangle + 1 |
+| 5 | rectangle + 2 |
+| 6 | rectangle + 3 |
+
+The two column widths are solved rather than fixed: the rectangle only closes if the hero and
+the stack finish at the same height, and no frame is cropped to get there, so the widths fall
+out of the three aspect ratios and the gutter between the stacked pair. A very tall hero takes
+a narrow column and gives the stack the rest; two upright frames in the stack push the balance
+the other way. A phone ignores all of this and uses the narrow shapes in the table.
+
+The rectangle and a `closer` compose: the rectangle takes the first three frames, the closer
+the last, and anything between flows in ordinary rows. That needs four frames or more — at
+exactly three the closer has claim on the last frame, so the rectangle gives way and the block
+reads 1 + 1 + 1.
+
+An **upright image alone on its row** stops at the same two-thirds band a hero pair uses,
+left-aligned, with the last third of the row empty. That covers a block of one, an upright
+`closer`, and an upright `hero` in the cases where the rectangle doesn't apply — anywhere an
+upright would otherwise tower at the full width of the column. Where the block is a single
+frame, its caption stops with it; in a longer block the caption keeps the full measure. On a
+phone the frame runs full width like any other.
 
 Within a row, widths are set in proportion to each frame's aspect ratio, so the frames land on
 a common height and fill the column exactly, uncropped — any mix of portrait and landscape
 works. **Below 720px a row never runs more than two across**, so a band of three doesn't
 shrink to thumbnails; where that leaves an odd frame, it goes last and takes the full width.
+
+#### On a phone
+
+Below 720px the photographs break out of the page margin and run to the screen edge, and the
+gutters inside a block halve, in both directions. Everything set in type — chapters, quotes,
+the page head, the caption under a block — stays inset on the container's measure, which drops
+from 16px to 10px at the same breakpoint. The album covers on the home page bleed the same
+way, with their titles and stamps holding the inset.
 
 ### `b-roll`
 
@@ -205,12 +316,15 @@ into it. Where a `photos` block composes, this one just lays them out.
 
 ```js
 {
-  type: 'broll',
+  type: "broll",
   images: [
-    { src: './b-roll/DSC_0006.jpg', alt: 'A woman on a balcony above palms and banana trees' },
+    {
+      src: "./b-roll/DSC_0006.jpg",
+      alt: "A woman on a balcony above palms and banana trees",
+    },
     // …eleven more
   ],
-  caption: 'Lombok and the Gilis, mostly off the little camera.',
+  caption: "Lombok and the Gilis, mostly off the little camera.",
 }
 ```
 
@@ -237,11 +351,11 @@ screen, and each slide repeats the block's caption with its position appended.
 
 ```js
 {
-  type: 'video',
-  src: './media/descent.mp4',
-  poster: './media/descent-still.jpg',
-  alt: 'A skier dropping off a corniced ridge into shadow',
-  caption: 'The last good line of the week.',
+  type: "video",
+  src: "./media/descent.mp4",
+  poster: "./media/descent-still.jpg",
+  alt: "A skier dropping off a corniced ridge into shadow",
+  caption: "The last good line of the week.",
 }
 ```
 
@@ -293,10 +407,10 @@ under the title instead.
 
 ```js
 {
-  type: 'quote',
-  text: 'A city built around its own reflection.',
-  attribution: 'Someone Who Said It',
-  url: 'https://example.com/where-they-said-it',
+  type: "quote",
+  text: "A city built around its own reflection.",
+  attribution: "Someone Who Said It",
+  url: "https://example.com/where-they-said-it",
 }
 ```
 
@@ -321,13 +435,13 @@ Optional. Every key is optional; anything you leave out keeps the default.
 
 ```js
   theme: {
-    background: '#0e0e10',
-    textPrimary: '#f5f5f5',
-    textSecondary: '#a0a0a0',
-    textTitle: '#ffffff',
-    textLink: '#ff5c00',
-    fontBody: 'Inter',
-    fontHeading: 'Fraunces',
+    background: "#0e0e10",
+    textPrimary: "#f5f5f5",
+    textSecondary: "#a0a0a0",
+    textTitle: "#ffffff",
+    textLink: "#ff5c00",
+    fontBody: "Inter",
+    fontHeading: "Fraunces",
   },
 ```
 
@@ -360,10 +474,10 @@ top of [`src/albums/index.js`](src/albums/index.js), above the album list:
 
 ```js
 export default {
-  title: 'Jack Bush | Albums',
-  heading: 'Albums',
+  title: "Jack Bush | Albums",
+  heading: "Albums",
   description: "Just nice, old-fashioned photo albums. …",
-  cover: './home-cover.jpg',
+  cover: "./home-cover.jpg",
   posts: [ /* … */ ],
 };
 ```

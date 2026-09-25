@@ -1,0 +1,106 @@
+---
+/*
+ * One frame of a `photos` block: the lightbox hook, the button, and the picture.
+ *
+ * Split out of PhotosItem because a hero block with an upright first frame nests
+ * two of its frames inside a stack element while the rest stay flat siblings, so
+ * the same markup has to be emitted from two places in that template.
+ *
+ * Everything here is decided by the parent — widths, rungs, plate — and arrives
+ * already computed. This holds no layout logic of its own.
+ */
+import { Picture } from 'astro:assets';
+import type { Photo } from '../../lib/schema';
+
+interface Frame extends Photo {
+  /** Plate number, zero-padded, shown by the viewer. */
+  label: string;
+  /** The block's caption, with this frame's position appended when it has siblings. */
+  caption?: string;
+  /** Animated GIFs skip the image service — resizing one drops all but frame one. */
+  gif: boolean;
+  plate: { src: string; width: number; height: number };
+  widths: number[];
+  fallback: number;
+  sizes: string;
+  /** The `--width-wide` / `--width-narrow` custom properties, as an inline style. */
+  style: string;
+}
+
+interface Props {
+  frame: Frame;
+}
+
+const { frame } = Astro.props;
+---
+
+<div
+  class="photos__frame"
+  style={frame.style}
+  data-lightbox
+  data-full={frame.plate.src}
+  data-full-width={frame.plate.width}
+  data-full-height={frame.plate.height}
+  data-alt={frame.alt}
+  data-caption={frame.caption}
+  data-plate={frame.label}
+>
+  <button
+    type="button"
+    class="photos__open"
+    aria-label={frame.alt ? `View full screen: ${frame.alt}` : `View plate ${frame.label} full screen`}
+  >
+    {
+      frame.gif ? (
+        <img
+          src={frame.src.src}
+          width={frame.src.width}
+          height={frame.src.height}
+          alt={frame.alt ?? ''}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <Picture
+          src={frame.src}
+          alt={frame.alt ?? ''}
+          width={frame.fallback}
+          widths={frame.widths}
+          sizes={frame.sizes}
+          formats={['avif', 'webp']}
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    }
+  </button>
+</div>
+
+<style>
+  /*
+   * Scoped here rather than in PhotosItem: Astro's scoping is per-component, so a
+   * rule written there wouldn't reach this element.
+   */
+  .photos__frame {
+    width: var(--width-wide);
+  }
+
+  .photos__open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .photos__open :global(img) {
+    width: 100%;
+  }
+
+  @media (max-width: 719px) {
+    .photos__frame {
+      width: var(--width-narrow);
+    }
+  }
+</style>
