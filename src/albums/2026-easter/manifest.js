@@ -43,12 +43,6 @@ export default {
           src: "./media/_MG_4795.jpg",
           alt: "A small child in red and black robes crouching between the penitents, a float passing behind",
         },
-      ],
-      caption: false,
-    },
-    {
-      type: "photos",
-      images: [
         {
           src: "./media/_MG_4800.jpg",
           alt: "A statue of the risen Christ on a bank of white flowers below a cathedral rose window",

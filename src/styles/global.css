@@ -84,6 +84,21 @@ a {
  * writing holds its left edge down the whole page while the pictures break past it.
  */
 @media (max-width: 719px) {
+  /*
+   * The text column pulls in with them, from 16px to 10px. Not to nothing: with the
+   * photographs running edge to edge, this inset is the only thing left saying the
+   * writing is a column and not an accident, and at much less than 10px it reads as
+   * type that has slipped off the plate rather than type that was placed.
+   *
+   * Phone only. On a wider screen the 1200px max-width is this gutter twice over
+   * plus the 1168px column, and that column width is hardcoded as CONTENT in the
+   * photo components — so changing the token up there would widen the column and
+   * quietly desync every image width ladder from it.
+   */
+  .container {
+    --page-gutter: 0.625rem;
+  }
+
   .bleed {
     margin-inline: calc(var(--page-gutter) * -1);
   }

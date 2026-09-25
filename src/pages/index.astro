@@ -9,8 +9,17 @@ const albums = getListedAlbums();
 
 // Cards are half the 1168px column on desktop, full width below the 768px break.
 // The gap between them is the site gutter, so a card is (1168 - 16) / 2.
-const SIZES =
-  '(min-width: 75rem) 576px, (min-width: 48rem) calc(50vw - 1.5rem), calc(100vw - 2rem)';
+//
+// Three breaks rather than two, because the column count and the bleed don't change
+// at the same width: cards go one-up at 768px, but the cover only breaks out to the
+// screen edge at 720px, where the rest of the site bleeds. Between the two it is a
+// full-width card still sitting inside the page gutter.
+const SIZES = [
+  '(min-width: 75rem) 576px',
+  '(min-width: 48rem) calc(50vw - 1.5rem)',
+  '(min-width: 45rem) calc(100vw - 2rem)',
+  '100vw',
+].join(', ');
 // 580 the card at 1x, 1180 at 2x — which also covers a DPR-3 phone on a full-width
 // card. Shares its rungs with the plate ladders, so a cover used in both is cut once.
 const WIDTHS = [400, 580, 830, 1180, 1650];
@@ -122,6 +131,28 @@ const FALLBACK = 1650;
       grid-template-columns: 1fr;
       gap: 3rem;
       padding-bottom: 4rem;
+    }
+  }
+
+  /*
+   * Below 720px a cover breaks out to the screen edge, the way a plate does inside
+   * an album, while the title and stamp under it stay on the container's measure.
+   * The card stops being a tidy rectangle and becomes a picture with its caption
+   * set beneath — which is the same trade the album pages already make.
+   *
+   * Width is set explicitly instead of using the shared `.bleed` helper. That one
+   * only hangs negative margins and lets the element grow into the space they open
+   * up, which works for an auto-width box but not for a replaced element already
+   * pinned to `width: 100%`.
+   */
+  @media (max-width: 719px) {
+    .entry__cover {
+      /* `img { max-width: 100% }` in global.css would otherwise clamp the width
+         below back to the container, leaving the negative left margin to pull the
+         cover flush left and strand a gutter's worth of gap down the right. */
+      max-width: none;
+      width: calc(100% + var(--page-gutter) * 2);
+      margin-inline: calc(var(--page-gutter) * -1);
     }
   }
 </style>
