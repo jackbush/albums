@@ -16,15 +16,20 @@ block's own properties back into house order is the one exception, and it's step
 ## 1. Put the manifest in house order
 
 ```bash
-npm run format -- <album-slug>
+npm run format -- <album-slug> --strip-empty
 ```
 
 One property per line, and `photos` blocks keyed `type`, `hero`, `closer`, `caption`, `images`.
 It rewrites the file in place and leaves comments, and blocks held back behind `//`, exactly
 where they were.
 
-**Do this silently.** It changes no words and no data — only which line a property sits on —
-so it doesn't belong in the report at the end. Run it, say nothing, move on.
+**The reordering is silent.** It changes no words and no data — only which line a property sits
+on — so it doesn't belong in the report at the end.
+
+**`--strip-empty` is not.** It removes `photos` blocks holding no frames — legal while drafting,
+where they hold a slot open, and rendered as nothing — and a removed block is a real change, so
+the count goes in the report. If one carried a caption, that caption is gone with it: say which
+blocks went, and quote any caption you deleted, in case a line someone wrote was parked there.
 
 ## 2. Register it on the home page
 
@@ -148,4 +153,5 @@ album should now appear in the position its line sits in.
 
 The change list from step 3, the warnings from step 4, and anything you asked about and are
 still waiting on. Say plainly if the album went into the index, was already there, or was
-skipped as standalone. Nothing about step 1 — the formatting pass is silent by design.
+skipped as standalone. From step 1, report only frameless blocks removed — the reordering
+itself is silent by design.

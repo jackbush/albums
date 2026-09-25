@@ -198,10 +198,17 @@ More than one lays out as rows, under a single caption:
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `images` | yes | One to six. Each takes a `src` relative to the manifest, and its own `alt`. |
+| `images` | yes | Up to six. Each takes a `src` relative to the manifest, and its own `alt`. **Empty is allowed** and renders nothing — see below. |
 | `caption` | no | One line under the whole block. `false` means "not written yet" — same as leaving it out, but keeps the slot. |
 | `hero` | no | `false`. Gives the first image a row of its own. Two exceptions, both below: a block of two shares one row, and an upright first image builds a rectangle with two frames stacked beside it. No effect on a block of one. |
 | `closer` | no | `false`. The same for the last image: it closes the block on a row of its own. Combines with `hero` to bracket the block. No effect on a block of one. |
+
+**An empty `images: []` is allowed, and renders as nothing at all** — no figure, no caption, no
+gap in the page, even if the block holds a caption or the array holds commented-out frames. It's
+a slot to hold open while you edit: somewhere to park a caption before the photograph exists, or
+to switch a block off without deleting the words in it. The dev server takes them without
+complaint; a production build prints a warning naming the block, since a live album shouldn't
+have them; and `publish-album` strips them out, reporting any caption it removed with them.
 
 `alt` and `caption` do different jobs: `alt` describes what is in the frame for someone who
 can't see it — screen readers and the full-screen viewer, never printed on the page — while

@@ -55,6 +55,27 @@ const meta = stamp(album);
         blocks.map(({ item, plate, block }) => {
           switch (item.type) {
             case 'photos':
+              /*
+               * A block with no frames renders as nothing — not an empty figure, not
+               * the caption on its own, nothing. It's a slot held open while editing,
+               * so it shouldn't leave a gap in the page to explain.
+               *
+               * Skipped here rather than inside the component so nothing downstream
+               * has to reason about an empty array. Plate numbering is unaffected:
+               * an empty block holds no plates, so it takes no numbers.
+               */
+              if (item.images.length === 0) {
+                // Quiet while you work; loud on a real build, where an empty block
+                // means `publish-album` hasn't run over the album yet.
+                if (import.meta.env.PROD) {
+                  console.warn(
+                    `[albums] ${album.slug} block ${block}: photos block has no frames, so it ` +
+                      `renders nothing. \`npm run format -- ${album.slug} --strip-empty\` removes it.`,
+                  );
+                }
+                return null;
+              }
+
               return (
                 <PhotosItem
                   images={item.images}

@@ -75,6 +75,11 @@ paths. Other block types keep the order their fields are documented in.
 `npm run format` puts a manifest into both of these, and `publish-album` runs it. Write them
 right the first time anyway — the formatter is a safety net, not the plan.
 
+**A block with `images: []` is legal and renders nothing** — no figure, no caption, no gap. It's
+a slot someone editing an album holds open, and `publish-album` clears them out. Don't write
+one: every file in `media/` goes into this draft, so an empty block here means a frame you've
+lost track of, not a slot you meant to hold.
+
 ```js
 /** @type {import('../../lib/schema').AlbumManifest} */
 export default {

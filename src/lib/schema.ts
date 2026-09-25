@@ -61,8 +61,15 @@ export const albumManifestSchema = z
           z
             .object({
               type: z.literal('photos'),
-              /** One to six frames; the count fixes the row layout. */
-              images: z.array(photo).min(1).max(6),
+              /**
+               * Up to six frames; the count fixes the row layout.
+               *
+               * An empty array is allowed and renders nothing at all — no caption, no
+               * space, no block. It's a slot held open while an album is being edited:
+               * somewhere to park a caption before the frame exists, or to silence a
+               * block without deleting the words in it. `publish-album` strips them.
+               */
+              images: z.array(photo).max(6),
               /** Shown once, under the whole block — each frame keeps its own `alt`. */
               caption,
               /** Gives the first frame a row of its own; a block of two shares one row, 2/3 + 1/3. */

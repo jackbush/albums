@@ -42,3 +42,17 @@ In this repo that means `README.md` (block types, row shapes, the npm script lis
 `.claude/skills/*/SKILL.md` — the skills generate manifests from those descriptions, so a
 stale row table produces wrong groupings later. Never end a run with a docs offer; the
 question is a tell that the work isn't finished.
+
+## Capture before you destroy, even when a script does the destroying (2026-09-25)
+
+Publishing 2025-sunbirds, step 1 of `publish-album` says to run the formatter with
+`--strip-empty` and then report which blocks went and quote any caption that went with them.
+I ran it first and read the instruction second. It printed "1 frameless block removed" and
+nothing else, the file was already overwritten, and the block wasn't in HEAD — so whatever
+caption had been parked there is gone, and I couldn't even say which block it was.
+
+**Rule:** before running anything that deletes, capture what it will delete — `cp` the file, or
+run the tool's dry-run mode first. Applies whenever the step's own output contract is "say what
+you removed": if the tool doesn't tell you, you have to look before, not after. And when a tool
+can't report what it destroyed, that's a gap in the tool — `--strip-empty` now prints the block
+number and caption of everything it removes, so the next run can't have this problem.

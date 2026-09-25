@@ -59,7 +59,10 @@ export function photoRows(
   hero = false,
   closer = false,
 ): number[] {
-  if (count <= 1) return [1];
+  // A block with no frames has no rows. It never reaches here — the page skips it —
+  // but returning a row for nothing would be a lie waiting to be believed.
+  if (count === 0) return [];
+  if (count === 1) return [1];
 
   if (hero && closer) {
     const between = count - 2;
