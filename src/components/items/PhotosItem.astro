@@ -1,0 +1,341 @@
+---
+import { Picture } from 'astro:assets';
+import { fullPlate, isGif } from '../../lib/media';
+import { photoRows } from '../../lib/layout';
+import type { Photo } from '../../lib/schema';
+
+interface Props {
+  images: Photo[];
+  caption?: string;
+  /** Gives the first frame a row of its own; a block of two shares one row, 2/3 + 1/3. */
+  hero: boolean;
+  /** Plate number of the first frame; the rest follow in order. */
+  plate: number;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
+}
+
+const { images, caption, hero, plate, block } = Astro.props;
+
+const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
+
+// The content column is 1168px wide; frames in a row split it, less the gutters.
+const CONTENT = 1168;
+// The gutter between two frames: the site gutter on a wide screen, where it also
+// matches the page padding either side of the column, and half of it on a phone.
+const GAP = { wide: 16, narrow: 8 };
+// What a row has to divide, against the viewport. A wide screen spends the page
+// gutter either side of the column; a phone doesn't — the block bleeds back out
+// through the container padding and runs the full width of the screen.
+const BASIS = { wide: '100vw - 2rem', narrow: '100vw' };
+
+// Two sets of rungs, picked per frame by how wide that frame ever gets. A frame
+// alone on its row holds the whole column, so it needs the column at 2x (2336);
+// 830 is the DPR-2 phone, 1180 both the DPR-3 phone and the column at 1x, 1650 the
+// tablet at 2x. A frame sharing a row never exceeds half the column on desktop, so
+// it stops at 1650 — which still covers it running full width below 720px.
+const FULL_WIDTHS = [560, 830, 1180, 1650, 2336];
+const ROW_WIDTHS = [250, 380, 580, 830, 1180, 1650];
+
+/**
+ * A frame's share of its row, the gutters that row spends, how many frames the row
+ * holds, and whether the row ends after it. Keyed by frame index, under one set of
+ * row shapes.
+ */
+function share(variant: 'wide' | 'narrow') {
+  const gap = GAP[variant];
+  const shares: { share: number; gaps: number; count: number; ends: boolean }[] = [];
+  const ratios = images.map((image) => image.src.width / image.src.height);
+
+  let start = 0;
+  for (const count of photoRows(images.length, variant, hero)) {
+    const inRow = ratios.slice(start, start + count);
+    const total = inRow.reduce((sum, ratio) => sum + ratio, 0);
+    // Frame widths in proportion to each frame's aspect ratio: the frames in a row
+    // then land on a common height and fill it exactly, without any being cropped.
+    inRow.forEach((ratio, i) => {
+      shares.push({ share: ratio / total, gaps: gap * (count - 1), count, ends: i === count - 1 });
+    });
+    start += count;
+  }
+
+  return shares;
+}
+
+const wide = share('wide');
+const narrow = share('narrow');
+
+/**
+ * A hero block of two doesn't divide its row in proportion to the frames: the hero
+ * holds two thirds of the column and the second frame the last third, so the seam
+ * between them falls on the right-hand gutter of an evenly spaced band of three.
+ * Wide screens only — `photoRows` keeps the pair stacked on a phone.
+ */
+const split = hero && images.length === 2;
+
+/**
+ * An upright frame on its own doesn't fill the column either: at full width it
+ * towers, so it takes the same two-thirds band as a hero and sits left, and the
+ * last third of the row stays empty.
+ *
+ * Wide screens only. On a phone it keeps the full bleed — there is no room to
+ * give a third of the screen away.
+ */
+const tall = images.length === 1 && images[0].src.height > images[0].src.width;
+
+/**
+ * Two of three even bands, plus the gutter they'd have had between them.
+ *
+ * Both the hero and a lone upright stop here, which is the point: the right edge
+ * lands exactly on the seam of a three-across row further down the page. Note it
+ * isn't two thirds of the column — `(2W - G) / 3`, a third of a gutter short of
+ * it, because the band has already paid for the gutters a row of three spends.
+ */
+const band = (basis: string) => `(${basis} - ${2 * GAP.wide}px - 0.5px) / 3`;
+const twoThirds = (basis: string) => `calc(${band(basis)} * 2 + ${GAP.wide}px)`;
+const TWO_THIRDS_PX = Math.round(((CONTENT - 2 * GAP.wide) / 3) * 2 + GAP.wide);
+
+/**
+ * A frame's width, as a CSS length. `basis` is the whole content column — `100%`
+ * against the row, `BASIS[variant]` against the viewport — out of which the row
+ * spends its gutters before the frame takes its share. The half-pixel keeps rounding
+ * from pushing a row's last frame onto its own line.
+ */
+function width(i: number, basis: string, variant: 'wide' | 'narrow') {
+  if (variant === 'wide') {
+    if (tall) return twoThirds(basis);
+    if (split) return i === 0 ? twoThirds(basis) : `calc(${band(basis)})`;
+  }
+
+  const row = variant === 'wide' ? wide[i] : narrow[i];
+  return `calc((${basis} - ${row.gaps}px - 0.5px) * ${row.share.toFixed(4)})`;
+}
+
+/** The same width at the one size the column is fixed: 1168px, from 75rem up. */
+function column(i: number) {
+  if (tall) return TWO_THIRDS_PX;
+
+  if (split) {
+    const third = (CONTENT - 2 * GAP.wide) / 3;
+    return Math.round(i === 0 ? third * 2 + GAP.wide : third);
+  }
+
+  return Math.round((CONTENT - wide[i].gaps) * wide[i].share);
+}
+
+const frames = await Promise.all(
+  images.map(async (image, i) => {
+    // Desktop decides the rungs: it is where a shared row is at its narrowest, and
+    // where a lone frame is at its widest. A lone upright is the exception — it
+    // never passes the two-thirds band on desktop, and below 720px it runs no wider
+    // than the screen, so the top rung of the full ladder would never be requested.
+    const full = wide[i].count === 1 && !tall;
+
+    return {
+      ...image,
+      label: labels[i],
+      // Each slide repeats the block's caption; the count says which frame of the
+      // set you are looking at — "Temples on the river (2/4)". A lone plate has no
+      // set to be counted in.
+      caption: caption && (images.length > 1 ? `${caption} (${i + 1}/${images.length})` : caption),
+      gif: isGif(image.src),
+      plate: await fullPlate(image.src),
+      widths: full ? FULL_WIDTHS : ROW_WIDTHS,
+      // Caps `Picture`'s fallback <img>, which otherwise renders at the source's full
+      // size — a 5MB frame from a 6000px original, plus an unreferenced avif and webp.
+      fallback: Math.min(image.src.width, full ? 2336 : 1650),
+      // A break after the last frame would only add an empty row.
+      breaks: {
+        wide: wide[i].ends && i < images.length - 1,
+        narrow: narrow[i].ends && i < images.length - 1,
+      },
+      sizes: [
+        `(max-width: 719px) ${width(i, BASIS.narrow, 'narrow')}`,
+        `(min-width: 75rem) ${column(i)}px`,
+        width(i, BASIS.wide, 'wide'),
+      ].join(', '),
+      style: [
+        `--width-wide: ${width(i, '100%', 'wide')}`,
+        `--width-narrow: ${width(i, '100%', 'narrow')}`,
+      ].join('; '),
+    };
+  }),
+);
+---
+
+<figure
+  class:list={['photos', tall && 'photos--tall']}
+  style={tall ? `--tall-width: ${twoThirds('100%')}` : undefined}
+  data-block={block}
+>
+  <div class:list={['photos__frames', 'bleed', split && 'photos__frames--split']}>
+    {
+      frames.map((frame) => (
+        <>
+          <div
+            class="photos__frame"
+            style={frame.style}
+            data-lightbox
+            data-full={frame.plate.src}
+            data-full-width={frame.plate.width}
+            data-full-height={frame.plate.height}
+            data-alt={frame.alt}
+            data-caption={frame.caption}
+            data-plate={frame.label}
+          >
+            <button
+              type="button"
+              class="photos__open"
+              aria-label={frame.alt ? `View full screen: ${frame.alt}` : `View plate ${frame.label} full screen`}
+            >
+              {frame.gif ? (
+                <img
+                  src={frame.src.src}
+                  width={frame.src.width}
+                  height={frame.src.height}
+                  alt={frame.alt ?? ''}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <Picture
+                  src={frame.src}
+                  alt={frame.alt ?? ''}
+                  width={frame.fallback}
+                  widths={frame.widths}
+                  sizes={frame.sizes}
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </button>
+          </div>
+          {frame.breaks.wide && <span class="photos__break photos__break--wide" aria-hidden="true" />}
+          {frame.breaks.narrow && <span class="photos__break photos__break--narrow" aria-hidden="true" />}
+        </>
+      ))
+    }
+  </div>
+  {
+    caption && (
+      <figcaption class="photos__caption">
+        <span class="meta photos__text">{caption}</span>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  /*
+   * One flow of frames rather than a div per row: the rows a phone wants aren't the
+   * rows a desktop wants, and the same frames can't sit in two sets of parents. A
+   * full-width, zero-height break element ends a row, and each breakpoint shows only
+   * its own breaks. Row spacing is two of the flex row-gaps — one either side of the
+   * break — so the row-gap is half the gutter, leaving rows and columns the same
+   * distance apart. A block of one is the degenerate case: one row, no breaks, full
+   * width.
+   */
+  .photos__frames {
+    --gutter: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--gutter) / 2) var(--gutter);
+    align-items: flex-start;
+  }
+
+  /*
+   * The two frames of a hero pair are cut to fixed thirds rather than to a common
+   * height, so they are only as tall as their own crops. They hang from a shared
+   * bottom edge — the top edges stagger, the baseline holds.
+   */
+  .photos__frames--split {
+    align-items: flex-end;
+  }
+
+  .photos__frame {
+    width: var(--width-wide);
+  }
+
+  .photos__break {
+    flex-basis: 100%;
+    height: 0;
+  }
+
+  .photos__break--narrow {
+    display: none;
+  }
+
+  .photos__open {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .photos__open :global(img) {
+    width: 100%;
+  }
+
+  /*
+   * One caption for the whole block, however many frames it holds. Size and leading
+   * sit here rather than on the inline span inside: a span can't pull a line box
+   * below its block's strut, so a line-height set there would be overruled by the
+   * body leading this figcaption inherits.
+   */
+  .photos__caption {
+    margin-top: 0.7rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  /*
+   * A lone upright leaves the last third of the row empty, and its caption stops
+   * with it rather than running out across the gap — the line belongs to the
+   * plate above it, so it reads as one object with a shared right edge.
+   */
+  .photos--tall .photos__caption {
+    width: var(--tall-width);
+  }
+
+  /* Size and leading come from the figcaption, overriding the smaller `.meta` pair,
+     so the strut and the inline box agree on the line box. */
+  .photos__text {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: 400;
+  }
+
+  /*
+   * On a phone the rows run no more than two across, the block bleeds to the screen
+   * edge (`.bleed`, in global.css), and the gutters between frames halve with it —
+   * both directions at once, since the row-gap is derived from the same property.
+   */
+  @media (max-width: 719px) {
+    .photos__frames {
+      --gutter: 0.5rem;
+    }
+
+    .photos__frame {
+      width: var(--width-narrow);
+    }
+
+    /* Nothing is held back to two thirds down here — the frame runs the full
+       width of the screen, so its caption goes back to the container's measure. */
+    .photos--tall .photos__caption {
+      width: auto;
+    }
+
+    .photos__break--wide {
+      display: none;
+    }
+
+    .photos__break--narrow {
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,499 @@
+/** @type {import('../../lib/schema').AlbumManifest} */
+export default {
+  title: "Mumbai to Delhi",
+  location: "India",
+  year: "2015",
+  cover: "./media/_JB16368.jpg",
+
+  items: [
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16078.jpg",
+          alt: "From the back seat of a taxi, the driver in silhouette against a bright street of parked cars and handcarts",
+        },
+        {
+          src: "./media/_JB16131.jpg",
+          alt: "The Taj hotel across an empty plaza with pigeons turning in the air above it, a family of four standing in the foreground",
+        },
+        {
+          src: "./media/_JB16130.jpg",
+          alt: "The Gateway of India under flat grey cloud, a scatter of people small along its base",
+        },
+      ],
+      caption: "Arriving in Colaba, where the air is thick with fresh coriander and the architecture has a deep colonial legacy.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16101.jpg",
+          alt: "A café cabinet lit at night, filled with cakes.",
+        },
+      ],
+      caption: "Shantaram pilgrimage to Leopold Cafe.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16159.jpg",
+          alt: "A concrete clock tower on a curved balcony above worn steps, deep in green shade, one person sitting alone underneath",
+        },
+        {
+          src: "./media/_JB16164.jpg",
+          alt: "A drummer in a white jacket on a roadside beside his decorated bull, both looking straight into the camera",
+        },
+        {
+          src: "./media/_JB16092.jpg",
+          alt: "Closed fruit stand by night, with people sleeping outside.",
+        },
+      ],
+    },
+
+    {
+      type: "subheading",
+      title: "Udaipur",
+      text: "A city built around its own reflection.",
+    },
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16228.jpg",
+          alt: "A swimmer bathing in the lake",
+        },
+        {
+          src: "./media/_JB16229.jpg",
+          alt: "The base of an old tree growing through the paving, trunk smeared with red pigment, a small white shrine tucked into its roots",
+        },
+        {
+          src: "./media/_JB16230.jpg",
+          alt: "Looking up the same trunk to a carved sandstone temple spire against a blue-painted wall",
+        },
+      ],
+      caption: "A shrine by the lake, where people also come to meet and bathe.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16234.jpg",
+          alt: "A woman cooking on the pavement outside a bright blue house, scooter parked beside a red gate, marigold garlands over the doors",
+        },
+        {
+          src: "./media/_JB16231.jpg",
+          alt: "A tiered white gateway with balconies and arched openings, people passing through the arches below into the bazaar",
+        },
+        {
+          src: "./media/_JB16571.jpg",
+          alt: "Looking out from a shaded temple porch to the water, orange flags on the ghat and scooters parked across the flagstones",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16344.jpg",
+          alt: "A wide street under converging lines of lights, a pandal tent glowing green at the far end",
+        },
+        {
+          src: "./media/_JB16327.jpg",
+          alt: "A busy street strung end to end with orange bulbs, women in saris walking towards the camera",
+        },
+        {
+          src: "./media/_JB16331.jpg",
+          alt: "Looking down from a balcony on a street lit blue and white, chandeliers hung outside a jeweller’s",
+        },
+      ],
+      caption: "The evening arrives and Diwali begins.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16336.jpg",
+          alt: "A temple entrance packed with people under heavy marigold garlands and cut-glass lamps, a policeman at the edge of the crowd",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16358.jpg",
+          alt: "Two boys holding sparklers at arm’s length in a doorway, faces lit hard from below",
+        },
+        {
+          src: "./media/_JB16330.jpg",
+          alt: "Two women sitting on a step in front of a green door, one in cream and one in red, a rack of souvenirs beside them",
+        },
+        {
+          src: "./media/_JB16351.jpg",
+          alt: "A man stepping back from fireworks burning on the ground, the whole frame lit red",
+        },
+        {
+          src: "./media/_JB16314.jpg",
+          alt: "A crowd gathered outside a lit travel agency at night, a motorbike headlight coming through them",
+        },
+      ],
+      caption: "The joy is everywhere and shared by all.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16368.jpg",
+          alt: "The Lake Palace at first light",
+        },
+      ],
+      caption: "Kept awake all night by firecrackers, had a bleary walk down to the Lake Palace for sunrise.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16498.jpg",
+          alt: "A low colonnaded building standing straight out of the lake, a tree leaning over its roof",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16470.jpg",
+          alt: "Four women in red, yellow, pink and green saris standing at the carved base of a temple",
+        },
+        {
+          src: "./media/_JB16471.jpg",
+          alt: "Two carved stone elephants facing each other on a temple frieze, worn smooth and marked with red powder",
+        },
+      ],
+      caption: "Jagdish Temple, still busy from the festival.",
+    },
+    {
+      type: "subheading",
+      title: "Jaisalmer",
+      text: "West into the desert, where everything is yellow and golden.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16579.jpg",
+          alt: "Carved sandstone balconies stacked up both sides of a lane, meeting a narrow strip of blue sky",
+        },
+        {
+          src: "./media/_JB16581.jpg",
+          alt: "A haveli façade of tiered projecting windows above an archway, people passing underneath into the light",
+        },
+      ],
+      caption: "Arrived on a night bus, sleep deprived again after 14 hours of lumpy roads and limited lumbar support. Straight up to the hill fort, to be distracted by the incredible ornament.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16658.jpg",
+          alt: "A roundabout monument outlined in yellow bulbs at dusk, motorbikes and cars going round it",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16705.jpg",
+          alt: "Two domed cenotaphs standing out in still water at dawn, pigeons crowded on the nearer roof",
+        },
+        {
+          src: "./media/_JB16710.jpg",
+          alt: "A dirt track running out into scrub, the sun coming up flat and pale through desert haze",
+        },
+        {
+          src: "./media/_JB16717.jpg",
+          alt: "A figure in a red shirt walking a narrow stone causeway across water towards a low sandstone gateway",
+        },
+      ],
+      caption: "Sunrise at Gadsisar Lake, with chhatris rebuilt in the 14th century. Met a train driver who invited me to run with him to his morning prayer.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16721.jpg",
+          alt: "The same temple from the front, women in bright print saris filling steel buckets around the offering",
+        },
+      ],
+      caption: "Getting to see this made my trip.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16724.jpg",
+          alt: "A man driving a red tractor and green trailer loaded with sand, the fort walls on the ridge behind him",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16739.jpg",
+          alt: "A single wide-crowned thorn tree standing alone on pale sand under a hard blue sky",
+        },
+        {
+          src: "./media/_JB16741.jpg",
+          alt: "Camels sitting in the sand in their red and white saddle blankets, the nearest one looking off to the right",
+        },
+        {
+          src: "./media/_JB16765.jpg",
+          alt: "Riding out through low scrub at dusk, seen from the camel behind — a rider ahead with a pack on their back, sand track winding between bushes",
+        },
+      ],
+      caption: "The desert is stunning, but the camels get a raw deal and this isn’t something any of us would do again.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16769.jpg",
+          alt: "Bare gradient sky after sunset, orange to deep violet, a single star out over a black line of trees",
+        },
+      ],
+      caption: false,
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16770.jpg",
+          alt: "Two guides talking across a low fire, faces lit orange, a water drum between them",
+        },
+      ],
+      caption: "These two started drumming on the water container and asked if we wanted a song, so I got all excited about hearing some folk music. Justin Bieber’s ‘Baby’ wasn’t what I expected, but they put a lot of love into it.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16796.jpg",
+          alt: "A ginger dog curled asleep on a dune in the cold blue light before sunrise",
+        },
+      ],
+      caption: "We slept on mats in the sand. I was on one end and got woken up in the middle of the night by some dogs circling and growling, their teeth barely illuminated by the crescent moon. This is Poppy, named by Amy, who chased them away and kept us safe all night.",
+    },
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16872.jpg",
+          alt: "Two men riding one motorbike towards the camera down a white gravel track, under a yellow and black height barrier",
+        },
+        {
+          src: "./media/_JB16826.jpg",
+          alt: "Inside a near-empty bus, cream vinyl seats and a bedroll on the rack, dry country going past the window",
+        },
+        {
+          src: "./media/_JB16818.jpg",
+          alt: "Packed into the back of a shared jeep, heads and shoulders filling the frame, the road bright through the windscreen",
+        },
+      ],
+      caption: "Off the long way to the next destination.",
+    },
+    {
+      type: "subheading",
+      title: "Jodhpur",
+      text: "Back east, at times intensely blue.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16867.jpg",
+          alt: "A man holding out a length of red cloth outside a mud-walled house, a woman in red standing in the doorway behind",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16865.jpg",
+          alt: "An older man in white sitting cross-legged on a rug in front of a wall painted with red vine patterns, hands folded",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16851.jpg",
+          alt: "A young potter sitting cross-legged at a stone wheel in an ochre room, shaping a pot between his hands",
+        },
+        {
+          src: "./media/_JB16853.jpg",
+          alt: "The same potter driving the heavy wheel round with a wooden stick, looking straight at the camera",
+        },
+        {
+          src: "./media/_JB16858.jpg",
+          alt: "The wheel spinning to a blur while he leans in and draws the clay up",
+        },
+      ],
+      caption: "A stone wheel, a stick to start it, and about ninety seconds a pot.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16878.jpg",
+          alt: "Woven rugs laid overlapping across a stone floor in raking light, reds and blues in diamond patterns",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16913.jpg",
+          alt: "Two men behind the counter of a spice shop, the older one giving a peace sign, packets and film posters stacked behind them",
+        },
+      ],
+      caption: "These two ran an amazing tea and spices shop, and had the claim to fame of having loaned their motorbike to Wes Anderson for Darjeeling Limited. It’s the one the brothers ride at the end, and also the one they gave Amy a ride around town on.",
+    },
+    {
+      type: "photos",
+      hero: true,
+      images: [
+        {
+          src: "./media/_JB16919.jpg",
+          alt: "A sadhu in an orange dhoti standing bare-chested in a temple courtyard, grey beard to his chest, looking level at the camera",
+        },
+        {
+          src: "./media/_JB16917.jpg",
+          alt: "A painted shrine behind red railings — Shiva on a blue mountain with a bull, a bell hanging in front",
+        },
+        {
+          src: "./media/_JB16920.jpg",
+          alt: "Blue-washed houses with peeling paint and green shutters, a white temple spire rising behind, scooters lined up along the wall",
+        },
+      ],
+    },
+    {
+      type: "subheading",
+      title: "Jaipur",
+      text: "Pink and enormous.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB16934.jpg",
+          alt: "The Hawa Mahal from below, its honeycomb of small windows curving up into a cloudless sky",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB17061.jpg",
+          alt: "A huge spreading tree filling a run-down courtyard, ochre buildings on three sides, sand piled in the beds below",
+        },
+        {
+          src: "./media/_JB16982.jpg",
+          alt: "The street framed through the windscreen of an auto-rickshaw, men sitting on a wall opposite, the driver’s blue shirt at the edge",
+        },
+        {
+          src: "./media/_JB17002.jpg",
+          alt: "The blank yellow flank of a Jantar Mantar instrument, arched recesses along its length, hard shadow down one side",
+        },
+        {
+          src: "./media/_JB17064.jpg",
+          alt: "A stone floor covered in chalk and pigment marks around a small moulded figure, left from a ritual",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB17086.jpg",
+          alt: "Stuck in traffic at sunset, a bus and motorbikes in silhouette against an orange sky under a flyover",
+        },
+      ],
+    },
+    {
+      type: "subheading",
+      title: "Bharatpur",
+      text: "A stop at Keoladeo National Park on the way east.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB17091.jpg",
+          alt: "Looking up into a big leaning tree, a green parakeet just visible on the trunk",
+        },
+        {
+          src: "./media/_JB17105.jpg",
+          alt: "A stork flying low over still wetland, reeds in the foreground and nesting trees along the far bank",
+        },
+      ],
+      caption: "We were so glad for some peace and quiet, and also the birds. Not pictured: an absolutely beautiful little owl.",
+    },
+    {
+      type: "subheading",
+      title: "Agra",
+      text: "While other towns are famous for their colours, Agra has a thick chemical haze.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB17119.jpg",
+          alt: "Sunrise over rooftops through overhanging branches, a figure in silhouette at a stall in the foreground",
+        },
+        {
+          src: "./media/_JB17120.jpg",
+          alt: "A domed tomb in the trees with the low sun burning through its colonnade",
+        },
+      ],
+      caption: "Walking across town at sunrise to see the Taj Mahal.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB17134.jpg",
+          alt: "The Taj Mahal in heavy morning mist, almost weightless above the scrub and sand of the far riverbank",
+        },
+      ],
+      caption: "Did you folks know this place doesn’t open on Fridays? We didn’t! Managed to see a little from the gardens across the river.",
+    },
+    {
+      type: "photos",
+      images: [
+        {
+          src: "./media/_JB17157.jpg",
+          alt: "A pierced stone screen in a dark alcove, a figure standing beyond it in the bright arch of the next room",
+        },
+        {
+          src: "./media/_JB17168.jpg",
+          alt: "Amy and a woman she got talking to, standing against a wall thrown all over with the lattice shadow of the screen",
+        },
+      ],
+      caption: "Last morning, out of the sun.",
+    },
+  ],
+};

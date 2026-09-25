@@ -1,0 +1,184 @@
+---
+import { Picture } from 'astro:assets';
+import { fullPlate, isGif } from '../../lib/media';
+import type { Photo } from '../../lib/schema';
+
+interface Props {
+  images: Photo[];
+  caption?: string;
+  /** Plate number of the first frame; the rest follow in order. */
+  plate: number;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
+}
+
+const { images, caption, plate, block } = Astro.props;
+
+const labels = images.map((_, i) => String(plate + i).padStart(2, '0'));
+
+// The content column is 1168px wide; a b-roll row is three frames and two gutters.
+const CONTENT = 1168;
+// The site gutter, halved on a phone — where the grid also gives up the page
+// padding either side and runs the full width of the screen. Same pair of moves a
+// `photos` block makes, for the same reason.
+const GAP = 16;
+const NARROW_GAP = 8;
+const PADDING = '2rem';
+
+// A b-roll frame is small and stays small: a third of the column on a wide screen,
+// half a phone's. 830 covers the widest case — the desktop third at 2x — and 580 the
+// phone half at 3x.
+const WIDTHS = [250, 380, 580, 830];
+
+/*
+ * The grid runs on one aspect ratio, taken from the first frame, and every frame is
+ * cropped to it. That's the point of the block: a dozen phone pictures read as one
+ * even field rather than a ragged one. The full-screen viewer shows the whole
+ * uncropped frame, so nothing is actually lost — but a frame that isn't already
+ * close to the ratio loses a lot of its edges here, which is worth saying out loud.
+ */
+const ratio = images[0].src.width / images[0].src.height;
+const cropped = images.filter((image) => Math.abs(image.src.width / image.src.height - ratio) > 0.02);
+
+if (cropped.length > 0) {
+  console.warn(
+    `[albums] b-roll block ${block}: ${cropped.length} of ${images.length} frames aren't ` +
+      `the ${ratio.toFixed(2)}:1 of the first frame, so they're cropped to fit the grid — ` +
+      cropped.map((image) => image.src.src.split('/').pop()).join(', '),
+  );
+}
+
+const sizes = [
+  `(max-width: 719px) calc((100vw - ${NARROW_GAP}px) / 2)`,
+  `(min-width: 75rem) ${Math.round((CONTENT - 2 * GAP) / 3)}px`,
+  `calc((100vw - ${PADDING} - ${2 * GAP}px) / 3)`,
+].join(', ');
+
+const frames = await Promise.all(
+  images.map(async (image, i) => ({
+    ...image,
+    label: labels[i],
+    // Each slide repeats the block's caption; the count says which frame of the set
+    // you are looking at — the same reading a `photos` group gets.
+    caption: caption && `${caption} (${i + 1}/${images.length})`,
+    gif: isGif(image.src),
+    plate: await fullPlate(image.src),
+  })),
+);
+---
+
+<figure class="broll" data-block={block}>
+  <div class="broll__grid bleed" style={`--ratio: ${ratio.toFixed(4)}`}>
+    {
+      frames.map((frame) => (
+        <div
+          class="broll__frame"
+          data-lightbox
+          data-full={frame.plate.src}
+          data-full-width={frame.plate.width}
+          data-full-height={frame.plate.height}
+          data-alt={frame.alt}
+          data-caption={frame.caption}
+          data-plate={frame.label}
+        >
+          <button
+            type="button"
+            class="broll__open"
+            aria-label={frame.alt ? `View full screen: ${frame.alt}` : `View plate ${frame.label} full screen`}
+          >
+            {frame.gif ? (
+              <img
+                src={frame.src.src}
+                width={frame.src.width}
+                height={frame.src.height}
+                alt={frame.alt ?? ''}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <Picture
+                src={frame.src}
+                alt={frame.alt ?? ''}
+                width={Math.min(frame.src.width, 830)}
+                widths={WIDTHS}
+                sizes={sizes}
+                formats={['avif', 'webp']}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+          </button>
+        </div>
+      ))
+    }
+  </div>
+  {
+    caption && (
+      <figcaption class="broll__caption">
+        <span class="meta broll__text">{caption}</span>
+      </figcaption>
+    )
+  }
+</figure>
+
+<style>
+  /*
+   * A plain grid, unlike `photos`: every frame is the same size, so there is nothing
+   * to proportion and no row shapes to pick. Three across, two on a phone — both
+   * divide six, which is why the schema insists on multiples of it.
+   */
+  .broll__grid {
+    --gutter: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gutter);
+  }
+
+  .broll__frame {
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+  }
+
+  .broll__open {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  /* Cropped to the grid's ratio rather than letterboxed: an even field is the whole
+     point, and the full-screen viewer still holds the uncut frame. */
+  .broll__open :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Matches a `photos` caption exactly — the two blocks sit in the same column and
+     shouldn't announce themselves as different kinds of thing. */
+  .broll__caption {
+    margin-top: 0.7rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .broll__text {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: 400;
+  }
+
+  /* Two across, edge to edge, on the halved phone gutter. */
+  @media (max-width: 719px) {
+    .broll__grid {
+      --gutter: 0.5rem;
+
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

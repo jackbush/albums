@@ -1,0 +1,178 @@
+/*
+  The whole site draws from the custom properties set per page by BaseLayout.
+  Nothing below hardcodes a colour or a family, so a manifest `theme` block is total.
+
+  Design rule: the page carries no colour of its own beyond its ink. Links and the
+  film label are the only coloured things on it — the photographs supply the rest.
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+figure,
+h1,
+h2,
+p,
+ul,
+ol {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+/* --- Layout ------------------------------------------------------------- */
+
+.container {
+  /* The page edge. Media breaks back out through it on a phone — see `.bleed`. */
+  --page-gutter: 1rem;
+
+  width: 100%;
+  /*
+   * 1200 = a 1168px content column plus a gutter either side. The column is what the
+   * image width ladders are cut to, so the max-width moves with the gutter to hold it
+   * steady: narrowing the gutter widens the page edge, not the photographs.
+   */
+  max-width: 1200px;
+  margin-inline: auto;
+  /* One gutter across the site: the page edge and the gaps inside a group match. */
+  padding-inline: var(--page-gutter);
+}
+
+/*
+ * Below 720px the page gutter buys nothing a photograph wants. 32px is a tenth of a
+ * phone's width, and it is a tenth taken off the only thing on the page worth
+ * looking at — so media runs to the screen edge instead, and the gutters inside a
+ * group halve to match the tighter page.
+ *
+ * Only the media bleeds. Everything set in type — the head, chapters, quotes, the
+ * caption under a block — stays on the container's measure, so the column of
+ * writing holds its left edge down the whole page while the pictures break past it.
+ */
+@media (max-width: 719px) {
+  .bleed {
+    margin-inline: calc(var(--page-gutter) * -1);
+  }
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  color: var(--text-link);
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text-link);
+  outline-offset: 3px;
+}
+
+/* --- Type --------------------------------------------------------------- */
+
+/*
+  Metadata is set in the body face rather than a third utility family: uppercase,
+  tracked out, with tabular figures so plate numbers and counts line up in a column.
+*/
+.meta {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+/*
+ * Debug annotations: block numbers and alt text, revealed by loading any page with
+ * `?debug` — see components/DebugMode.astro. Always in the HTML, never visible until
+ * the root carries .debug, and hidden from assistive tech at the markup.
+ *
+ * The one hardcoded colour on the site, and deliberately so: these are tooling, not
+ * part of an album, and a mid-grey sits back from every theme instead of joining it.
+ */
+.block-marker,
+.debug-alts {
+  display: none;
+  color: #8a8a8a;
+  font-variant-numeric: tabular-nums;
+}
+
+.block-marker {
+  margin-left: 0.5em;
+  white-space: nowrap;
+}
+
+.debug-alts {
+  margin-top: 0.35rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  text-transform: none;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+.debug-alts__line {
+  display: block;
+}
+
+.debug .block-marker {
+  display: inline;
+}
+
+.debug .debug-alts {
+  display: block;
+}
+
+.display {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--text-title);
+  text-wrap: balance;
+}
+

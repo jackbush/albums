@@ -1,0 +1,165 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Lightbox from '../components/Lightbox.astro';
+import NavBar from '../components/NavBar.astro';
+import PhotosItem from '../components/items/PhotosItem.astro';
+import BRollItem from '../components/items/BRollItem.astro';
+import VideoItem from '../components/items/VideoItem.astro';
+import SubheadingItem from '../components/items/SubheadingItem.astro';
+import QuoteItem from '../components/items/QuoteItem.astro';
+import { getAlbums, getSite, plateCount, stamp, withNumbers, type Album } from '../lib/posts';
+
+interface Props {
+  album: Album;
+}
+
+// Built from the folders, not from index.js, so an unlisted album is still
+// reachable by direct URL — that's how you preview one before publishing it.
+export const getStaticPaths: GetStaticPaths = () =>
+  [...getAlbums().values()].map((album) => ({
+    params: { slug: album.slug },
+    props: { album },
+  }));
+
+const { album } = Astro.props;
+const { title, cover, items, theme, standalone } = album;
+
+const site = getSite();
+const plates = plateCount(items);
+const blocks = withNumbers(items);
+
+// Title, stamp and share image all come from the manifest, so editing it
+// updates the page, the home page card and the link preview together.
+const pageTitle = `${title} — ${site.heading}`;
+const meta = stamp(album);
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={meta}
+  image={cover}
+  imageAlt={`Cover image — ${title}`}
+  theme={theme}
+>
+  {!standalone && <NavBar />}
+
+  <main id="main" class="container post">
+    <div class="post__head">
+      <p class="meta post__stamp">{meta}</p>
+      <h1 class="display post__title">{title}</h1>
+    </div>
+
+    <div class="post__body">
+      {
+        blocks.map(({ item, plate, block }) => {
+          switch (item.type) {
+            case 'photos':
+              return (
+                <PhotosItem
+                  images={item.images}
+                  caption={item.caption}
+                  hero={item.hero}
+                  plate={plate!}
+                  block={block}
+                />
+              );
+            case 'broll':
+              return (
+                <BRollItem
+                  images={item.images}
+                  caption={item.caption}
+                  plate={plate!}
+                  block={block}
+                />
+              );
+            case 'video':
+              return (
+                <VideoItem
+                  src={item.src}
+                  poster={item.poster}
+                  alt={item.alt}
+                  caption={item.caption}
+                  loop={item.loop}
+                  muted={item.muted}
+                  autoplay={item.autoplay}
+                  block={block}
+                />
+              );
+            case 'subheading':
+              return <SubheadingItem title={item.title} text={item.text} block={block} />;
+            case 'quote':
+              return (
+                <QuoteItem
+                  text={item.text}
+                  attribution={item.attribution}
+                  url={item.url}
+                  block={block}
+                />
+              );
+          }
+        })
+      }
+    </div>
+  </main>
+
+  {!standalone && <NavBar as="footer" />}
+
+  {plates > 0 && <Lightbox />}
+</BaseLayout>
+
+<style>
+
+  /*
+   * The stamp is a kicker above the title, so the head's top padding is cut by
+   * exactly the height it adds — its line box plus the gap under it. The title
+   * lands on the same line it did when the head opened on the title alone.
+   */
+  .post__head {
+    --stamp-size: 0.875rem; /* 14px */
+    --stamp-leading: 1.4;
+    --stamp-gap: 0.875rem;
+
+    padding-block: calc(7rem - var(--stamp-size) * var(--stamp-leading) - var(--stamp-gap))
+      3rem;
+  }
+
+  .post__title {
+    font-size: clamp(3.375rem, 2.1rem + 5.1vw, 6rem);
+  }
+
+  /* Tracking is already wide on .meta; the extra step sets the stamp apart from
+     the caption and counter lines further down the page. Size and leading are
+     restated from the custom properties so they can't drift from the calc above. */
+  .post__stamp {
+    margin-bottom: var(--stamp-gap);
+    font-size: var(--stamp-size);
+    line-height: var(--stamp-leading);
+    letter-spacing: 0.16em;
+  }
+
+  /* One rhythm for every block type, so the column reads as a single sequence.
+     Chapters read off this gap to set their own space, so it's a property. */
+  .post__body {
+    --block-gap: 4rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-gap);
+    padding-bottom: 5rem;
+  }
+
+  @media (max-width: 48rem) {
+    /* 2.5rem can't absorb the stamp without collapsing to nothing, so the phone
+       head keeps some air and the title sits a little under 1rem lower. */
+    .post__head {
+      padding-block: 1.25rem 2rem;
+    }
+
+    .post__body {
+      --block-gap: 3rem;
+
+      padding-bottom: 3.5rem;
+    }
+  }
+</style>

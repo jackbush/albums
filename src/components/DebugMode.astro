@@ -1,0 +1,68 @@
+---
+/*
+ * Debug mode: block numbers and alt text, on any build, dev or published.
+ *
+ * Turn it on with `?debug` or `#debug` on any URL, off with `?debug=off`. It is
+ * remembered for the browser session, so it survives clicking through from the home
+ * page to an album and on to the next one, and is forgotten when the tab closes.
+ *
+ * The annotations are built here rather than rendered into the page: a normal visitor
+ * downloads none of this text, and the alt strings stay in one place — the `data-alt`
+ * each frame already carries for the full-screen viewer. Everything added is
+ * `aria-hidden`; a screen reader reads the album, never the scaffolding.
+ */
+---
+
+<script is:inline>
+  (function () {
+    var KEY = 'albums:debug';
+    var search = location.search;
+    var off = /[?&]debug=(off|0|false)\b/.test(search) || location.hash === '#debug=off';
+    var on = /[?&]debug\b/.test(search) || location.hash === '#debug';
+
+    try {
+      if (off) sessionStorage.removeItem(KEY);
+      else if (on) sessionStorage.setItem(KEY, '1');
+      on = !off && (on || sessionStorage.getItem(KEY) === '1');
+    } catch (e) {
+      /* Private browsing with storage denied: the URL still works, it just won't stick. */
+      on = !off && on;
+    }
+
+    if (!on) return;
+    document.documentElement.classList.add('debug');
+
+    function annotate() {
+      /* Every block that holds frames: `photos` and `broll` are annotated alike. */
+      var figures = document.querySelectorAll('figure.photos[data-block], figure.broll[data-block]');
+      for (var f = 0; f < figures.length; f++) {
+        var figure = figures[f];
+        if (figure.querySelector('.debug-alts')) continue;
+
+        var frames = figure.querySelectorAll('.photos__frame, .broll__frame');
+        var block = figure.getAttribute('data-block');
+        var list = document.createElement('p');
+        list.className = 'debug-alts';
+        list.setAttribute('aria-hidden', 'true');
+
+        for (var i = 0; i < frames.length; i++) {
+          var line = document.createElement('span');
+          var label = frames.length > 1 ? '[' + block + '/' + (i + 1) + ']' : '[' + block + ']';
+          line.className = 'debug-alts__line';
+          line.textContent = label + ' ' + (frames[i].getAttribute('data-alt') || '');
+          list.appendChild(line);
+        }
+
+        var caption = figure.querySelector('figcaption');
+        if (caption) caption.appendChild(list);
+        else figure.appendChild(list);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', annotate);
+    } else {
+      annotate();
+    }
+  })();
+</script>

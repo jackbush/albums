@@ -1,0 +1,126 @@
+---
+import { blockMarker } from '../../lib/dev';
+
+interface Props {
+  text: string;
+  attribution?: string;
+  url?: string;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
+}
+
+const { text, attribution, url, block } = Astro.props;
+const marker = blockMarker(block);
+---
+
+<figure class="quote">
+  <blockquote class="quote__text" cite={url}>
+    <p>{text}</p>
+  </blockquote>
+
+  {
+    attribution && (
+      <figcaption class="quote__source">
+        {url ? (
+          <a href={url} target="_blank" rel="noopener noreferrer">
+            <cite>{attribution}</cite>
+            <span class="quote__new-tab"> (opens in a new tab)</span>
+          </a>
+        ) : (
+          <cite>{attribution}</cite>
+        )}
+      </figcaption>
+    )
+  }
+
+  {marker && <p class="meta block-marker quote__marker" aria-hidden="true">{marker}</p>}
+</figure>
+
+<style>
+  /*
+   * A quote is an interruption, not a caption, so it runs centred in a column two
+   * thirds the width of the photographs either side of it — narrow enough that the
+   * eye reads it as a held breath rather than as more of the page.
+   */
+  .quote {
+    width: 66.6%;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  /*
+   * One step down the same scale as a chapter title, so a quote never competes with
+   * the heading above it but is plainly of the same voice.
+   */
+  .quote__text {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 1rem + 2vw, 2.4rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--text-title);
+    text-wrap: pretty;
+  }
+
+  /*
+   * The marks sit inline so they hug the first and last words of the centred text
+   * rather than floating off the block. `line-height: 0` keeps them from opening up
+   * the line they land on at the size they're set.
+   */
+  .quote__text p::before,
+  .quote__text p::after {
+    font-size: 1.15em;
+    line-height: 0;
+    vertical-align: -0.05em;
+  }
+
+  .quote__text p::before {
+    content: '\201C';
+  }
+
+  .quote__text p::after {
+    content: '\201D';
+  }
+
+  /* The same line as the text under a chapter title — the quiet register on the page. */
+  .quote__source {
+    margin-top: 0.75rem;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+
+  /* A name, not a title of a work, so it's set upright like the rest of the line. */
+  .quote__source cite {
+    font-style: normal;
+  }
+
+  /*
+   * The source is the one link that leaves the site, so it opens in its own tab —
+   * a reader following it up shouldn't lose their place in the album. Sighted
+   * readers get no warning of that, so this line carries it for screen readers.
+   */
+  .quote__new-tab {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .quote__marker {
+    margin-top: 0.75rem;
+  }
+
+  /* 768px: less room either side, so the column takes nearly all of it. */
+  @media (max-width: 48rem) {
+    .quote {
+      width: 85%;
+    }
+  }
+</style>

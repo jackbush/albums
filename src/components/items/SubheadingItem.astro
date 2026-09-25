@@ -1,0 +1,78 @@
+---
+import { blockMarker } from '../../lib/dev';
+
+interface Props {
+  title: string;
+  text?: string;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
+}
+
+const { title, text, block } = Astro.props;
+const marker = blockMarker(block);
+
+// Blank lines separate paragraphs. Plain text — no markdown parsing.
+const paragraphs = (text ?? '')
+  .split(/\n\s*\n/)
+  .map((paragraph) => paragraph.trim())
+  .filter(Boolean);
+---
+
+<section class="chapter">
+  <h2 class="chapter__title">{title}</h2>
+  {paragraphs.map((paragraph) => <p class="chapter__text">{paragraph}</p>)}
+  {marker && <p class="meta block-marker chapter__marker" aria-hidden="true">{marker}</p>}
+</section>
+
+<style>
+  /*
+   * A chapter opens a section, so it takes twice the body's block gap above it and
+   * the ordinary one below — the flex gap supplies that lower one, and the margin
+   * here tops the upper one up to 2x. It reads as belonging to the plates that
+   * follow rather than floating between two groups.
+   */
+  .chapter {
+    margin-top: var(--block-gap);
+  }
+
+  /* Opening the album on a chapter shouldn't push the first line down the page. */
+  .chapter:first-child {
+    margin-top: 0;
+  }
+
+  /*
+   * Sized to land between the post title and the body: roughly half the title at
+   * every width, so the two scale together rather than crossing over.
+   */
+  .chapter__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.875rem, 1.25rem + 2.5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--text-title);
+    /*
+     * `pretty` rather than `balance`: balance evens the lines out, which on a title
+     * of a few words means it breaks long before it has run out of column. This
+     * lets the title fill the width and only guards against a short last line.
+     */
+    text-wrap: pretty;
+  }
+
+  .chapter__text {
+    margin-top: 0.75rem;
+    max-width: 60ch;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+
+  .chapter__text + .chapter__text {
+    margin-top: 1em;
+  }
+
+  .chapter__marker {
+    margin-top: 0.75rem;
+  }
+</style>

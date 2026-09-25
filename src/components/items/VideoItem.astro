@@ -1,0 +1,204 @@
+---
+import { getImage } from 'astro:assets';
+import { blockMarker } from '../../lib/dev';
+
+interface Props {
+  /** Already resolved to an asset URL by lib/posts.ts. */
+  src: string;
+  poster?: ImageMetadata;
+  /** Screen readers only, like a frame's `alt` — never printed on the page. */
+  alt?: string;
+  /** The line printed under the film, same as a `photos` block's. */
+  caption?: string;
+  loop: boolean;
+  muted: boolean;
+  autoplay: boolean;
+  /** Position in the manifest, shown only by the dev server. */
+  block: number;
+}
+
+const { src: source, poster, alt, caption, loop, muted, autoplay, block } = Astro.props;
+const marker = blockMarker(block);
+
+const posterImage = poster ? await getImage({ src: poster, width: 1650, format: 'webp' }) : null;
+
+/*
+ * Browsers refuse to autoplay with sound, so autoplay implies muted rather than
+ * silently doing nothing. An autoplaying loop is ambient: it drops the native
+ * controls, which would sit over the frame promising a film it isn't, and keeps one
+ * button — for the sound it deliberately started without.
+ */
+const isAmbient = autoplay;
+const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+---
+
+<figure class="film">
+  <div class="film__frame bleed">
+    <video
+      controls={!isAmbient}
+      loop={loop || isAmbient}
+      muted={muted || isAmbient}
+      autoplay={isAmbient}
+      playsinline
+      preload={isAmbient ? 'auto' : 'metadata'}
+      poster={posterImage?.src}
+      aria-label={alt}
+      data-film
+    >
+      <source src={source} type={type} />
+      Your browser can't play this video.
+    </video>
+    {
+      isAmbient && (
+        /* Hidden until the script claims it: without JS the button has nothing to do. */
+        <button type="button" class="film__sound" data-film-sound aria-label="Unmute" hidden>
+          <svg class="film__icon film__icon--muted" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4z" />
+            <path d="m16 9 6 6M22 9l-6 6" />
+          </svg>
+          <svg class="film__icon film__icon--sound" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M11 5 6 9H3v6h3l5 4z" />
+            <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
+          </svg>
+        </button>
+      )
+    }
+  </div>
+  {
+    (caption || marker) && (
+      <figcaption class="film__caption">
+        {caption && <span class="meta film__text">{caption}</span>}
+        {marker && (
+          /* The block number and the alt, the way a photo block prints them. */
+          <p class="debug-alts" aria-hidden="true">
+            <span class="debug-alts__line">{[marker, alt].filter(Boolean).join(' ')}</span>
+          </p>
+        )}
+      </figcaption>
+    )
+  }
+</figure>
+
+<script>
+  /*
+   * Ambient films: the sound toggle, and playback tied to the film being on screen.
+   *
+   * The markup already autoplays on its own — this only takes over to save the
+   * download and the battery while the film is scrolled away, and to offer the sound
+   * back. If autoplay is refused anyway (iOS in Low Power Mode is the common case),
+   * the native controls come back and the toggle goes away: a film you have to press
+   * play on has a volume slider of its own.
+   */
+  function claim(button: HTMLButtonElement) {
+    const frame = button.closest('.film__frame');
+    const video = frame?.querySelector<HTMLVideoElement>('video[data-film]');
+    if (!video) return;
+
+    const restore = () => {
+      video.controls = true;
+      button.hidden = true;
+    };
+
+    button.hidden = false;
+    button.addEventListener('click', () => {
+      // Flipping `muted` inside a click is the one way a page is allowed to turn
+      // sound on: every browser takes the gesture as the permission.
+      video.muted = !video.muted;
+      button.setAttribute('aria-label', video.muted ? 'Unmute' : 'Mute');
+      button.setAttribute('data-muted', String(video.muted));
+    });
+    button.setAttribute('data-muted', String(video.muted));
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const watcher = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) video.play().catch(restore);
+          else video.pause();
+        }
+      },
+      // A little short of the viewport, so it is already running when it arrives.
+      { rootMargin: '200px 0px', threshold: 0 },
+    );
+
+    watcher.observe(video);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-film-sound]').forEach(claim);
+</script>
+
+<style>
+  .film__frame {
+    position: relative;
+  }
+
+  /* The bed showing through while the film loads: the page's own ink, thinned
+     right down. Not themed — nothing else on the page needs the same tint. */
+  .film video {
+    display: block;
+    width: 100%;
+    background: color-mix(in srgb, var(--text-primary) 14%, transparent);
+  }
+
+  /*
+   * The one control an ambient film keeps. Its backdrop is the footage, not the
+   * page, so it is dark-on-light of its own rather than themed — the same argument
+   * that keeps the debug markers a fixed grey.
+   */
+  .film__sound {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(0 0 0 / 45%);
+    color: #fff;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+
+  .film__sound:hover {
+    background: rgb(0 0 0 / 65%);
+  }
+
+  .film__icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Muted is the state it starts in, so its icon is the one on show. */
+  .film__sound .film__icon--sound,
+  .film__sound[data-muted='false'] .film__icon--muted {
+    display: none;
+  }
+
+  .film__sound[data-muted='false'] .film__icon--sound {
+    display: block;
+  }
+
+  /* Matches a `photos` caption exactly — a film's line is the same kind of line. */
+  .film__caption {
+    margin-top: 0.7rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .film__text {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: 400;
+  }
+</style>
