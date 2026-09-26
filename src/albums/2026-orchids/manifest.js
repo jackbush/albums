@@ -3,7 +3,7 @@ export default {
   title: "The Orchid Search",
   location: "Spain",
   year: "2026",
-  cover: "./cover/e.jpg",
+  cover: "./cover/f.jpg",
   // _MG_4401  _MG_4198
 
   items: [
