@@ -3,8 +3,8 @@ export default {
   title: "Sunbirds",
   location: "Morocco + Spain",
   year: "2025",
-  cover: "./media/IMG_1329.jpg",
-  // 0743, 1208, 1329, 1331, 1581,
+  cover: "./media/IMG_1581.jpg",
+  // 0743, 1208, 1331, 1581,
 
   items: [
     {
