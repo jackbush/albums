@@ -1,9 +1,9 @@
 /** @type {import('../../lib/schema').AlbumManifest} */
 export default {
-  title: "The Orchid Search",
+  title: "Where the Wild Orchids Grow",
   location: "Spain",
   year: "2026",
-  cover: "./cover/f.jpg",
+  cover: "./cover/g.jpg",
   // _MG_4401  _MG_4198
 
   items: [
