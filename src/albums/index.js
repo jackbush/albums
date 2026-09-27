@@ -25,7 +25,7 @@ export default {
   posts: [
     "2026-norway",
     "2026-easter",
-    "2026-orchids",
+    // "2026-orchids",
     "2025-sunbirds",
     "2019-purbeck",
     "2016-indonesia",
