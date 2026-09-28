@@ -1,6 +1,6 @@
 /** @type {import('../../lib/schema').AlbumManifest} */
 export default {
-  title: "Where the Wild Orchids Grow",
+  title: "Where the Winter Orchids Grow",
   location: "Spain",
   year: "2026",
   cover: "./cover/g.jpg",
