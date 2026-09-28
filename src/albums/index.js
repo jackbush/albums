@@ -29,6 +29,7 @@ export default {
     "2025-sunbirds",
     "2022-europe",
     // "2019-purbeck",
+    // "2018-india",
     "2016-indonesia",
     "2015-india",
     "2013-iceland",
