@@ -13,6 +13,9 @@ changes — not the order, not the grouping, not one `alt` or `caption`.
 **Nothing is written until the user approves it.** The whole middle of this skill is a
 proposal; the writing is the last step.
 
+**Run when asked, never by default.** `draft-album` finishes without quote blocks and doesn't
+call this skill; quotes are something the user asks for by name.
+
 ## 1. Harvest the subjects
 
 Read `manifest.js` and pull out what the album is actually about. The sources, in order of how

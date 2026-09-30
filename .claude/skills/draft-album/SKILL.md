@@ -21,7 +21,24 @@ subheading. `publish-album` checks it again, but it shouldn't have anything to f
 
 ## Procedure
 
-### 1. Read the capture times
+### 1. Compress the sources
+
+Fit the album's photographs to the largest size the site actually serves, before anything else
+reads them:
+
+```bash
+npm run compress -- <album> --yes
+```
+
+`--yes` because this runs unattended; without it the script stops for a confirmation there's
+nobody to give. It only touches files over the plate cap, it keeps EXIF — so the capture times
+the next step reads are untouched — and it's safe to re-run. It is lossy and it overwrites the
+originals in place, which is the deal the script documents: keep true originals outside the repo.
+
+Do this first and every later step is cheaper: smaller files to preview, and an album that's
+already publishable rather than one carrying a compression pass someone has to remember.
+
+### 2. Read the capture times
 
 ```bash
 exiftool -q -p '$FileName  $DateTimeOriginal' -d '%a %d %b %Y  %H:%M' \
@@ -37,7 +54,7 @@ one end. Place those by content, next to the day they visually belong to.
 
 `sips -g creation` is the *file* date, not the capture date — don't use it.
 
-### 2. Look at every photo — cheaply
+### 3. Look at every photo — cheaply
 
 Do **not** Read the originals; they are 3–10 MB each. Downscale to previews first:
 
@@ -53,7 +70,7 @@ for f in "$ALBUM"/media/*.jpg; do sips -Z 512 "$f" --out "$OUT/$(basename "$f")"
 Then Read the previews **~12 per message, in parallel** in capture order. At 512px each costs
 ~250 tokens, so a 63-photo album is ~15k tokens total. Reading originals would be 10× that.
 
-### 3. Write the manifest
+### 4. Write the manifest
 
 Copy the shape from `src/albums/2011-tibet/manifest.js`. Schema is `src/lib/schema.ts` —
 the JSDoc type line at the top is what gives editor autocomplete, keep it.
@@ -112,7 +129,7 @@ by link alone — add `standalone: true` under `cover`:
 ```
 
 It drops the back-link bars at the top and bottom of the page. Only set it when asked; an
-ordinary album leaves the key out. A standalone album also **skips step 5 entirely** — it does
+ordinary album leaves the key out. A standalone album also **skips step 6 entirely** — it does
 not go into `src/albums/index.js`, not even as a commented-out line.
 
 #### Day separators
@@ -233,7 +250,7 @@ on a phone), every frame cropped to the aspect ratio of the first, `alt` on each
 `caption` left `false`. Nothing else in the block to decide — no row shapes, no `hero`. Frames
 go in capture order.
 
-Read them the same cheap way as the rest (step 2) and write a real `alt` for each: they open
+Read them the same cheap way as the rest (step 3) and write a real `alt` for each: they open
 full screen like any other plate. **Check the shapes before you write the block** — the grid
 crops everything to the first frame's ratio, so a portrait among landscapes loses its top and
 bottom. If the folder holds a mix, say so rather than quietly cropping.
@@ -241,18 +258,21 @@ bottom. If the folder holds a mix, say so rather than quietly cropping.
 The `b-roll/` frames and the `media/` ones can share filenames. Keep the folder in the path:
 `./b-roll/DSC_0006.jpg` and `./media/DSC_0006.jpg` are two different photographs.
 
-#### Flora blocks — hand the captions to `flora-id`
+#### Flora blocks — captions stay `false`
 
-Flora blocks get `caption: false` like everything else. The `flora-id` skill writes them: it
-reads the originals, identifies each frame, and fills in the caption. Invoke it after step 4,
-when the blocks are final.
+Flora blocks get `caption: false` like everything else, and a draft leaves them that way. The
+`flora-id` skill is what identifies them and writes those captions, and **it is not part of this
+skill's run** — only invoke it when the user asks for the flora identified.
 
-#### Quote blocks — hand them to `quote-find`
+Grouping is still yours: collect the close-ups as described above whether or not anyone ever
+IDs them.
 
-Don't write quote blocks yourself, and never invent a quotation to fill a gap. The
-`quote-find` skill does this: it reads the `alt` text and flora captions for subjects, searches
-out real quotations about them, and proposes a numbered list for the user to approve. Invoke it
-after step 4, alongside `flora-id`, when the blocks are final.
+#### Quote blocks — not unless asked
+
+A draft has no `quote` blocks in it. Don't write one yourself, and never invent a quotation to
+fill a gap. The `quote-find` skill proposes real ones for the user to approve, and like
+`flora-id` **it is not part of this skill's run** — only invoke it when the user asks for
+quotes.
 
 #### Place names
 
@@ -260,10 +280,10 @@ Filenames are the photographer's own labels and are sometimes wrong for the fram
 file may plainly be somewhere else). Trust the photo over the filename: describe what you see,
 and name what you actually recognise.
 
-### 4. Second pass: the loose uprights
+### 5. Second pass: the loose uprights
 
 "Upright" is the shape of the frame — taller than it is wide, what the orientation command in
-step 3 prints as `portrait`. It says nothing about the subject: most upright frames here are
+step 4 prints as `portrait`. It says nothing about the subject: most upright frames here are
 landscapes in the ordinary sense of the word.
 
 Two upright frames side by side fill a row; one alone doesn't. With the manifest otherwise
@@ -272,9 +292,10 @@ loose upright **from the same day**, placing the pair where the earlier of the t
 frames already in a burst or flora group. An odd one out stays a block of one — never pair
 across days.
 
-Then invoke `flora-id` for the flora captions, and `quote-find` for quote blocks.
+That's the end of the draft. Neither `flora-id` nor `quote-find` runs here: both wait to be
+asked for by name.
 
-### 5. Register it on the home page — commented out
+### 6. Register it on the home page — commented out
 
 **Skip this step for a standalone album.** It stays out of `src/albums/index.js` altogether.
 
@@ -290,7 +311,7 @@ the line **commented out**:
 The page still builds at its own URL, so it can be previewed; it just isn't linked from the
 index yet. `publish-album` uncomments the line when the album is ready.
 
-### 6. Verify
+### 7. Verify
 
 ```bash
 npx astro check
@@ -307,6 +328,10 @@ the editor squiggles from the JSDoc type line, is the coverage you get.
 
 Report what you did in a couple of lines: photo count, day count, how many groups you made and
 why, and any file you couldn't date or place. Then stop — the captions and the home page are
-`flora-id`, `quote-find` and `publish-album`'s work, not this skill's.
+`publish-album`'s work, not this skill's.
+
+If the album holds flora close-ups, or reads like somewhere a quotation would sit well, say so
+in one line and name the skill that would do it. Offering is the whole of it: `flora-id` and
+`quote-find` run when the user asks for them, not because a draft finished.
 
 The album is a draft until `publish-album` runs over it.

@@ -8,6 +8,9 @@ description: Identify the plants, fungi and lichens in an album's flora blocks a
 Input: an album folder whose `manifest.js` is finished. Output: a `caption` on each flora
 block. Nothing else in the manifest changes — not the order, not the grouping, not one `alt`.
 
+**Run when asked, never by default.** `draft-album` leaves flora captions `false` and doesn't
+call this skill; identifying an album's plants is something the user asks for by name.
+
 ## 1. Find the blocks
 
 A flora block is a `photos` block of close-ups sitting immediately before the next day's
