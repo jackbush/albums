@@ -99,6 +99,7 @@ export default {
 | `location` | A placeholder from the folder name: `2015-india` → `"India"`. Drop the year, title-case the rest. Don't reach for a region you can't see in the frames. |
 | `year` | From the capture times. One year: `"2015"`. Spanning two: `"2015-16"`. |
 | `cover` | The `src` of the **first photo in `items`**. Don't pick a favourite. |
+| `description` | Leave the key out. It's the album's own opening line, and an optional one — whoever writes the album writes it, or doesn't. |
 
 #### Standalone albums
 

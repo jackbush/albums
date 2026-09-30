@@ -9,6 +9,7 @@ npm run dev      # http://localhost:4321/albums/
 npm run build    # writes dist/
 npm run preview  # serves dist/ at the real base path
 npm run compress # fits album sources to the largest size the site serves
+npm run reexport # takes re-exported sources: newest version wins, older ones go
 npm run format   # puts manifests in house order (one property per line)
 ```
 
@@ -67,6 +68,7 @@ export default {
   title: "Purbeck Bimble",
   location: "Dorset, UK",
   year: "2019",
+  description: "Two days round the Isle of Purbeck on gravel bikes, into the wind both ways.",
   cover: "./media/DSCF0802.jpg",
 
   items: [
@@ -120,6 +122,7 @@ adjusting `../../` if your file sits at a different depth.
 | `title` | yes | Shown on the index and as the page heading. |
 | `location` | yes | **Free-form.** A country, or a region and country: `'Norway'`, `'Dorset, UK'`. |
 | `year` | yes | A year, or a range of two: `'2019'`, `'2014-15'`, `'2014-2015'`. Validated on that shape, but never parsed or sorted on. |
+| `description` | no | A sentence or two about the album, one paragraph. Prints under the title as lead text, and carries where and when after it as the page's meta description and link-preview blurb: `Two days round the Isle of Purbeck. (Dorset, UK, 2019)`. Left out, that line is just `Dorset, UK, 2019` and the page opens straight onto the photographs. |
 | `cover` | yes | Image shown on the home page. |
 | `items` | yes | The post itself, rendered in order. At least one. |
 | `standalone` | no | `false`. `true` drops the "← Albums" bars above and below the post, leaving the page with no link back to the site. See below. |
@@ -231,6 +234,39 @@ serves; every inline width is smaller. Pixels past it are resized away on every 
 cost only repository size, so once an album is final, `npm run compress` fits its sources
 inside that box in place. It keeps EXIF, skips anything already within the cap, and is safe to
 re-run. It is also lossy and irreversible — keep the true originals somewhere outside the repo.
+
+#### Re-exported sources
+
+Re-export a photograph into an album that already holds it and you get a numbered pile:
+
+```
+DSC0001.jpg      the one in the manifest
+DSC0001-2.jpg    a re-export
+DSC0001-3.jpg    the one you actually want
+```
+
+`npm run reexport` collapses those: highest number wins, the rest are deleted, the winner is
+renamed to the bare stem, and any manifest line that has to change — an export that came back
+as a `.png`, say — is rewritten. Then it hands the albums it touched to `npm run compress`, so
+one command takes you from a folder of exports to sources the site is ready to build.
+
+**Numbered means re-exported.** A version is `STEM-N` where `N` is nothing but digits, and only
+when there's something for it to be a version *of*: a `STEM` file beside it, another `STEM-M`, or
+a manifest line naming `STEM`. So a phone filename that merely ends in digits is left alone, and
+so are variants you made yourself and want to keep — name those with **letters**, the way
+`2026-orchids/cover/` runs `a.jpg` to `g.jpg`, and nothing in this script will look at them.
+
+Anything it declines to touch is listed rather than guessed at, as is any manifest reference with
+no file behind it — those fail the build, so it exits non-zero and leaves them to you.
+
+```bash
+npm run reexport -- --dry-run        # report, change nothing
+npm run reexport -- 2026-orchids     # named albums only
+npm run reexport -- --no-compress    # stop after the manifests
+```
+
+It deletes files and then compresses what survives, so it asks before doing either — once, for
+both. Everything it removes is recoverable with `git checkout` as long as it was committed.
 
 #### Rows
 
@@ -404,7 +440,7 @@ Opens a chapter — a place, a day, whatever the album divides on.
 | Field | Required | Notes |
 | --- | --- | --- |
 | `title` | yes | The chapter line. Set in the heading face, left-aligned, about half the size of the post title. |
-| `text` | no | A line of body text under it. Blank lines (`\n\n`) become paragraphs. |
+| `text` | no | A line of body text under it. Blank lines (`\n\n`) become paragraphs. The album's own `description` is this line one step up the scale, printed under the post title. |
 
 A chapter takes twice the usual block gap above it and the usual one below, so it
 reads as the opening of the plates that follow. A chapter in the first position sits tight
@@ -500,9 +536,20 @@ export default {
 > `src/albums/2011-tibet/media/jb20111204lhasa3.jpg`. Drop a proper image in at
 > `src/albums/home-cover.jpg` (or point `cover` somewhere else) when you have one.
 
-**Album pages take all of this from their own `manifest.js`** — `title`, `location`, `year`
-and `cover`. Edit the manifest and the album page, its card on the home page and its link preview
-all change together; there's nothing to update in a second place.
+**Album pages take all of this from their own `manifest.js`** — `title`, `location`, `year`,
+`description` and `cover`. Edit the manifest and the album page, its card on the home page and its
+link preview all change together; there's nothing to update in a second place.
+
+An album's meta description is built by `blurb` in [`src/lib/posts.ts`](src/lib/posts.ts), and it
+always ends in where and when:
+
+| `description` | Meta description |
+| --- | --- |
+| written | `Two days round the Isle of Purbeck. (Dorset, UK, 2019)` |
+| left out | `Dorset, UK, 2019` |
+
+That's a comma, where the stamp printed on the page uses a middot — `Dorset, UK · 2019`. The stamp
+divides two fields in a line of type; this is prose in a search result, so it punctuates like it.
 
 Every page gets `<title>`, a meta description, a canonical URL, Open Graph and Twitter card
 tags. Share images are cropped to 1200×630 at build time, whatever the source shape.

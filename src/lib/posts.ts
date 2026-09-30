@@ -77,6 +77,20 @@ export function stamp(album: Album): string {
 }
 
 /**
+ * The album's meta and share description: "Where, when", or the album's own
+ * `description` with where and when after it in brackets.
+ *
+ * Not the stamp. The stamp is set on the page, where the middot reads as a divider
+ * between two fields; this is a line of prose in a search result or a link preview,
+ * so it punctuates like one. Where the two agree is that both are built here rather
+ * than written into a manifest — see `stamp`.
+ */
+export function blurb(album: Album): string {
+  const when = `${album.location}, ${album.year}`;
+  return album.description ? `${album.description} (${when})` : when;
+}
+
+/**
  * Loads every album, keyed by slug, failing the build on an illegal folder name.
  *
  * The folder name *is* the URL, so a stray space or capital would either 404 or

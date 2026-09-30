@@ -10,6 +10,7 @@
     "check": "astro check",
     "clean": "rm -rf .astro-cache dist",
     "compress": "node scripts/compress-media.mjs",
+    "reexport": "node scripts/take-reexports.mjs",
     "format": "node scripts/format-manifests.mjs"
   },
   "dependencies": {

@@ -8,7 +8,7 @@ import BRollItem from '../components/items/BRollItem.astro';
 import VideoItem from '../components/items/VideoItem.astro';
 import SubheadingItem from '../components/items/SubheadingItem.astro';
 import QuoteItem from '../components/items/QuoteItem.astro';
-import { getAlbums, getSite, plateCount, stamp, withNumbers, type Album } from '../lib/posts';
+import { blurb, getAlbums, getSite, plateCount, stamp, withNumbers, type Album } from '../lib/posts';
 
 interface Props {
   album: Album;
@@ -23,7 +23,7 @@ export const getStaticPaths: GetStaticPaths = () =>
   }));
 
 const { album } = Astro.props;
-const { title, cover, items, theme, standalone } = album;
+const { title, description, cover, items, theme, standalone } = album;
 
 const site = getSite();
 const plates = plateCount(items);
@@ -33,11 +33,14 @@ const blocks = withNumbers(items);
 // updates the page, the home page card and the link preview together.
 const pageTitle = `${title} — ${site.heading}`;
 const meta = stamp(album);
+// What search engines and link previews get: the description if the album has one,
+// with where and when after it either way. See `blurb` in lib/posts.
+const share = blurb(album);
 ---
 
 <BaseLayout
   title={pageTitle}
-  description={meta}
+  description={share}
   image={cover}
   imageAlt={`Cover image — ${title}`}
   theme={theme}
@@ -48,6 +51,7 @@ const meta = stamp(album);
     <div class="post__head">
       <p class="meta post__stamp">{meta}</p>
       <h1 class="display post__title">{title}</h1>
+      {description && <p class="post__lead">{description}</p>}
     </div>
 
     <div class="post__body">
@@ -150,6 +154,21 @@ const meta = stamp(album);
     font-size: clamp(3.375rem, 2.1rem + 5.1vw, 6rem);
   }
 
+  /*
+   * The lead is a chapter's secondary line one step up the scale — 1.25rem becomes
+   * 1.5rem — which is what separates the album's own opening words from the running
+   * text under a subheading further down. Everything else about it is that line:
+   * the secondary ink, the 60ch measure, the same leading.
+   */
+  .post__lead {
+    margin-top: 1.25rem;
+    max-width: 60ch;
+    font-size: 1.5rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+
   /* Tracking is already wide on .meta; the extra step sets the stamp apart from
      the caption and counter lines further down the page. Size and leading are
      restated from the custom properties so they can't drift from the calc above. */
@@ -176,6 +195,14 @@ const meta = stamp(album);
        head keeps some air and the title sits a little under 1rem lower. */
     .post__head {
       padding-block: 1.25rem 2rem;
+    }
+
+    /* Still a step above the body on a phone, but off the desktop size: at 1.5rem a
+       sentence or two runs to five or six lines on a narrow column, which reads as a
+       block of text rather than an opening line. */
+    .post__lead {
+      margin-top: 1rem;
+      font-size: 1.25rem;
     }
 
     .post__body {

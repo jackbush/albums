@@ -13,7 +13,7 @@ import type { Theme } from '../lib/schema';
 interface Props {
   /** Used verbatim as <title> and og:title — pages compose their own. */
   title: string;
-  /** Meta and share description. Album pages pass their stamp; see lib/posts. */
+  /** Meta and share description. An album passes its `blurb`; see lib/posts. */
   description: string;
   /** Share image. The home page passes its cover, album pages theirs. */
   image: ImageMetadata;

@@ -44,8 +44,8 @@ Otherwise, look for the slug in `posts` in `src/albums/index.js`:
 
 ## 3. Check the writing
 
-Read every piece of prose in the manifest: the album `title` and `location`, each `alt`, each
-`caption`, and each `subheading` `title` and `text`.
+Read every piece of prose in the manifest: the album `title`, `location` and `description`, each
+`alt`, each `caption`, and each `subheading` `title` and `text`.
 
 **Never touch the `text` of a `quote` block.** Those are someone else's words, reproduced;
 a spelling you'd "correct" is the source's, and fixing it makes the quote wrong. Its

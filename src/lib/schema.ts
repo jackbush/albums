@@ -47,6 +47,13 @@ export const albumManifestSchema = z
       .string()
       .trim()
       .regex(/^\d{4}(-\d{2}|-\d{4})?$/, 'must be a year or a range, e.g. "2019" or "2014-15"'),
+    /**
+     * A sentence or two about the album, in one paragraph. Does two jobs at once: it
+     * becomes the page's meta description and the blurb in a link preview, and it
+     * prints under the title as lead text. Left out, the stamp does the first job and
+     * the page opens straight onto the photographs.
+     */
+    description: z.string().trim().min(1).optional(),
     cover: mediaPath,
     /**
      * A page that stands on its own: no back-link bar above or below it. For an album
@@ -222,6 +229,7 @@ export interface Album {
   title: string;
   location: string;
   year: string;
+  description?: string;
   cover: ImageMetadata;
   /** True hides the back-link bars, leaving the album with no route to the home page. */
   standalone: boolean;
