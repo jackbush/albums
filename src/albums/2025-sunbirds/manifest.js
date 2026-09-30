@@ -598,5 +598,207 @@ export default {
         },
       ],
     },
+    {
+      type: "subheading",
+      title: "B-roll",
+    },
+    {
+      type: "broll",
+      caption: false,
+      images: [
+        {
+          src: "./b-roll/IMG_5196.jpg",
+          alt: "A boulder with a shrine in the hollow beneath it, strung with small coloured flags",
+        },
+        {
+          src: "./b-roll/IMG_5199.jpg",
+          alt: "A path along a rocky headland at dusk, a long beach curving away below",
+        },
+        {
+          src: "./b-roll/IMG_5212.jpg",
+          alt: "Wet sand at dusk reflecting the orange horizon, a crescent moon above",
+        },
+        {
+          src: "./b-roll/IMG_5242.jpg",
+          alt: "A man standing beside a barrow piled with fruit against a sunlit wall",
+        },
+        {
+          src: "./b-roll/IMG_5262.jpg",
+          alt: "A tiled terrace with iron chairs, snow on the mountains beyond",
+        },
+        {
+          src: "./b-roll/IMG_5263.jpg",
+          alt: "A woman stopped on a mountain bike below a rock cutting, checking her phone",
+        },
+        {
+          src: "./b-roll/IMG_5269.jpg",
+          alt: "A cat asleep in a hollowed log on a mud wall",
+        },
+        {
+          src: "./b-roll/IMG_5316.jpg",
+          alt: "A rider heading away down a wide dirt road towards a snowy range",
+        },
+        {
+          src: "./b-roll/IMG_5325.jpg",
+          alt: "Two people squinting into a selfie on a stony track",
+        },
+        {
+          src: "./b-roll/IMG_5344.jpg",
+          alt: "A woman on a bike on open stony ground, a building on the ridge behind",
+        },
+        {
+          src: "./b-roll/IMG_5346.jpg",
+          alt: "A van at a gravel campsite with bikes laid down beside it",
+        },
+        {
+          src: "./b-roll/IMG_5361.jpg",
+          alt: "A road sign in two scripts, shot through the windscreen",
+        },
+        {
+          src: "./b-roll/IMG_5411.jpg",
+          alt: "Standing with a bike on a sandy track, palms below a snowy range",
+        },
+        {
+          src: "./b-roll/IMG_5435.jpg",
+          alt: "A tiny figure riding a track across a huge stony plain",
+        },
+        {
+          src: "./b-roll/IMG_5442.jpg",
+          alt: "A rider coming up a gravel road between banded cliffs",
+        },
+        {
+          src: "./b-roll/IMG_5459.jpg",
+          alt: "A camel standing in scrub",
+        },
+        {
+          src: "./b-roll/IMG_5463.jpg",
+          alt: "Two cats sharing a bowl indoors",
+        },
+        {
+          src: "./b-roll/IMG_5509.jpg",
+          alt: "Two riders stopped on the crest of a dune at sunset",
+        },
+        {
+          src: "./b-roll/IMG_5514.jpg",
+          alt: "A motorbike cutting down the face of a dune, sand thrown up behind",
+        },
+        {
+          src: "./b-roll/IMG_5648.jpg",
+          alt: "A close-up of small orange and pink flowerheads",
+        },
+        {
+          src: "./b-roll/IMG_5710.jpg",
+          alt: "A selfie in a vest and bucket hat, the other rider coming up behind",
+        },
+        {
+          src: "./b-roll/IMG_5725.jpg",
+          alt: "Two people cheek to cheek at the top of a hill, packs on",
+        },
+        {
+          src: "./b-roll/IMG_5746.jpg",
+          alt: "Both hoods up and sunglasses on, squinting into the wind",
+        },
+        {
+          src: "./b-roll/IMG_5770.jpg",
+          alt: "Waves running up an empty beach, white houses along the headland",
+        },
+        {
+          src: "./b-roll/IMG_5787.jpg",
+          alt: "A selfie on a pale rocky shore at dusk, sea behind",
+        },
+        {
+          src: "./b-roll/IMG_5799.jpg",
+          alt: "Running a coast path at sunset above a bay",
+        },
+        {
+          src: "./b-roll/IMG_5815.jpg",
+          alt: "A selfie in a helmet and yellow jacket, the other rider laughing just behind",
+        },
+        {
+          src: "./b-roll/IMG_5818.jpg",
+          alt: "Stopped on a gravel track by the coast, throwing a peace sign",
+        },
+        {
+          src: "./b-roll/IMG_5830.jpg",
+          alt: "Looking back from a bike in long grass, the coast far below",
+        },
+        {
+          src: "./b-roll/IMG_5858.jpg",
+          alt: "A chameleon crossing gravel between fallen leaves",
+        },
+        {
+          src: "./b-roll/IMG_5863.jpg",
+          alt: "A night sky full of stars, a branch in one corner",
+        },
+        {
+          src: "./b-roll/IMG_5941.jpg",
+          alt: "A dirt track through scrub, eroded hills and a strip of water beyond",
+        },
+        {
+          src: "./b-roll/IMG_5951.jpg",
+          alt: "White blossom open on a bare branch",
+        },
+        {
+          src: "./b-roll/IMG_5954.jpg",
+          alt: "Pale eroded hillsides under a flat white sky",
+        },
+        {
+          src: "./b-roll/IMG_5966.jpg",
+          alt: "A track along a hillside past bare trees, storm cloud over the hills",
+        },
+        {
+          src: "./b-roll/IMG_5968.jpg",
+          alt: "A big black beetle on a low pink flower in the sand",
+        },
+        {
+          src: "./b-roll/IMG_5970.jpg",
+          alt: "A stony track between trees, wildflowers along the verges",
+        },
+        {
+          src: "./b-roll/IMG_6013.jpg",
+          alt: "Pushing a bike through a shallow stream",
+        },
+        {
+          src: "./b-roll/IMG_6042.jpg",
+          alt: "A waterfall dropping into pools among pale rocks, woods above",
+        },
+        {
+          src: "./b-roll/IMG_6067.jpg",
+          alt: "A fox stepping through grass, head low",
+        },
+        {
+          src: "./b-roll/IMG_6146.jpg",
+          alt: "A turquoise lake below a low pale cliff",
+        },
+        {
+          src: "./b-roll/IMG_6168.jpg",
+          alt: "Two people on a rocky top looking out over a wide green valley",
+        },
+        {
+          src: "./b-roll/IMG_6219.jpg",
+          alt: "Riding a lane through a meadow, a peace sign thrown over one shoulder",
+        },
+        {
+          src: "./b-roll/IMG_6224.jpg",
+          alt: "A selfie in the hills, one of them ruffling her own hair",
+        },
+        {
+          src: "./b-roll/IMG_6275.jpg",
+          alt: "Tiered fungus growing out of a mossy fallen log",
+        },
+        {
+          src: "./b-roll/IMG_6322.jpg",
+          alt: "Snowy peaks above a green meadow and scattered trees",
+        },
+        {
+          src: "./b-roll/IMG_6348.jpg",
+          alt: "A surfer riding a wave at dusk, hills across the water",
+        },
+        {
+          src: "./b-roll/IMG_6420.jpg",
+          alt: "A ship's funnel against a sunset, hopscotch painted on the deck",
+        },
+      ],
+    },
   ],
 };
