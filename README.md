@@ -540,6 +540,9 @@ export default {
 `description` and `cover`. Edit the manifest and the album page, its card on the home page and its
 link preview all change together; there's nothing to update in a second place.
 
+Visitors who arrive from jackbush.github.io (whose project links add `?from=home`) get a
+"← Jack Bush" link above the home page's masthead, kept for the rest of that tab's visit.
+
 An album's meta description is built by `blurb` in [`src/lib/posts.ts`](src/lib/posts.ts), and it
 always ends in where and when:
 

@@ -8,19 +8,40 @@ interface Props {
    * one at the top is the page header and the one at the bottom is its footer —
    * two landmarks rather than two identical navs.
    */
-  as?: 'header' | 'footer';
+  as?: 'header' | 'footer' | 'nav';
+  /**
+   * Link to jackbush.github.io instead of the albums index. Hidden unless the visitor came
+   * from there (its project links add ?from=home), which is remembered for the tab, so it's
+   * still there after a look at an album.
+   */
+  home?: boolean;
 }
 
-const { as: Tag = 'header' }: Props = Astro.props;
+const { as: Tag = 'header', home = false }: Props = Astro.props;
 const site = getSite();
 ---
 
-<Tag class="navbar">
+<Tag class="navbar" hidden={home}>
   <div class="container">
-    <a class="meta navbar__link" href={url()}>
-      <span aria-hidden="true">&larr;</span> {site.heading}
+    <a class="meta navbar__link" href={home ? '/' : url()}>
+      <span aria-hidden="true">&larr;</span> {home ? 'Jack Bush' : site.heading}
     </a>
   </div>
+  {
+    home && (
+      <script is:inline>
+        {
+          const bar = document.currentScript.parentElement;
+          let fromHome = new URLSearchParams(location.search).get('from') === 'home';
+          try {
+            if (fromHome) sessionStorage.setItem('albums:from', 'home');
+            else fromHome = sessionStorage.getItem('albums:from') === 'home';
+          } catch {}
+          bar.hidden = !fromHome;
+        }
+      </script>
+    )
+  }
 </Tag>
 
 <style>

@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBar from '../components/NavBar.astro';
 import { getListedAlbums, getSite, stamp } from '../lib/posts';
 import { url } from '../lib/site';
 
@@ -29,6 +30,7 @@ const FALLBACK = 1650;
 ---
 
 <BaseLayout title={site.title} description={site.description} image={site.cover}>
+  <NavBar as="nav" home />
   <header class="container masthead">
     <h1 class="display masthead__mark">{site.heading}</h1>
   </header>
