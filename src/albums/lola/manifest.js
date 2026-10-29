@@ -151,7 +151,8 @@ export default {
     },
     {
       type: "subheading",
-      title: "Build journal",
+      title: "Build Journal",
+      // text: "Making her habitable for the first summer",
     },
     {
       type: "photos",
@@ -492,28 +493,143 @@ export default {
       ],
     },
     {
+      type: "subheading",
+      title: "Winter is coming",
+      // text: "xxx",
+    },
+    {
       type: "photos",
-      caption: false,
+      caption: "Heater installation with Luke + pizza celebration after.",
       images: [
         {
-          src: "./build/IMG_4103.jpeg",
-          alt: "A roof rack along the top of the van against a clear blue sky, garages across the close",
+          src: "./build/IMG_4107.jpeg",
+          alt: "A diesel heater squeezed in among ducting, pipes and wiring beside the leisure battery",
+        },
+        {
+          src: "./build/IMG_4109.jpeg",
+          alt: "A man smiling behind a huge pizza in its box at a pizzeria table",
         },
       ],
     },
     {
-      type: "video",
-      src: "./build/IMG_4107.mov",
-      alt: "A diesel heater squeezed in among ducting, pipes and wiring beside the leisure battery",
+      type: "photos",
       caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-09-11-15-05-52.jpg",
+          alt: "A tall plywood carcass standing on a workbench in a workshop, hard hats on a shelf behind",
+        },
+      ],
     },
     {
       type: "photos",
       caption: false,
       images: [
         {
-          src: "./build/IMG_4109.jpeg",
-          alt: "A man smiling behind a huge pizza in its box at a pizzeria table",
+          src: "./build/PHOTO-2024-09-12-11-03-40.jpg",
+          alt: "A plywood shoe rack leaning against a workshop wall with a pair of walking boots on its shelf, tools hung above",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-09-18-10-26-46.jpg",
+          alt: "An open-fronted plywood cabinet and a tall ply partition inside the van, wires coming through the wall by the window",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-09-21-18-10-17.jpg",
+          alt: "A dark worktop on a white frame beside the swivelled passenger seat, a small window above it",
+        },
+        {
+          src: "./build/PHOTO-2024-09-21-18-11-59.jpg",
+          alt: "From a seat at the dark table, looking across to the white kitchen unit with its hob and tap, the side door open on the street",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-09-27-09-20-16.jpg",
+          alt: "Marble-effect panels lining a narrow shower cubicle framed in plywood",
+        },
+        {
+          src: "./build/PHOTO-2024-09-27-09-20-37.jpg",
+          alt: "The shower cubicle from further back, its floor still bare, the worktop beside it covered in tools",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-09-27-09-24-40.jpg",
+          alt: "The kitchen unit in the workshop: a black sink and three-burner hob set in a dark worktop, wooden pull handles below",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-10-01-17-37-47.jpg",
+          alt: "A white chest of drawers beside the shower, now fitted with a frosted sliding door",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-10-08-14-45-04.jpg",
+          alt: "A plywood step being fitted along the floor beneath the two cab seats",
+        },
+        {
+          src: "./build/PHOTO-2024-10-08-14-54-07.jpg",
+          alt: "Looking down on the plywood floor panels screwed in place around the base of the cab seats",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-10-08-15-11-26.jpg",
+          alt: "A shelf fitted above the window over the worktop, a router and tools spread out below",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-10-11-15-35-51.jpg",
+          alt: "Down the length of the van from the cab: the dark worktop, the white kitchen unit and the bed across the back",
+        },
+      ],
+    },
+    {
+      type: "photos",
+      caption: false,
+      images: [
+        {
+          src: "./build/PHOTO-2024-10-11-16-02-34.jpg",
+          alt: "A window with red-tipped catches set into a white wall, finished with a wooden sill",
         },
       ],
     },
@@ -535,69 +651,33 @@ export default {
       type: "photos",
       caption: false,
       images: [
-        {
-          src: "./build/IMG_4493.jpeg",
-          alt: "A woman in a bobble hat sitting cross-legged on the bed at the back, the kitchen and shower in front",
-        },
       ],
     },
     {
       type: "photos",
       caption: false,
-      images: [
-        {
-          src: "./build/IMG_4561.jpeg",
-          alt: "Porridge in a pan and a kettle on the hob, apples on an orange chopping board, a clifftop field and the sea outside",
-        },
-      ],
-    },
-    {
-      type: "photos",
-      caption: false,
-      images: [
-        {
-          src: "./build/IMG_4562.jpeg",
-          alt: "The van parked on a clifftop under a grey sky, its side door open on the pink kitchen and an awning along the roof",
-        },
-      ],
-    },
-    {
-      type: "photos",
-      caption: false,
+      hero: true,
+      closer: true,
       images: [
         {
           src: "./build/IMG_4569.jpeg",
           alt: "Down the length of the van to the bed: switch panel and speaker on the left, green wall and hob on the right",
         },
-      ],
-    },
-    {
-      type: "photos",
-      caption: false,
-      images: [
         {
-          src: "./build/IMG_4570.jpeg",
-          alt: "A woman curled up in the swivelled passenger seat with her phone, a fold-out table in front of her",
+          src: "./build/IMG_4561.jpeg",
+          alt: "Porridge in a pan and a kettle on the hob, apples on an orange chopping board, a clifftop field and the sea outside",
         },
-      ],
-    },
-    {
-      type: "photos",
-      caption: false,
-      images: [
+        // {
+        //   src: "./build/IMG_4562.jpeg",
+        //   alt: "The van parked on a clifftop under a grey sky, its side door open on the pink kitchen and an awning along the roof",
+        // },
         {
           src: "./build/IMG_4628.jpeg",
           alt: "The bed at night under a patterned blanket, reading lamps lit and honeysuckle panels on the rear doors",
         },
-      ],
-    },
-    {
-      type: "photos",
-      caption: false,
-      images: [
         {
-          src: "./build/IMG_6939.jpeg",
-          alt: "Onions chopped beside an empty frying pan on the hob, plane trees and dry grass outside the door",
+          src: "./build/IMG_4570.jpeg",
+          alt: "A woman curled up in the swivelled passenger seat with her phone, a fold-out table in front of her",
         },
       ],
     },
