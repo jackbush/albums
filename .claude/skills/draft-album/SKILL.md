@@ -128,7 +128,8 @@ by link alone — add `standalone: true` under `cover`:
   standalone: true,
 ```
 
-It drops the back-link bars at the top and bottom of the page. Only set it when asked; an
+It drops the back-link bars at the top and bottom of the page, except for visitors from
+jackbush.github.io (`?from=home`), whose bars lead back there. Only set it when asked; an
 ordinary album leaves the key out. A standalone album also **skips step 6 entirely** — it does
 not go into `src/albums/index.js`, not even as a commented-out line.
 

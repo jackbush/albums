@@ -45,7 +45,7 @@ const share = blurb(album);
   imageAlt={`Cover image — ${title}`}
   theme={theme}
 >
-  {!standalone && <NavBar />}
+  <NavBar home={standalone} />
 
   <main id="main" class="container post">
     <div class="post__head">
@@ -128,7 +128,7 @@ const share = blurb(album);
     </div>
   </main>
 
-  {!standalone && <NavBar as="footer" />}
+  <NavBar as="footer" home={standalone} />
 
   {plates > 0 && <Lightbox />}
 </BaseLayout>

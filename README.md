@@ -125,7 +125,7 @@ adjusting `../../` if your file sits at a different depth.
 | `description` | no | A sentence or two about the album, one paragraph. Prints under the title as lead text, and carries where and when after it as the page's meta description and link-preview blurb: `Two days round the Isle of Purbeck. (Dorset, UK, 2019)`. Left out, that line is just `Dorset, UK, 2019` and the page opens straight onto the photographs. |
 | `cover` | yes | Image shown on the home page. |
 | `items` | yes | The post itself, rendered in order. At least one. |
-| `standalone` | no | `false`. `true` drops the "← Albums" bars above and below the post, leaving the page with no link back to the site. See below. |
+| `standalone` | no | `false`. `true` drops the "← Albums" bars above and below the post, leaving the page with no link back to the site — unless the visitor came from jackbush.github.io. See below. |
 | `theme` | no | Per-post colour and font overrides. See below. |
 
 ### Media paths
@@ -154,6 +154,9 @@ A post you share by link alone — an unlisted album, a walkthrough, anything th
 the collection. It renders exactly like any other post, minus the "← Albums" bar at the top and
 the one at the bottom, so the page doesn't hand the reader a route into the rest of the site.
 Nothing hides it from someone who has the URL; it's unlisted, not private.
+
+A visitor from jackbush.github.io (`?from=home`, as on the home page below) gets the bars back,
+as "← Homepage" links to there rather than to the albums index.
 
 ---
 
@@ -572,7 +575,8 @@ export default {
 link preview all change together; there's nothing to update in a second place.
 
 Visitors who arrive from jackbush.github.io (whose project links add `?from=home`) get a
-"← Jack Bush" link above the home page's masthead, kept for the rest of that tab's visit.
+"← Homepage" link above the home page's masthead, kept for the rest of that tab's visit. A
+[standalone album](#standalone-albums) shows the same link above and below the post.
 
 An album's meta description is built by `blurb` in [`src/lib/posts.ts`](src/lib/posts.ts), and it
 always ends in where and when:
