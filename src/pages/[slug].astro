@@ -100,11 +100,10 @@ const share = blurb(album);
                 />
               );
             case 'video':
+            case 'videos':
               return (
                 <VideoItem
-                  src={item.src}
-                  poster={item.poster}
-                  alt={item.alt}
+                  clips={item.type === 'video' ? [item] : item.clips}
                   caption={item.caption}
                   loop={item.loop}
                   muted={item.muted}

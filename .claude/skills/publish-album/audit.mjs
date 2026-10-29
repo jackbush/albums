@@ -77,7 +77,7 @@ m.items.forEach((it, i) => {
     if (field === 'caption' && looksFlora(v)) notes.push(...floraNotes(v));
     if (notes.length) flags.push(`  [${i + 1}] ${field}: ${notes.join(', ')} — ${JSON.stringify(v)}`);
   };
-  if (['photos', 'broll', 'video'].includes(it.type) && typeof it.caption === 'string') check('caption', it.caption, true);
+  if (['photos', 'broll', 'video', 'videos'].includes(it.type) && typeof it.caption === 'string') check('caption', it.caption, true);
   if (it.type === 'quote' && it.attribution) check('attribution', it.attribution, false);
 });
 console.log(flags.length ? flags.join('\n') : '  none');
@@ -91,6 +91,7 @@ ref(m.cover);
 for (const it of m.items) {
   if (it.type === 'photos' || it.type === 'broll') it.images.forEach((g) => ref(g.src));
   if (it.type === 'video') { ref(it.src); ref(it.poster); }
+  if (it.type === 'videos') it.clips.forEach((c) => { ref(c.src); ref(c.poster); });
 }
 
 console.log('\n— Media on disk with nothing pointing at it —');

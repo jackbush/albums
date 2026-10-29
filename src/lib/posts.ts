@@ -6,6 +6,7 @@ import {
   formatIssues,
   type Item,
   type Album,
+  type Clip,
   type Photo,
   type Site,
 } from './schema';
@@ -50,11 +51,18 @@ function loadAlbum(slug: string, module: { default: unknown }): Album {
           })),
           caption: written(item.caption),
         };
-      case 'video':
+      case 'video': {
+        const { src, poster, alt, ...rest } = item;
+        return {
+          ...rest,
+          ...resolveClip(slug, { src, poster, alt }),
+          caption: written(item.caption),
+        };
+      }
+      case 'videos':
         return {
           ...item,
-          src: resolveVideo(slug, item.src),
-          poster: item.poster ? resolveImage(slug, item.poster) : undefined,
+          clips: item.clips.map((clip) => resolveClip(slug, clip)),
           caption: written(item.caption),
         };
       default:
@@ -63,6 +71,14 @@ function loadAlbum(slug: string, module: { default: unknown }): Album {
   });
 
   return { ...data, slug, cover: resolveImage(slug, data.cover), items };
+}
+
+function resolveClip(slug: string, clip: { src: string; poster?: string; alt?: string }): Clip {
+  return {
+    src: resolveVideo(slug, clip.src),
+    poster: clip.poster ? resolveImage(slug, clip.poster) : undefined,
+    alt: clip.alt,
+  };
 }
 
 /**

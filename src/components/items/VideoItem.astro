@@ -1,14 +1,12 @@
 ---
 import { getImage } from 'astro:assets';
 import { blockMarker } from '../../lib/dev';
+import type { Clip } from '../../lib/schema';
 
 interface Props {
-  /** Already resolved to an asset URL by lib/posts.ts. */
-  src: string;
-  poster?: ImageMetadata;
-  /** Screen readers only, like a frame's `alt` — never printed on the page. */
-  alt?: string;
-  /** The line printed under the film, same as a `photos` block's. */
+  /** One for a `video` block, two side by side for `videos`. */
+  clips: Clip[];
+  /** The line printed under the films, same as a `photos` block's. */
   caption?: string;
   loop: boolean;
   muted: boolean;
@@ -17,10 +15,16 @@ interface Props {
   block: number;
 }
 
-const { src: source, poster, alt, caption, loop, muted, autoplay, block } = Astro.props;
+const { clips, caption, loop, muted, autoplay, block } = Astro.props;
 const marker = blockMarker(block);
 
-const posterImage = poster ? await getImage({ src: poster, width: 1650, format: 'webp' }) : null;
+const films = await Promise.all(
+  clips.map(async (clip) => ({
+    ...clip,
+    poster: clip.poster ? await getImage({ src: clip.poster, width: 1650, format: 'webp' }) : null,
+    type: clip.src.endsWith('.webm') ? 'video/webm' : 'video/mp4',
+  })),
+);
 
 /*
  * Browsers refuse to autoplay with sound, so autoplay implies muted rather than
@@ -29,39 +33,42 @@ const posterImage = poster ? await getImage({ src: poster, width: 1650, format: 
  * button — for the sound it deliberately started without.
  */
 const isAmbient = autoplay;
-const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
 ---
 
 <figure class="film">
-  <div class="film__frame bleed">
-    <video
-      controls={!isAmbient}
-      loop={loop || isAmbient}
-      muted={muted || isAmbient}
-      autoplay={isAmbient}
-      playsinline
-      preload={isAmbient ? 'auto' : 'metadata'}
-      poster={posterImage?.src}
-      aria-label={alt}
-      data-film
-    >
-      <source src={source} type={type} />
-      Your browser can't play this video.
-    </video>
+  <div class="film__row bleed">
     {
-      isAmbient && (
-        /* Hidden until the script claims it: without JS the button has nothing to do. */
-        <button type="button" class="film__sound" data-film-sound aria-label="Unmute" hidden>
-          <svg class="film__icon film__icon--muted" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M11 5 6 9H3v6h3l5 4z" />
-            <path d="m16 9 6 6M22 9l-6 6" />
-          </svg>
-          <svg class="film__icon film__icon--sound" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M11 5 6 9H3v6h3l5 4z" />
-            <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
-          </svg>
-        </button>
-      )
+      films.map((film) => (
+        <div class="film__frame">
+          <video
+            controls={!isAmbient}
+            loop={loop || isAmbient}
+            muted={muted || isAmbient}
+            autoplay={isAmbient}
+            playsinline
+            preload={isAmbient ? 'auto' : 'metadata'}
+            poster={film.poster?.src}
+            aria-label={film.alt}
+            data-film
+          >
+            <source src={film.src} type={film.type} />
+            Your browser can't play this video.
+          </video>
+          {isAmbient && (
+            /* Hidden until the script claims it: without JS the button has nothing to do. */
+            <button type="button" class="film__sound" data-film-sound aria-label="Unmute" hidden>
+              <svg class="film__icon film__icon--muted" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M11 5 6 9H3v6h3l5 4z" />
+                <path d="m16 9 6 6M22 9l-6 6" />
+              </svg>
+              <svg class="film__icon film__icon--sound" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M11 5 6 9H3v6h3l5 4z" />
+                <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
+              </svg>
+            </button>
+          )}
+        </div>
+      ))
     }
   </div>
   {
@@ -69,9 +76,13 @@ const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
       <figcaption class="film__caption">
         {caption && <span class="meta film__text">{caption}</span>}
         {marker && (
-          /* The block number and the alt, the way a photo block prints them. */
+          /* The block number and each alt, the way a photo block prints them. */
           <p class="debug-alts" aria-hidden="true">
-            <span class="debug-alts__line">{[marker, alt].filter(Boolean).join(' ')}</span>
+            {films.map((film, i) => (
+              <span class="debug-alts__line">
+                {[i === 0 && marker, film.alt].filter(Boolean).join(' ')}
+              </span>
+            ))}
           </p>
         )}
       </figcaption>
@@ -129,6 +140,16 @@ const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
 </script>
 
 <style>
+  /* Two films split the row evenly, with the gutter a row of photographs uses. */
+  .film__row {
+    --gutter: 1rem;
+
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: var(--gutter);
+  }
+
   .film__frame {
     position: relative;
   }
@@ -200,5 +221,12 @@ const type = source.endsWith('.webm') ? 'video/webm' : 'video/mp4';
     font-size: inherit;
     line-height: inherit;
     font-weight: 400;
+  }
+
+  /* The gutter halves on a phone, as it does between photographs. */
+  @media (max-width: 719px) {
+    .film__row {
+      --gutter: 0.5rem;
+    }
   }
 </style>

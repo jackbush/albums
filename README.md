@@ -429,6 +429,37 @@ is downloaded whether or not anyone asks for it, so keep the bitrate sane — 2 
 at 1080p, and straight-off-the-camera files are often four times that. Videos aren't numbered
 as plates and don't open full screen — they play in place.
 
+### `videos`
+
+Two films side by side, splitting the row evenly with the same gutter as two photographs — the
+way to set a pair of portrait phone clips, which alone would stand taller than the screen.
+
+```js
+{
+  type: "videos",
+  caption: "Up the ladder and down again.",
+  clips: [
+    {
+      src: "./media/climb.mp4",
+      alt: "Climbing the ladder to the roof rack",
+    },
+    {
+      src: "./media/descent.mp4",
+      alt: "Climbing back down with a bag of tools",
+    },
+  ],
+}
+```
+
+| Field | Required | Default | Notes |
+| --- | --- | --- | --- |
+| `clips` | yes | | Exactly two, each with its own `src`, `poster` and `alt` as on a `video` block. |
+| `caption` | no | | One line under both films. |
+| `loop`, `muted`, `autoplay` | no | `false` | As on a `video` block, set once for both. An ambient pair gives each film its own sound button. |
+
+Give it clips of the same shape: nothing is cropped, so a landscape beside a portrait leaves the
+row ragged at the bottom.
+
 ### `subheading`
 
 Opens a chapter — a place, a day, whatever the album divides on.

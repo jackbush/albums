@@ -37,6 +37,23 @@ const photo = z
   })
   .strict();
 
+/** One film: the file, a still for before it plays, and its `alt`. */
+const clip = z
+  .object({
+    src: mediaPath,
+    poster: mediaPath.optional(),
+    /** Screen readers only, like a frame's `alt` — never printed on the page. */
+    alt: z.string().optional(),
+  })
+  .strict();
+
+/** How a film plays. A `videos` block sets it once for both clips. */
+const playback = {
+  loop: z.boolean().default(false),
+  muted: z.boolean().default(false),
+  autoplay: z.boolean().default(false),
+};
+
 export const albumManifestSchema = z
   .object({
     title: z.string().trim().min(1),
@@ -103,18 +120,22 @@ export const albumManifestSchema = z
               caption,
             })
             .strict(),
-          z
-            .object({
+          clip
+            .extend({
               type: z.literal('video'),
-              src: mediaPath,
-              poster: mediaPath.optional(),
-              /** Screen readers only, like a frame's `alt` — never printed on the page. */
-              alt: z.string().optional(),
               /** The line printed under the film, same as a `photos` block's. */
               caption,
-              loop: z.boolean().default(false),
-              muted: z.boolean().default(false),
-              autoplay: z.boolean().default(false),
+              ...playback,
+            })
+            .strict(),
+          z
+            .object({
+              type: z.literal('videos'),
+              /** Two films side by side, sharing a row the way two frames of a `photos` block do. */
+              clips: z.array(clip).length(2),
+              /** Shown once, under both — each clip keeps its own `alt`. */
+              caption,
+              ...playback,
             })
             .strict(),
           z
@@ -196,6 +217,19 @@ export interface Photo {
   alt?: string;
 }
 
+/** One film after its paths have been resolved: `src` to an asset URL. */
+export interface Clip {
+  src: string;
+  poster?: ImageMetadata;
+  alt?: string;
+}
+
+export interface Playback {
+  loop: boolean;
+  muted: boolean;
+  autoplay: boolean;
+}
+
 /** A block after its media paths have been resolved to real assets. */
 export type Item =
   | {
@@ -210,16 +244,8 @@ export type Item =
       images: Photo[];
       caption?: string;
     }
-  | {
-      type: 'video';
-      src: string;
-      poster?: ImageMetadata;
-      alt?: string;
-      caption?: string;
-      loop: boolean;
-      muted: boolean;
-      autoplay: boolean;
-    }
+  | ({ type: 'video'; caption?: string } & Clip & Playback)
+  | ({ type: 'videos'; clips: Clip[]; caption?: string } & Playback)
   | { type: 'subheading'; title: string; text?: string }
   | { type: 'quote'; text: string; attribution?: string; url?: string };
 
