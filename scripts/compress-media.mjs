@@ -18,6 +18,12 @@
  *     boundaries, block order, the `year` field — so a pass that stripped it
  *     would leave the album unregenerable.
  *
+ * Videos get the same treatment against a web-ready target: H.264 in an mp4, no
+ * larger than 1080p, around 2 Mbps. A clip already there is left alone, so a re-run
+ * doesn't stack up generation loss; anything else — a phone's .mov, HEVC, HDR, 4K, a
+ * camera's 10 Mbps — is re-encoded. A .mov comes out as an .mp4 beside it, and the
+ * album's manifest is repointed to match. Needs ffmpeg; HDR also needs macOS.
+ *
  * Lossy and irreversible: it overwrites the source. Keep true originals outside
  * the repo.
  *
@@ -28,11 +34,16 @@
  *   npm run compress -- --yes           # skip the confirmation
  */
 
+import { execFile } from 'node:child_process';
 import { createInterface } from 'node:readline/promises';
-import { readdir, readFile, rename, stat, unlink } from 'node:fs/promises';
+import { access, readdir, readFile, rename, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import { promisify } from 'node:util';
 import sharp from 'sharp';
+import { rewrite } from './lib/manifest.mjs';
+
+const run = promisify(execFile);
 
 const ALBUMS = 'src/albums';
 
@@ -44,6 +55,26 @@ const QUALITY = 85;
 /* sharp de-animates a GIF on resize, keeping frame one and dropping the rest —
  * which is why `fullPlate` passes them through untouched too. */
 const RESIZABLE = new Set(['.jpg', '.jpeg', '.png']);
+
+/* What a phone or camera hands over. WebM is left alone: nobody exports one by
+ * accident, so one in an album was made for the web already. */
+const VIDEOS = new Set(['.mov', '.mp4', '.m4v']);
+
+/* The web-ready target. `ceiling` is what counts as already there: the encode below
+ * peaks at `maxrate` plus the audio, so its own output always lands under it. */
+const VIDEO = {
+  long: 1920,
+  short: 1080,
+  crf: 24,
+  maxrate: '2.5M',
+  bufsize: '5M',
+  audio: '128k',
+  ceiling: 3.5e6,
+};
+
+/* HLG and PQ: an iPhone's HDR. Squeezed straight into 8-bit SDR it comes out
+ * washed-out and grey, so it's tone-mapped first. */
+const HDR = new Set(['arib-std-b67', 'smpte2084']);
 
 /**
  * The plate cap, read out of media.ts rather than copied.
@@ -84,8 +115,8 @@ async function albumsToScan(named) {
   return named;
 }
 
-/** Every image under an album, at any depth — media/ and b-roll/ alike. */
-async function imagesIn(album) {
+/** Every file under an album with one of `extensions`, at any depth — media/ and b-roll/ alike. */
+async function filesIn(album, extensions) {
   const found = [];
   async function walk(dir) {
     let entries;
@@ -97,7 +128,7 @@ async function imagesIn(album) {
     for (const entry of entries) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) await walk(full);
-      else if (RESIZABLE.has(path.extname(entry.name).toLowerCase())) found.push(full);
+      else if (extensions.has(path.extname(entry.name).toLowerCase())) found.push(full);
     }
   }
   await walk(path.join(ALBUMS, album));
@@ -155,6 +186,109 @@ async function shrink(file, cap, dryRun) {
   }
 }
 
+/** Dimensions as shown (a phone's portrait clip is stored landscape and flagged), codec, HDR, bitrate. */
+async function probe(file) {
+  const { stdout } = await run('ffprobe', [
+    '-v', 'error', '-print_format', 'json', '-show_streams', '-show_format', file,
+  ]);
+  const { streams, format } = JSON.parse(stdout);
+  const video = streams.find((s) => s.codec_type === 'video');
+  if (!video) throw new Error(`No video stream in ${file}`);
+
+  const rotation = video.side_data_list?.find((d) => d.rotation !== undefined)?.rotation ?? 0;
+  const sideways = Math.abs(Number(rotation)) % 180 === 90;
+  return {
+    width: sideways ? video.height : video.width,
+    height: sideways ? video.width : video.height,
+    codec: video.codec_name,
+    hdr: HDR.has(video.color_transfer),
+    bitrate: Number(format.bit_rate),
+  };
+}
+
+/** Why a clip isn't web-ready yet — empty when it is. */
+function videoProblems(file, { width, height, codec, hdr, bitrate }) {
+  const problems = [];
+  if (path.extname(file).toLowerCase() !== '.mp4') problems.push(path.extname(file).slice(1));
+  if (codec !== 'h264') problems.push(codec);
+  if (hdr) problems.push('HDR');
+  if (Math.max(width, height) > VIDEO.long || Math.min(width, height) > VIDEO.short) {
+    problems.push(`${width}x${height}`);
+  }
+  if (bitrate > VIDEO.ceiling) problems.push(`${(bitrate / 1e6).toFixed(1)} Mbps`);
+  return problems;
+}
+
+const exists = (file) => access(file).then(() => true, () => false);
+
+/**
+ * Re-encodes one clip to the target, as an .mp4 beside the source, then replaces it.
+ *
+ * Returns null when a clip that was only over the bitrate ceiling comes out no
+ * smaller — the same rule `shrink` applies to photographs. A clip in the wrong
+ * container or codec is converted whatever the size, since that's about whether it
+ * plays at all.
+ */
+async function transcode(item) {
+  const { file, album, problems } = item;
+  const target = path.join(path.dirname(file), `${path.basename(file, path.extname(file))}.mp4`);
+  if (target !== file && (await exists(target))) {
+    throw new Error(`${target} already exists, so ${path.basename(file)} has nowhere to go. Move one aside.`);
+  }
+
+  const before = (await stat(file)).size;
+  const temp = `${target}.compressing`;
+  const sdr = `${file}.sdr.mov`;
+  let input = file;
+
+  try {
+    if (item.hdr) {
+      /* ffmpeg can only tone-map with filters this build may not have; macOS ships
+       * the converter Photos itself uses, which also lands it at 1080p. */
+      if (process.platform !== 'darwin') throw new Error(`${file} is HDR, which needs macOS's avconvert to tone-map.`);
+      await run('avconvert', ['-s', file, '-p', 'Preset1920x1080', '-o', sdr, '--replace']);
+      input = sdr;
+    }
+
+    // Fit inside 1920x1080 either way up, never enlarging; even sides for yuv420p.
+    const fit = (side, landscape, portrait) => `'min(${side},if(gte(iw,ih),${landscape},${portrait}))'`;
+    const scale =
+      `scale=w=${fit('iw', VIDEO.long, VIDEO.short)}:h=${fit('ih', VIDEO.short, VIDEO.long)}` +
+      ':force_original_aspect_ratio=decrease:force_divisible_by=2';
+    await run('ffmpeg', [
+      '-v', 'error', '-y', '-i', input,
+      '-map', '0:v:0', '-map', '0:a?',
+      '-vf', scale,
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', String(VIDEO.crf),
+      '-maxrate', VIDEO.maxrate, '-bufsize', VIDEO.bufsize, '-pix_fmt', 'yuv420p',
+      '-c:a', 'aac', '-b:a', VIDEO.audio,
+      // Index up front, so playback starts before the whole file has arrived.
+      '-movflags', '+faststart', '-map_metadata', '-1',
+      '-f', 'mp4', temp,
+    ], { maxBuffer: 1 << 24 });
+
+    const after = (await stat(temp)).size;
+    if (after >= before && problems.every((p) => p.endsWith('Mbps'))) {
+      await unlink(temp);
+      return null;
+    }
+
+    await rename(temp, target);
+    if (target !== file) {
+      await unlink(file);
+      const manifest = path.join(ALBUMS, album, 'manifest.js');
+      if (await exists(manifest)) {
+        const ref = (f) => `./${path.relative(path.join(ALBUMS, album), f).split(path.sep).join('/')}`;
+        await writeFile(manifest, rewrite(await readFile(manifest, 'utf8'), [[ref(file), ref(target)]]));
+      }
+    }
+    return { before, after, target };
+  } finally {
+    await unlink(temp).catch(() => {});
+    await unlink(sdr).catch(() => {});
+  }
+}
+
 async function confirm(count, totalBefore) {
   if (!process.stdin.isTTY) {
     console.error('\nRefusing to overwrite without confirmation. Re-run with --yes (or --dry-run).');
@@ -178,29 +312,46 @@ async function main() {
   const cap = await plateCap();
   const albums = await albumsToScan(named);
 
-  console.log(`Plate cap is ${cap}px on the long edge (src/lib/media.ts). Anything beyond it is never served.\n`);
+  console.log(`Plate cap is ${cap}px on the long edge (src/lib/media.ts). Anything beyond it is never served.`);
+  console.log(`Videos: H.264 mp4, within ${VIDEO.long}x${VIDEO.short}, under ${VIDEO.ceiling / 1e6} Mbps.\n`);
 
   /* Surveyed up front so the confirmation can state the real damage, and so a
    * dry run and a live run walk exactly the same list. */
   const work = [];
   let skipped = 0;
   for (const album of albums) {
-    for (const file of await imagesIn(album)) {
+    for (const file of await filesIn(album, RESIZABLE)) {
       const { width, height } = await sharp(file).metadata();
-      if (Math.max(width, height) > cap) work.push({ album, file });
+      if (Math.max(width, height) > cap) work.push({ album, file, kind: 'image' });
       else skipped++;
     }
   }
 
+  const clips = (await Promise.all(albums.map((album) => filesIn(album, VIDEOS)))).flat().length;
+  const ffmpeg = await run('ffmpeg', ['-version']).then(() => true, () => false);
+  if (clips > 0 && !ffmpeg) {
+    console.log(`ffmpeg isn't installed, so ${clips} video${clips === 1 ? ' is' : 's are'} skipped. brew install ffmpeg\n`);
+  }
+  if (ffmpeg) {
+    for (const album of albums) {
+      for (const file of await filesIn(album, VIDEOS)) {
+        const probed = await probe(file);
+        const problems = videoProblems(file, probed);
+        if (problems.length > 0) work.push({ album, file, kind: 'video', hdr: probed.hdr, problems });
+        else skipped++;
+      }
+    }
+  }
+
   if (work.length === 0) {
-    console.log(`Nothing to do — all ${skipped} images are already within the cap.`);
+    console.log(`Nothing to do — all ${skipped} files are already within the cap.`);
     return;
   }
 
   let totalBefore = 0;
   for (const { file } of work) totalBefore += (await stat(file)).size;
 
-  console.log(`${work.length} oversized, ${skipped} already within the cap.`);
+  console.log(`${work.length} to compress, ${skipped} already within the cap.`);
   if (!dryRun && !assumeYes) await confirm(work.length, totalBefore);
 
   let before = 0;
@@ -208,18 +359,38 @@ async function main() {
   let changed = 0;
   let album = null;
 
-  for (const item of work) {
+  for (const item of work.sort((a, b) => a.album.localeCompare(b.album))) {
     if (item.album !== album) {
       album = item.album;
       console.log(`\n${album}`);
     }
+    const name = path.basename(item.file);
+
+    if (item.kind === 'video') {
+      if (dryRun) {
+        changed++;
+        console.log(`  would re-encode ${name}  (${item.problems.join(', ')})  ${bytes((await stat(item.file)).size)} → ?`);
+        continue;
+      }
+      const result = await transcode(item);
+      if (!result) continue;
+      changed++;
+      before += result.before;
+      after += result.after;
+      const renamed = result.target === item.file ? '' : ` as ${path.basename(result.target)}`;
+      console.log(
+        `  re-encoded ${name}${renamed}  (${item.problems.join(', ')})  ` +
+          `${bytes(result.before)} → ${bytes(result.after)}`,
+      );
+      continue;
+    }
+
     const result = await shrink(item.file, cap, dryRun);
     if (!result) continue;
 
     changed++;
     before += result.before;
     after += result.after ?? result.before;
-    const name = path.basename(item.file);
     const size = dryRun
       ? `${bytes(result.before)} → ?`
       : `${bytes(result.before)} → ${bytes(result.after)}`;
@@ -230,7 +401,7 @@ async function main() {
   }
 
   console.log(`\n${dryRun ? 'Would rewrite' : 'Rewrote'} ${changed} file${changed === 1 ? '' : 's'}.`);
-  if (!dryRun) {
+  if (!dryRun && changed > 0) {
     console.log(`${bytes(before)} → ${bytes(after)}  (${((1 - after / before) * 100).toFixed(1)}% smaller)`);
   }
 }

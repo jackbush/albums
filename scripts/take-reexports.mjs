@@ -51,6 +51,7 @@ import { spawn } from 'node:child_process';
 import path from 'node:path';
 import process from 'node:process';
 import sharp from 'sharp';
+import { rewrite } from './lib/manifest.mjs';
 
 const ALBUMS = 'src/albums';
 
@@ -300,23 +301,6 @@ function planReferences(plan, existing) {
   }
 
   return { moves, dead };
-}
-
-/**
- * Rewrites the references in a manifest's text.
- *
- * Substitution on the source, for the same reason the references were read out of it:
- * a commented-out frame has to be repointed as well, and re-serialising a parsed
- * manifest would drop every comment in the file. Only the quoted path is replaced, so
- * a caption that happens to mention a filename is left alone.
- */
-function rewrite(source, moves) {
-  let text = source;
-  for (const [from, to] of moves) {
-    const escaped = from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    text = text.replace(new RegExp(`(['"])${escaped}\\1`, 'g'), `$1${to}$1`);
-  }
-  return text;
 }
 
 async function confirm(question) {

@@ -8,7 +8,7 @@ npm install
 npm run dev      # http://localhost:4321/albums/
 npm run build    # writes dist/
 npm run preview  # serves dist/ at the real base path
-npm run compress # fits album sources to the largest size the site serves
+npm run compress # fits album photos to the largest size the site serves, and videos to 1080p
 npm run reexport # takes re-exported sources: newest version wins, older ones go
 npm run format   # puts manifests in house order (one property per line)
 ```
@@ -237,6 +237,7 @@ serves; every inline width is smaller. Pixels past it are resized away on every 
 cost only repository size, so once an album is final, `npm run compress` fits its sources
 inside that box in place. It keeps EXIF, skips anything already within the cap, and is safe to
 re-run. It is also lossy and irreversible — keep the true originals somewhere outside the repo.
+It does the same for videos — see [`video`](#video).
 
 #### Re-exported sources
 
@@ -432,10 +433,13 @@ scrolls into view and pauses when it leaves, so a film further down the page cos
 until you reach it. Where autoplay is refused outright (iOS in Low Power Mode), the native
 controls come back and the button goes away.
 
-**Videos aren't transcoded.** Export them web-ready: H.264 mp4, around 1080p. An ambient clip
-is downloaded whether or not anyone asks for it, so keep the bitrate sane — 2 Mbps is plenty
-at 1080p, and straight-off-the-camera files are often four times that. Videos aren't numbered
-as plates and don't open full screen — they play in place.
+**The build doesn't transcode videos; `npm run compress` does, once, in place.** It brings every
+clip to H.264 mp4 within 1080p at around 2 Mbps — straight-off-the-camera files are often four
+times that, and an ambient clip is downloaded whether or not anyone asks for it. A phone's `.mov`
+comes out as an `.mp4` and the manifest is repointed to it. iPhone HDR is tone-mapped to SDR
+first, which needs macOS (`avconvert`); everything else needs `ffmpeg` (`brew install ffmpeg`).
+A clip already web-ready is left alone, so it's safe to re-run. Videos aren't numbered as plates
+and don't open full screen — they play in place.
 
 ### `videos`
 

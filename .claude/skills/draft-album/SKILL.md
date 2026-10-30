@@ -23,15 +23,16 @@ subheading. `publish-album` checks it again, but it shouldn't have anything to f
 
 ### 1. Compress the sources
 
-Fit the album's photographs to the largest size the site actually serves, before anything else
-reads them:
+Fit the album's photographs to the largest size the site actually serves, and its videos to
+web-ready 1080p mp4, before anything else reads them:
 
 ```bash
 npm run compress -- <album> --yes
 ```
 
 `--yes` because this runs unattended; without it the script stops for a confirmation there's
-nobody to give. It only touches files over the plate cap, it keeps EXIF — so the capture times
+nobody to give. It only touches photos over the plate cap and videos that aren't web-ready yet
+(a `.mov` becomes an `.mp4`, so write the `.mp4` name into the manifest), it keeps EXIF — so the capture times
 the next step reads are untouched — and it's safe to re-run. It is lossy and it overwrites the
 originals in place, which is the deal the script documents: keep true originals outside the repo.
 
