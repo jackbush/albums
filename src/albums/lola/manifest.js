@@ -2,7 +2,8 @@
 export default {
   title: "Lola",
   location: "Van Conversion",
-  year: "2023-26",
+  description: "After an extended bike tour led to daydreaming about nomadic life, we decided to build a home in a van.",
+  year: "2023-2024",
   cover: "./finals/cover.jpg",
   standalone: true,
   theme: {
@@ -138,7 +139,7 @@ export default {
     {
       type: "subheading",
       title: "Build Journal",
-      // text: "Making her habitable for the first summer",
+      text: "We bought Lola in October 2023 and fitted her out over a year in two phases: basics that winter + spring to move out of our Bristol flat and get up to the mountains, then an autumn session to get ready for winter.",
     },
     {
       type: "photos",
@@ -348,7 +349,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "Taking a few months in the Alps to enjoy the van.",
+      caption: "Time for a break: first van summer in the Alps.",
       images: [
         {
           src: "./build/IMG_6945.jpeg",
@@ -358,7 +359,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "Heater installation with Luke + pizza celebration after.",
+      caption: "Heater installation with Luke and, more importantly, pizza celebration after.",
       images: [
         {
           src: "./build/IMG_4107.jpeg",
@@ -445,7 +446,7 @@ export default {
     {
       type: "photos",
       closer: true,
-      caption: "First winter trip, toasty in Cornwall.",
+      caption: "First winter trip, toasty in Cornwall while it's wet and three degrees outside.",
       images: [
         {
           src: "./build/IMG_4561.jpeg",
