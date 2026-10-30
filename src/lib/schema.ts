@@ -76,7 +76,8 @@ export const albumManifestSchema = z
      * A page that stands on its own: no back-link bar above or below it. For an album
      * shared by link alone, which shouldn't hand the reader a way into the rest of the
      * site. A visitor from jackbush.github.io (`?from=home`) gets bars back to there
-     * instead. Standalone albums stay out of `src/albums/index.js` entirely.
+     * instead. Its meta description is its `description` alone, without where and when.
+     * Standalone albums stay out of `src/albums/index.js` entirely.
      */
     standalone: z.boolean().default(false),
     theme: themeSchema.optional(),

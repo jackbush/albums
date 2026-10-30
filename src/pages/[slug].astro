@@ -34,7 +34,7 @@ const blocks = withNumbers(items);
 const pageTitle = `${title} — ${site.heading}`;
 const meta = stamp(album);
 // What search engines and link previews get: the description if the album has one,
-// with where and when after it either way. See `blurb` in lib/posts.
+// with where and when after it unless the album is standalone. See `blurb` in lib/posts.
 const share = blurb(album);
 ---
 

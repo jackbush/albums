@@ -122,7 +122,7 @@ adjusting `../../` if your file sits at a different depth.
 | `title` | yes | Shown on the index and as the page heading. |
 | `location` | yes | **Free-form.** A country, or a region and country: `'Norway'`, `'Dorset, UK'`. |
 | `year` | yes | A year, or a range of two: `'2019'`, `'2014-15'`, `'2014-2015'`. Validated on that shape, but never parsed or sorted on. |
-| `description` | no | A sentence or two about the album, one paragraph. Prints under the title as lead text, and carries where and when after it as the page's meta description and link-preview blurb: `Two days round the Isle of Purbeck. (Dorset, UK, 2019)`. Left out, that line is just `Dorset, UK, 2019` and the page opens straight onto the photographs. |
+| `description` | no | A sentence or two about the album, one paragraph. Prints under the title as lead text, and carries where and when after it as the page's meta description and link-preview blurb: `Two days round the Isle of Purbeck. (Dorset, UK, 2019)` — on a standalone album, without them. Left out, that line is just `Dorset, UK, 2019` and the page opens straight onto the photographs. |
 | `cover` | yes | Image shown on the home page. |
 | `items` | yes | The post itself, rendered in order. At least one. |
 | `standalone` | no | `false`. `true` drops the "← Albums" bars above and below the post, leaving the page with no link back to the site — unless the visitor came from jackbush.github.io. See below. |
@@ -153,6 +153,7 @@ standalone: true,
 A post you share by link alone — an unlisted album, a walkthrough, anything that isn't part of
 the collection. It renders exactly like any other post, minus the "← Albums" bar at the top and
 the one at the bottom, so the page doesn't hand the reader a route into the rest of the site.
+Its link-preview blurb is the `description` alone, without location and year after it.
 Nothing hides it from someone who has the URL; it's unlisted, not private.
 
 A visitor from jackbush.github.io (`?from=home`, as on the home page below) gets the bars back,
@@ -588,11 +589,12 @@ Visitors who arrive from jackbush.github.io (whose project links add `?from=home
 [standalone album](#standalone-albums) shows the same link above and below the post.
 
 An album's meta description is built by `blurb` in [`src/lib/posts.ts`](src/lib/posts.ts), and it
-always ends in where and when:
+ends in where and when unless the album is standalone:
 
 | `description` | Meta description |
 | --- | --- |
 | written | `Two days round the Isle of Purbeck. (Dorset, UK, 2019)` |
+| written, `standalone: true` | `Two days round the Isle of Purbeck.` |
 | left out | `Dorset, UK, 2019` |
 
 That's a comma, where the stamp printed on the page uses a middot — `Dorset, UK · 2019`. The stamp

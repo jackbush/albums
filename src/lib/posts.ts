@@ -94,7 +94,8 @@ export function stamp(album: Album): string {
 
 /**
  * The album's meta and share description: "Where, when", or the album's own
- * `description` with where and when after it in brackets.
+ * `description` with where and when after it in brackets. A standalone album's
+ * description goes out on its own, since it isn't one stop in a collection of trips.
  *
  * Not the stamp. The stamp is set on the page, where the middot reads as a divider
  * between two fields; this is a line of prose in a search result or a link preview,
@@ -103,7 +104,8 @@ export function stamp(album: Album): string {
  */
 export function blurb(album: Album): string {
   const when = `${album.location}, ${album.year}`;
-  return album.description ? `${album.description} (${when})` : when;
+  if (!album.description) return when;
+  return album.standalone ? album.description : `${album.description} (${when})`;
 }
 
 /**
