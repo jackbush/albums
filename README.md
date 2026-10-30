@@ -281,8 +281,8 @@ The count fixes the rows — nothing in the manifest chooses them:
 | 2 | 2 | 2 (⅔ + ⅓) | 1 + 1 | 1 + 1 |
 | 3 | 3 | 1 + 2 | 2 + 1 | 1 + 1 + 1 |
 | 4 | 2 + 2 | 1 + 3 | 3 + 1 | 1 + 2 + 1 |
-| 5 | 3 + 2 | 1 + 2 + 2 | 2 + 2 + 1 | 1 + 3 + 1 |
-| 6 | 2 + 2 + 2 | 1 + 3 + 2 | 3 + 2 + 1 | 1 + 2 + 2 + 1 |
+| 5 | 3 + 2, or 2 + 3 if landscape, landscape, then upright | 1 + 2 + 2 | 2 + 2 + 1 | 1 + 3 + 1 |
+| 6 | 2 + 2 + 2, or 3 + 3 if all upright | 1 + 3 + 2 | 3 + 2 + 1 | 1 + 2 + 2 + 1 |
 
 And the same on a phone, where a row never runs more than two across:
 
@@ -333,6 +333,11 @@ The rectangle and a `closer` compose: the rectangle takes the first three frames
 the last, and anything between flows in ordinary rows. That needs four frames or more — at
 exactly three the closer has claim on the last frame, so the rectangle gives way and the block
 reads 1 + 1 + 1.
+
+Orientation changes two shapes, for blocks with neither flag. **Six upright images** read as two
+bands of three rather than three rows of two, which would be three rows of towers. **Five whose
+first two are landscape and last three upright** read 2 + 3, so each row holds one shape. A phone
+keeps its usual rows for both.
 
 An **upright image alone on its row** stops at the same two-thirds band a hero pair uses,
 left-aligned, with the last third of the row empty. That covers a block of one, an upright

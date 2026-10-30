@@ -68,7 +68,7 @@ function share(variant: 'wide' | 'narrow') {
       ? rest > 0
         ? photoRows(rest, 'wide', false, closer)
         : []
-      : photoRows(images.length, variant, hero, closer);
+      : photoRows(images.length, variant, hero, closer, images.map(upright));
 
   for (const count of rows) {
     const inRow = ratios.slice(start, start + count);

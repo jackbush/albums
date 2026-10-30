@@ -192,7 +192,8 @@ next day's `subheading`. More than six in a day takes two adjacent blocks.
 }
 ```
 
-Rows follow the count: 2 → 2, 3 → 3, 4 → 2+2, 5 → 3+2, 6 → 2+2+2. Frames keep capture order.
+Rows follow the count: 2 → 2, 3 → 3, 4 → 2+2, 5 → 3+2, 6 → 2+2+2, or 3+3 when all six are
+upright; five that go landscape, landscape, then three upright read 2+3. Frames keep capture order.
 Optional `hero: true` gives the first frame a full-width row of its own and re-rows the rest:
 3 → 1+2, 4 → 1+3, 5 → 1+2+2, 6 → 1+3+2. Optional `closer: true` does the same at the other
 end, the last frame taking the row: 3 → 2+1, 4 → 3+1, 5 → 2+2+1, 6 → 3+2+1. Both together

@@ -52,12 +52,19 @@ const NARROW_ROWS: Record<number, number[]> = {
  * third of a phone column is the thumbnail the narrow shapes exist to avoid. Adding
  * `closer` overrides that, since asking for the last frame on its own is asking for
  * the two to stack.
+ *
+ * Orientation overrides the count in two places, both on wide screens only — a phone
+ * keeps its pairs. Six upright frames read as two bands of three, where 2 + 2 + 2
+ * would be three rows of towers. Five whose first two are landscape and last three
+ * upright read 2 + 3, so each row holds one shape rather than 3 + 2 mixing them.
  */
 export function photoRows(
   count: number,
   variant: 'wide' | 'narrow' = 'wide',
   hero = false,
   closer = false,
+  /** Per frame: taller than it is wide. */
+  upright: boolean[] = [],
 ): number[] {
   // A block with no frames has no rows. It never reaches here — the page skips it —
   // but returning a row for nothing would be a lie waiting to be believed.
@@ -72,6 +79,11 @@ export function photoRows(
 
   if (hero && count === 2 && variant === 'wide') return [2];
   if (hero) return [1, ...photoRows(count - 1, variant)];
+
+  if (variant === 'wide' && upright.length === count) {
+    if (count === 6 && upright.every(Boolean)) return [3, 3];
+    if (count === 5 && upright.join() === 'false,false,true,true,true') return [2, 3];
+  }
 
   const shapes = variant === 'narrow' ? NARROW_ROWS : ROWS;
   return shapes[count] ?? [count];
