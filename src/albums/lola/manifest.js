@@ -191,11 +191,11 @@ export default {
       caption: "Sound deadening and first layer of dense foam insulation.",
       clips: [
         {
-          src: "./build/IMG_1088.mov",
+          src: "./build/IMG_1088.mp4",
           alt: "Panning round the stripped interior: a new window, a roof fan and boxes of parts on the floor",
         },
         {
-          src: "./build/IMG_1090.mov",
+          src: "./build/IMG_1090.mp4",
           alt: "The empty van after dark, roof ribs lit faintly towards the rear doors",
         },
       ],
@@ -299,11 +299,11 @@ export default {
       caption: "The walls appearing after another productive weekend with Andrew, bike rack in use, video tour!",
       clips: [
         {
-          src: "./build/IMG_2412.mov",
+          src: "./build/IMG_2412.mp4",
           alt: "A woman running her hand over the honeysuckle-print panel on the rear door",
         },
         {
-          src: "./build/IMG_2413.mov",
+          src: "./build/IMG_2413.mp4",
           alt: "A green-painted wall inside the van, garden leaves through the window and an orange light above",
         },
       ],
@@ -343,7 +343,7 @@ export default {
     },
     {
       type: "video",
-      src: "./build/IMG_2593.mov",
+      src: "./build/IMG_2593.mp4",
       alt: "From the bed under a palm-leaf duvet, looking out of the rear doors down a terraced street",
       caption: "Ready for the Alps!",
     },
