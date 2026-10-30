@@ -241,9 +241,6 @@ const frames = await Promise.all(
       gif: isGif(image.src),
       plate: await fullPlate(image.src),
       widths: full ? FULL_WIDTHS : ROW_WIDTHS,
-      // Caps `Picture`'s fallback <img>, which otherwise renders at the source's full
-      // size — a 5MB frame from a 6000px original, plus an unreferenced avif and webp.
-      fallback: Math.min(image.src.width, full ? 2336 : 1650),
       // A break after the last frame would only add an empty row.
       breaks: {
         wide: wide[i].ends && i < images.length - 1,

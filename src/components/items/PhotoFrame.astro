@@ -9,7 +9,7 @@
  * Everything here is decided by the parent — widths, rungs, plate — and arrives
  * already computed. This holds no layout logic of its own.
  */
-import { Picture } from 'astro:assets';
+import AvifPicture from '../AvifPicture.astro';
 import type { Photo } from '../../lib/schema';
 
 interface Frame extends Photo {
@@ -21,7 +21,6 @@ interface Frame extends Photo {
   gif: boolean;
   plate: { src: string; width: number; height: number };
   widths: number[];
-  fallback: number;
   sizes: string;
   /** The `--width-wide` / `--width-narrow` custom properties, as an inline style. */
   style: string;
@@ -61,16 +60,7 @@ const { frame } = Astro.props;
           decoding="async"
         />
       ) : (
-        <Picture
-          src={frame.src}
-          alt={frame.alt ?? ''}
-          width={frame.fallback}
-          widths={frame.widths}
-          sizes={frame.sizes}
-          formats={['avif', 'webp']}
-          loading="lazy"
-          decoding="async"
-        />
+        <AvifPicture src={frame.src} alt={frame.alt ?? ''} widths={frame.widths} sizes={frame.sizes} />
       )
     }
   </button>

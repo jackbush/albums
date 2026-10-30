@@ -1,0 +1,45 @@
+---
+/*
+ * A photograph as AVIF at every width the layout asks for, with one JPEG behind it.
+ *
+ * Astro's own <Picture> cuts the fallback at every width too, and a WebP ladder
+ * besides — two full sets of files that only browsers without AVIF (anything before
+ * Safari 16) would ever fetch, and more than the 1GB GitHub Pages allows a site. So
+ * the fallback here is a single mid-size JPEG, soft on a big screen in an old
+ * browser.
+ */
+import { getImage } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  /** The AVIF ladder, in pixels. */
+  widths: number[];
+  sizes: string;
+  class?: string;
+  [scope: `data-astro-cid-${string}`]: unknown;
+}
+
+// `rest` carries the parent's `data-astro-cid-*` scope, so its styles still reach the img.
+const { src, alt, widths, sizes, class: className, ...rest } = Astro.props;
+
+// The column at 1x: sharp wherever an old browser is most likely to be, and no
+// wider than the ladder it stands in for.
+const FALLBACK = 1180;
+
+const [avif, fallback] = await Promise.all([
+  getImage({ src, widths, format: 'avif' }),
+  getImage({ src, width: Math.min(src.width, FALLBACK, Math.max(...widths)), format: 'jpg' }),
+]);
+---
+
+<picture>
+  <source srcset={avif.srcSet.attribute} sizes={sizes} type="image/avif" />
+  <img
+    src={fallback.src}
+    {...fallback.attributes}
+    {...rest}
+    class={className}
+    alt={alt}
+  />
+</picture>

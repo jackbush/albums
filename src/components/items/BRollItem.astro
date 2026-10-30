@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import AvifPicture from '../AvifPicture.astro';
 import { fullPlate, isGif } from '../../lib/media';
 import type { Photo } from '../../lib/schema';
 
@@ -96,16 +96,7 @@ const frames = await Promise.all(
                 decoding="async"
               />
             ) : (
-              <Picture
-                src={frame.src}
-                alt={frame.alt ?? ''}
-                width={Math.min(frame.src.width, 830)}
-                widths={WIDTHS}
-                sizes={sizes}
-                formats={['avif', 'webp']}
-                loading="lazy"
-                decoding="async"
-              />
+              <AvifPicture src={frame.src} alt={frame.alt ?? ''} widths={WIDTHS} sizes={sizes} />
             )}
           </button>
         </div>

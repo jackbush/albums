@@ -202,7 +202,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "Second layer of foam insulation.",
+      caption: "Second layer of foam insulation, space ship vibes.",
       images: [
         {
           src: "./build/IMG_1121.jpeg",

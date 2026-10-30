@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import AvifPicture from '../components/AvifPicture.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NavBar from '../components/NavBar.astro';
 import { getListedAlbums, getSite, stamp } from '../lib/posts';
@@ -24,9 +24,6 @@ const SIZES = [
 // 580 the card at 1x, 1180 at 2x — which also covers a DPR-3 phone on a full-width
 // card. Shares its rungs with the plate ladders, so a cover used in both is cut once.
 const WIDTHS = [400, 580, 830, 1180, 1650];
-
-// Caps `Picture`'s fallback <img> at the widest rung — see PhotosItem.
-const FALLBACK = 1650;
 ---
 
 <BaseLayout title={site.title} description={site.description} image={site.cover}>
@@ -41,17 +38,7 @@ const FALLBACK = 1650;
         albums.map((album) => (
           <li class="entry">
             <a class="entry__link" href={url(`${album.slug}/`)}>
-              <Picture
-                class="entry__cover"
-                src={album.cover}
-                alt=""
-                width={Math.min(album.cover.width, FALLBACK)}
-                widths={WIDTHS}
-                sizes={SIZES}
-                formats={['avif', 'webp']}
-                loading="lazy"
-                decoding="async"
-              />
+              <AvifPicture class="entry__cover" src={album.cover} alt="" widths={WIDTHS} sizes={SIZES} />
               <h2 class="display entry__title">{album.title}</h2>
               <p class="meta entry__stamp">{stamp(album)}</p>
             </a>
