@@ -139,7 +139,7 @@ export default {
     {
       type: "subheading",
       title: "Build Journal",
-      text: "We bought Lola in October 2023 and fitted her out over a year in two phases: basics that winter + spring to move out of our Bristol flat and get up to the mountains, then an autumn session to get ready for winter.",
+      text: "We bought Lola in October 2023 and fitted her out over a year in two phases: basics to move out of our Bristol flat and get up to the mountains, then an autumn session to get ready for winter.",
     },
     {
       type: "photos",
@@ -217,7 +217,7 @@ export default {
     {
       type: "photos",
       closer: true,
-      caption: "Awning rail going on, also starting the bed platform railing and studwork. Loving reality check from Luke and Faye that this was going to take a lot of time.",
+      caption: "Awning rail going on, also starting the bed platform railing and studwork. Loving reality check from Luke and Faye (the professionals) that this was going to take a lot of time.",
       images: [
         {
           src: "./build/IMG_1512.jpeg",
@@ -254,7 +254,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "Cab surround and head locker, then getting the ceiling in.",
+      caption: "Cab surround and head locker, board insulation, then getting the ceiling in.",
       images: [
         {
           src: "./build/IMG_2148.jpeg",
@@ -268,7 +268,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "More detailed planning with Andrew: architect, woodworker and van builder. Phase 1 to be kitchen for summer, with the rest coming in autumn.",
+      caption: "More detailed planning with Andrew: architect, carpenter and van builder. First the kitchen for summer, then the rest coming in autumn.",
       images: [
         {
           src: "./build/IMG_2398.jpeg",
