@@ -373,7 +373,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "Desk, shoe rack and shower going in.",
+      caption: "Back in Andrew's workshop: desk, shoe rack and shower going in.",
       images: [
         {
           src: "./build/PHOTO-2024-09-11-15-05-52.jpg",
@@ -403,7 +403,7 @@ export default {
     },
     {
       type: "photos",
-      caption: "Finishing the furniture, iterating the kitchen tap and hob. Bookshelf, windowsill, floor cupboard.",
+      caption: "More updates from Andrew: finishing the furniture, iterating the kitchen tap and hob. Bookshelf, windowsill, floor cupboard.",
       images: [
         {
           src: "./build/PHOTO-2024-09-21-18-11-59.jpg",
